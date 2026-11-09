@@ -2,10 +2,12 @@
 // 3x5-Mini-Font, Gen-1-Textboxen, Cursor/Pfeile.
 
 export const W = 160, H = 144;
-// Farbrollen. 'classic' ist das Haupt-Schema (Blau/Weiss/Orange), 'pocket' die Alternative.
+// Farbrollen. 'classic' ist das Haupt-Schema (Blau/Weiss/Orange), dazu Alternativen.
 export const SCHEMES = {
   classic: { BG: '#1e3a8a', DARK: '#142a63', WHITE: '#ffffff', ORANGE: '#f97316' },
   pocket: { BG: '#306230', DARK: '#0f380f', WHITE: '#e0f8d0', ORANGE: '#c4f02a' },
+  la: { BG: '#552583', DARK: '#3a1760', WHITE: '#ffffff', ORANGE: '#FDB927' },
+  mono: { BG: '#000000', DARK: '#2a2a2a', WHITE: '#ffffff', ORANGE: '#a6a6a6' },
 };
 export const SCHEME_LIST = Object.keys(SCHEMES);
 export const C = { ...SCHEMES.classic };

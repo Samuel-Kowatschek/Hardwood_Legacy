@@ -15,7 +15,7 @@ export default {
   options: {
     title: 'OPTIONS', lang: 'LANGUAGE', colors: 'COLORS', sound: 'SOUND', on: 'ON', off: 'OFF', back: 'BACK',
     hint: '{ok}/ARROWS CHANGE  {back} BACK',
-    schemes: { classic: 'CLASSIC', pocket: 'POCKET' },
+    schemes: { classic: 'CLASSIC', pocket: 'POCKET', la: 'LA SPECIAL', mono: 'BLACK/WHITE' },
   },
   hof: {
     title: 'HALL OF FAME', empty: 'STILL EMPTY.', empty2: 'FINISH A CAREER', empty3: 'TO GET ON THE WALL.',

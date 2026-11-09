@@ -12,17 +12,26 @@ export class FreeThrow {
   constructor(s) {
     this.s = s;
     const p = s.run.p, m = s.opts.mods, pr = s.opts.pressure;
-    this.amp = 0.16 * (1 + pr * 1.2) * clamp(1.35 - (p.skills.clu + p.skills.sho) / 220, 0.6, 1.3) * (1 - clamp(m.ft, 0, 0.6));
+    // Ruhige, langsame Drift (Summe weicher Sinuswellen) statt Zufallszittern; Groesse haengt von Druck, Skills und Perks ab
+    this.amp = 11 * (1 + pr * 0.8) * clamp(1.3 - (p.skills.clu + p.skills.sho) / 240, 0.6, 1.2) * (1 - clamp(m.ft, 0, 0.6));
     this.i = 0; this.makes = 0; this.swishes = 0;
     this.start();
   }
   start() {
     const rng = this.s.run.rng;
-    this.x = RX + rng.float(-10, 10); this.y = RY + rng.float(-8, 8);
-    this.vx = 0; this.vy = 0; this.clock = 360; this.fly = 0; this.res = null;
+    this.ph = [rng.float(0, 6.3), rng.float(0, 6.3), rng.float(0, 6.3), rng.float(0, 6.3)];
+    this.cx = 0; this.cy = 0; // Gegensteuerung des Spielers
+    this.f = 0; this.clock = 420; this.fly = 0; this.res = null;
+    this.pos();
+  }
+  pos() {
+    const f = this.f, ph = this.ph, grow = 1 + Math.min(1, f / 360) * 0.5;
+    const dx = (Math.sin(f * 0.021 + ph[0]) * 0.7 + Math.sin(f * 0.047 + ph[1]) * 0.3) * this.amp * grow;
+    const dy = (Math.sin(f * 0.017 + ph[2]) * 0.7 + Math.sin(f * 0.039 + ph[3]) * 0.3) * this.amp * 0.8 * grow;
+    this.x = clamp(RX + dx + this.cx, 20, 140);
+    this.y = clamp(RY + dy + this.cy, 8, 84);
   }
   update() {
-    const rng = this.s.run.rng;
     if (this.fly) {
       this.fly++;
       if (this.fly === 24) { if (this.res.make) { sfx.swish(); sfx.crowd(0.6); } else sfx.miss(); }
@@ -36,19 +45,17 @@ export class FreeThrow {
       }
       return;
     }
-    this.clock--;
-    // Wackeln wird mit der Zeit staerker
-    const a = this.amp * (1 + (360 - this.clock) / 300);
-    this.vx += rng.gauss(0, a); this.vy += rng.gauss(0, a);
-    if (input.isDown('left')) this.vx -= 0.09;
-    if (input.isDown('right')) this.vx += 0.09;
-    if (input.isDown('up')) this.vy -= 0.09;
-    if (input.isDown('down')) this.vy += 0.09;
-    this.vx *= 0.94; this.vy *= 0.94;
-    this.x = clamp(this.x + this.vx, 20, 140); this.y = clamp(this.y + this.vy, 8, 84);
+    this.f++; this.clock--;
+    const sp = 0.55;
+    if (input.isDown('left')) this.cx -= sp;
+    if (input.isDown('right')) this.cx += sp;
+    if (input.isDown('up')) this.cy -= sp;
+    if (input.isDown('down')) this.cy += sp;
+    this.cx = clamp(this.cx, -40, 40); this.cy = clamp(this.cy, -30, 30);
+    this.pos();
     if (input.pressed('a') || this.clock <= 0) {
       const d = Math.hypot(this.x - RX, this.y - RY);
-      const make = d < 7, swish = d < 3;
+      const make = d < 8, swish = d < 3.5;
       if (make) this.makes++;
       if (swish) this.swishes++;
       this.res = { make, swish };
@@ -66,6 +73,9 @@ export class FreeThrow {
     ctx.fillStyle = C.BG; ctx.fillRect(RX - 7, RY - 13, 14, 10);
     ctx.fillStyle = C.ORANGE; ctx.fillRect(RX - 9, RY, 18, 2);
     ctx.fillStyle = C.WHITE; for (let i = 0; i < 6; i++) ctx.fillRect(RX - 7 + i * 3, RY + 2 + (i % 2), 1, 7);
+    // Zielkreis (Trefferbereich)
+    ctx.fillStyle = C.DARK;
+    for (let k = 0; k < 24; k++) { const r = k / 24 * Math.PI * 2; ctx.fillRect(Math.round(RX + Math.cos(r) * 8), Math.round(RY + Math.sin(r) * 8), 1, 1); }
     platform(ctx, 30, 92, 26, 4);
     drawSprite(ctx, p.look, team.colors, 14, 46, { view: 'back', frame: this.fly && this.fly < 18 ? 'shoot' : idleFrame(tt), scale: 2, age: p.age });
     if (this.fly) {
@@ -83,7 +93,7 @@ export class FreeThrow {
     text(ctx, t('arcade.ft', { i: Math.min(this.i + 1, N), n: N }), 8, 103);
     tiny(ctx, `${this.makes}/${N}`, 152, 104, C.ORANGE, 'right');
     if (this.res && this.fly > 20) text(ctx, this.res.swish ? t('arcade.swish') : this.res.make ? t('arcade.make') : t('arcade.miss'), 80, 119, this.res.make ? C.ORANGE : C.WHITE, 'center');
-    else { ctx.fillStyle = C.WHITE; ctx.fillRect(12, 120, Math.round(136 * this.clock / 360), 2); }
+    else { ctx.fillStyle = C.WHITE; ctx.fillRect(12, 120, Math.round(136 * this.clock / 420), 2); }
     tiny(ctx, t('arcade.ftHint'), 80, 133, C.WHITE, 'center');
   }
 }

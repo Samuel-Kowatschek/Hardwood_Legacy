@@ -14,9 +14,13 @@ ctx.imageSmoothingEnabled = false;
 
 function resize() {
   const scr = document.getElementById('screen');
-  const fit = Math.min(scr.clientWidth / W, scr.clientHeight / H);
-  // Ganzzahliges Scaling; nur auf sehr kleinen Screens (< 1x) ausnahmsweise verkleinern
-  const s = fit >= 1 ? Math.floor(fit) : Math.max(0.5, fit);
+  // Rand zum Browser lassen: max. 90 % der Breite, 84 % der Hoehe
+  const fit = Math.min((scr.clientWidth * 0.9) / W, (scr.clientHeight * 0.84) / H);
+  const full = Math.min(scr.clientWidth / W, scr.clientHeight / H);
+  // Ganzzahliges Scaling mit Rand; auf kleinen Screens Rand opfern statt unter 2x zu fallen
+  let s = Math.floor(fit);
+  if (s < 2) s = Math.floor(full);
+  if (s < 1) s = Math.max(0.5, full);
   canvas.style.width = W * s + 'px';
   canvas.style.height = H * s + 'px';
 }

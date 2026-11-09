@@ -10,7 +10,7 @@ export class CardScene extends Scene {
   constructor(run, card, phase) { super(); this.run = run; this.card = card; this.phase0 = phase; }
   enter() {
     if (this.tw) return;
-    this.tw = new Typewriter(cardText(this.run, this.card), 18, 4);
+    this.tw = new Typewriter(cardText(this.run, this.card), 17, 4);
     const labels = t(`cards.${this.card.id}.o`);
     this.menu = new Menu(this.card.opts.map((o, i) => ({ label: labels[i], hint: hintFor(o) })), { rowH: 16 });
     this.phase = 'text';
@@ -21,7 +21,7 @@ export class CardScene extends Scene {
     } else if (this.phase === 'choose') {
       const i = this.menu.update();
       if (i !== null) {
-        this.res = new Typewriter(applyOption(this.run, this.card, i), 18, 4);
+        this.res = new Typewriter(applyOption(this.run, this.card, i), 17, 4);
         this.run.cur.events.push(this.card.id);
         this.phase = 'result';
         sfx.hit();
@@ -31,12 +31,12 @@ export class CardScene extends Scene {
   draw(ctx) {
     drawStatus(ctx, this.run, this.t, t('status.' + this.phase0));
     box(ctx, 0, 31, 160, 58);
-    text(ctx, t(`cards.${this.card.id}.t`).slice(0, 18), 8, 37, C.ORANGE);
-    this.tw.draw(ctx, 8, 48, 9);
+    text(ctx, t(`cards.${this.card.id}.t`).slice(0, 17), 10, 37, C.ORANGE);
+    this.tw.draw(ctx, 10, 48, 9);
     box(ctx, 0, 88, 160, 56);
-    if (this.phase === 'choose') this.menu.draw(ctx, 6, 94);
+    if (this.phase === 'choose') this.menu.draw(ctx, 8, 94);
     else if (this.phase === 'result') {
-      if (this.res.draw(ctx, 8, 96, 10, C.WHITE)) downArrow(ctx, 146, 134, this.t);
+      if (this.res.draw(ctx, 10, 96, 10, C.WHITE)) downArrow(ctx, 146, 134, this.t);
     }
   }
 }

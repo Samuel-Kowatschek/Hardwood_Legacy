@@ -22,7 +22,7 @@ Dann `http://localhost:8000` öffnen. Eigener Seed: `http://localhost:8000/?seed
 | Stats (jederzeit im Run) | S | STATS-Button |
 | Ton an/aus | M | SOUND-Button |
 
-Sprache (Englisch/Deutsch) und Farbschema (Classic/Pocket) unter **Options**. Neue Sprache: `src/i18n/<lang>.js` + `cards.<lang>.js` anlegen und in `src/i18n/index.js` eintragen.
+Sprache (Englisch/Deutsch) und Farbschema (Classic, Pocket, LA Special, Black/White) unter **Options**. Neue Sprache: `src/i18n/<lang>.js` + `cards.<lang>.js` anlegen und in `src/i18n/index.js` eintragen.
 
 ## Ablauf
 

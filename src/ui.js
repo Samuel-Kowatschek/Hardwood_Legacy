@@ -49,14 +49,14 @@ export class Typewriter {
 // Standard-Textbox unten (Gen-1-Layout): 160x48, 2 Zeilen
 export class TextBox {
   constructor(str, { rows = 2, lineH = 16, y = 96, h = 48 } = {}) {
-    this.tw = new Typewriter(str, 18, rows);
+    this.tw = new Typewriter(str, 17, rows);
     this.y = y; this.h = h; this.lineH = lineH;
   }
   update() { return this.tw.update(); }
   get done() { return this.tw.done; }
   draw(ctx, t) {
     box(ctx, 0, this.y, 160, this.h);
-    const arrow = this.tw.draw(ctx, 8, this.y + 12, this.lineH);
+    const arrow = this.tw.draw(ctx, 10, this.y + 12, this.lineH);
     if (arrow) downArrow(ctx, 146, this.y + this.h - 10, t);
   }
 }
