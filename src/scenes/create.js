@@ -34,7 +34,9 @@ export class CreateScene extends Scene {
     if (input.pressed('up')) { this.i = (this.i + this.rows - 1) % this.rows; sfx.blip(); this.msg = ''; }
     if (this.i < ARCHETYPES.length) this.arch = this.i;
     if (input.pressed('b')) return this.back();
-    if (!input.pressed('a')) return;
+    const clicked = this.clickRow != null;
+    if (clicked) { this.i = this.clickRow; this.clickRow = null; if (this.i < ARCHETYPES.length) this.arch = this.i; }
+    if (!input.pressed('a') && !clicked) return;
     if (this.i === ARCHETYPES.length) {
       if (this.rerolls > 0) { this.rerolls--; this.roll(3 - this.rerolls); sfx.select(); } else sfx.back();
       return;
@@ -67,6 +69,7 @@ export class CreateScene extends Scene {
       .concat([t('create.reroll', { n: this.rerolls }), t('create.back')]);
     labels.forEach((l, k) => {
       const y = 75 + k * 9;
+      input.region(4, y - 1, 104, 9, () => { if (this.i !== k) { this.i = k; this.msg = ''; sfx.blip(); } }, () => { this.clickRow = k; });
       if (k === this.i) cursor(ctx, 6, y);
       const dis = (k < ARCHETYPES.length && this.locked[k]) || (k === ARCHETYPES.length && !this.rerolls);
       const col = dis ? C.DARK : k === this.i ? C.ORANGE : C.WHITE;

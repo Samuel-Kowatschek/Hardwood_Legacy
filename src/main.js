@@ -2,12 +2,14 @@
 import { W, H, C, initFont, text, setScheme } from './gfx.js';
 import { setLang } from './i18n/index.js';
 import { StatsScene } from './scenes/stats.js';
+import { OptionsScene } from './scenes/options.js';
+import { t } from './i18n/index.js';
 import { input, initInput } from './input.js';
 import { initAudio, unlockAudio, setMuted, isMuted, sfx } from './systems/audio.js';
 import { save } from './systems/save.js';
 import { loadNameGen } from './names/nameGen.js';
 import { TitleScene } from './scenes/title.js';
-import { HelpScene } from './scenes/help.js';
+import { openHelp, closeHelp } from './helpModal.js';
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -89,16 +91,21 @@ function frame() {
     else if (tr.phase === 'in' && tr.t >= TRANS[tr.type].in) game.trans = null;
   } else if (game.overlay) {
     game.overlay.t++;
-    game.overlay.update(game);
+    if (input.pressed('help')) openHelp();
+    else game.overlay.update(game);
   } else if (game.scene) {
     // Stats-Overlay jederzeit waehrend eines Runs
-    if (game.run && input.pressed('stats') && !game.scene.noStats) { game.overlay = new StatsScene(game.run); input.endFrame(); }
+    if (input.pressed('help')) openHelp();
+    else if (input.pressed('options')) { game.overlay = new OptionsScene({ overlay: true, game }); input.endFrame(); }
+    else if (game.run && input.pressed('stats') && !game.scene.noStats) { game.overlay = new StatsScene(game.run); input.endFrame(); }
     else { game.scene.t++; game.scene.update?.(game); }
   }
   ctx.fillStyle = C.BG;
   ctx.fillRect(0, 0, W, H);
+  input.clearRegions();
   game.scene?.draw?.(ctx, game);
-  if (game.overlay) game.overlay.draw(ctx, game);
+  if (game.trans) input.clearRegions();
+  if (game.overlay) { input.clearRegions(); game.overlay.draw(ctx, game); }
   if (game.trans) drawTransition(game.trans);
   input.endFrame();
 }
@@ -123,6 +130,10 @@ async function boot() {
   const toggleMute = () => { setMuted(!isMuted()); save.setSettings({ ...save.settings(), mute: isMuted() }); };
   input.onAny(b => { unlockAudio(); if (b === 'mute') toggleMute(); });
   game.toggleMute = toggleMute;
+  // Button-Beschriftungen (Hilfe/Optionen/Stats/Ton) in der aktuellen Sprache
+  const labelButtons = () => document.querySelectorAll('[data-label]').forEach(el => { el.textContent = t('ui.' + el.dataset.label); });
+  labelButtons();
+  window.addEventListener('langchange', labelButtons);
 
   await initFont();
   text(ctx, 'LOADING...', 80, 68, C.WHITE, 'center');
@@ -139,7 +150,8 @@ async function boot() {
   }
   game.set(new TitleScene(), 'none');
   // Beim Laden der Seite: How-to-Play als Popup
-  game.overlay = new HelpScene({ popup: true, game });
+  input.onClose = closeHelp;
+  openHelp();
   requestAnimationFrame(loop);
 }
 

@@ -11,11 +11,12 @@ import { drawSprite, idleFrame } from '../sprites/spriteGen.js';
 export class StatsScene {
   constructor(run) { this.run = run; this.t = 0; sfx.select(); }
   update(game) {
-    if (this.t > 2 && (input.pressed('stats') || input.pressed('b') || input.pressed('a'))) { sfx.back(); game.overlay = null; }
+    if (this.t > 2 && (input.pressed('stats') || input.pressed('b') || input.pressed('a') || this.clickClose)) { sfx.back(); game.overlay = null; }
   }
   draw(ctx) {
     const run = this.run, p = run.p, team = run.teams[p.teamId];
     ctx.fillStyle = C.BG; ctx.fillRect(0, 0, 160, 144);
+    input.region(0, 0, 160, 144, null, () => { this.clickClose = true; });
     box(ctx, 0, 0, 160, 144);
     drawSprite(ctx, p.look, team.colors, 6, 5, { frame: idleFrame(this.t), age: p.age });
     text(ctx, `${p.first[0]}. ${p.last}`.slice(0, 14), 25, 6, C.WHITE);

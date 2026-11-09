@@ -31,7 +31,9 @@ export class PerkScene extends Scene {
     const n = this.opts.length;
     if (input.pressed('down')) { this.i = (this.i + 1) % n; sfx.blip(); }
     if (input.pressed('up')) { this.i = (this.i + n - 1) % n; sfx.blip(); }
-    if (input.pressed('a')) {
+    const clicked = this.clickRow != null;
+    if (clicked) { this.i = this.clickRow; this.clickRow = null; }
+    if (input.pressed('a') || clicked) {
       const pk = this.opts[this.i], p = this.run.p;
       const before = activeSynergies(p.perks).map(s => s.id);
       p.perks.push(pk.id);
@@ -46,6 +48,7 @@ export class PerkScene extends Scene {
     header(ctx, t('perk.title'), t('perk.active', { n: p.perks.length }));
     this.opts.forEach((pk, k) => {
       const y = 15 + k * 26;
+      if (!this.box) input.region(0, y, 160, 26, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
       box(ctx, 0, y, 160, 26);
       if (k === this.i) cursor(ctx, 5, y + 5);
       text(ctx, pk.name, 12, y + 5, k === this.i ? C.ORANGE : C.WHITE);

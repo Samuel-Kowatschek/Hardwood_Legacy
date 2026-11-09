@@ -8,6 +8,8 @@ import { sfx, isMuted } from '../systems/audio.js';
 import { t, LANG_LIST, setLang, lang } from '../i18n/index.js';
 
 export class OptionsScene extends Scene {
+  // overlay = true: waehrend eines Runs ueber der laufenden Szene (Taste O / OPTIONS-Button)
+  constructor({ overlay = false, game = null } = {}) { super(); this.overlay = overlay; this.game = game; this.i = 0; this.noStats = true; }
   enter(game) { this.game = game; this.i = 0; }
   rows() {
     const s = save.settings();
@@ -23,6 +25,7 @@ export class OptionsScene extends Scene {
     if (id === 'lang') {
       const l = LANG_LIST[(LANG_LIST.indexOf(lang()) + dir + LANG_LIST.length) % LANG_LIST.length];
       setLang(l); save.setSettings({ ...s, lang: l });
+      window.dispatchEvent(new Event('langchange'));
     } else if (id === 'scheme') {
       const cur = SCHEMES[s.scheme] ? s.scheme : 'classic';
       const n = SCHEME_LIST[(SCHEME_LIST.indexOf(cur) + dir + SCHEME_LIST.length) % SCHEME_LIST.length];
@@ -30,9 +33,19 @@ export class OptionsScene extends Scene {
     } else if (id === 'sound') this.game.toggleMute();
     sfx.select();
   }
-  back() { sfx.back(); import('./title.js').then(m => this.game.set(new m.TitleScene())); }
+  back() {
+    sfx.back();
+    if (this.overlay) { this.game.overlay = null; return; }
+    import('./title.js').then(m => this.game.set(new m.TitleScene()));
+  }
   update() {
     const rows = this.rows();
+    if (this.clickRow != null) {
+      const k = this.clickRow; this.clickRow = null; this.i = k;
+      if (rows[k].id === 'back') return this.back();
+      this.change(rows[k].id, 1);
+      return;
+    }
     if (input.pressed('down')) { this.i = (this.i + 1) % rows.length; sfx.blip(); }
     if (input.pressed('up')) { this.i = (this.i + rows.length - 1) % rows.length; sfx.blip(); }
     const id = rows[this.i].id;
@@ -42,10 +55,12 @@ export class OptionsScene extends Scene {
     else if (input.pressed('left')) this.change(id, -1);
   }
   draw(ctx) {
+    if (this.overlay) { ctx.fillStyle = C.BG; ctx.fillRect(0, 0, 160, 144); }
     header(ctx, t('options.title'));
     box(ctx, 4, 20, 152, 92);
     this.rows().forEach((r, k) => {
       const y = 30 + k * 20;
+      input.region(8, y - 3, 144, 20, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
       if (k === this.i) cursor(ctx, 10, y);
       text(ctx, r.label, 18, y, k === this.i ? C.ORANGE : C.WHITE);
       if (r.value) tiny(ctx, `< ${r.value} >`, 18, y + 10, C.WHITE);

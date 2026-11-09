@@ -21,6 +21,10 @@ Dann `http://localhost:8000` öffnen. Eigener Seed: `http://localhost:8000/?seed
 | Richtung | Pfeiltasten | D-Pad |
 | Stats (jederzeit im Run) | S | STATS-Button |
 | Ton an/aus | M | SOUND-Button |
+| Hilfe (Popup) | H | HELP-Button |
+| Optionen (auch im Run) | O | OPTIONS-Button |
+
+Alles Auswählbare geht auch mit der Maus: Hover markiert, Linksklick wählt aus. Unter dem Spiel gibt es Buttons für Hilfe, Optionen, Stats und Ton.
 
 Sprache (Englisch/Deutsch/Bosnisch) und Farbschema (Classic, LA Special, Black/White, Spaceship, Storm) unter **Options**. Neue Sprache: `src/i18n/<lang>.js` + `cards.<lang>.js` anlegen und in `src/i18n/index.js` eintragen.
 

@@ -67,6 +67,12 @@ export class Menu {
   }
   update() {
     const n = this.items.length;
+    if (this.clicked !== undefined && this.clicked !== null) {
+      const k = this.clicked; this.clicked = null;
+      if (this.items[k].disabled) { sfx.back(); return null; }
+      sfx.select();
+      return k;
+    }
     if (input.pressed('down') || input.pressed('right')) { this.i = (this.i + 1) % n; sfx.blip(); }
     if (input.pressed('up') || input.pressed('left')) { this.i = (this.i + n - 1) % n; sfx.blip(); }
     if (input.pressed('a')) {
@@ -76,9 +82,10 @@ export class Menu {
     }
     return null;
   }
-  draw(ctx, x, y) {
+  draw(ctx, x, y, w = 160 - x - 4) {
     this.items.forEach((it, k) => {
       const yy = y + k * this.rowH;
+      input.region(x - 2, yy - 2, w, this.rowH, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clicked = k; });
       if (k === this.i) cursor(ctx, x, yy);
       text(ctx, it.label, x + 8, yy, it.disabled ? C.DARK : k === this.i ? C.ORANGE : C.WHITE);
       if (this.hint && it.hint) tiny(ctx, it.hint, x + 8, yy + 9, C.WHITE);
@@ -98,7 +105,11 @@ export function drawStatus(ctx, run, t, kind = '') {
   if (kind) tiny(ctx, kind, 26 + line.length * 4, 10, C.ORANGE);
   text(ctx, String(ovr(p)), 158, 3, C.ORANGE, 'right');
   tiny(ctx, tr('stat.ovr'), 158 - 3 * 8 - 14, 4, C.WHITE);
-  if (input.device !== 'touch') tiny(ctx, tr('status.hint'), 158, 12, C.WHITE, 'right');
+  if (input.device !== 'touch') {
+    tiny(ctx, tr('status.hint'), 158, 12, C.WHITE, 'right');
+    // Klick auf den Hinweis oeffnet die Stats
+    input.region(124, 10, 36, 8, null, () => { input.press('stats'); input.release('stats'); });
+  }
   const vals = [['form', p.form], ['body', p.body], ['chem', p.chem], ['fame', p.fame]];
   vals.forEach(([l, v], i) => {
     const x = 22 + (i % 2) * 69, y = 18 + Math.floor(i / 2) * 6;

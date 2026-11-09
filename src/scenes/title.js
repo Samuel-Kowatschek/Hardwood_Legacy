@@ -2,13 +2,14 @@ import { Scene } from './scene.js';
 import { C, tiny, box, ball } from '../gfx.js';
 import { Menu, bigText } from '../ui.js';
 import { save } from '../systems/save.js';
+import { input } from '../input.js';
 import { playMusic } from '../systems/audio.js';
 import { randomSeedString, dailySeedString, RNG } from '../systems/rng.js';
 import { drawSprite, idleFrame, rollLook } from '../sprites/spriteGen.js';
 import { t } from '../i18n/index.js';
 import { CreateScene } from './create.js';
 import { HofScene } from './hof.js';
-import { HelpScene } from './help.js';
+import { openHelp } from '../helpModal.js';
 import { OptionsScene } from './options.js';
 
 export class TitleScene extends Scene {
@@ -38,7 +39,7 @@ export class TitleScene extends Scene {
     else if (id === 'daily') game.set(new CreateScene(dailySeedString(), true));
     else if (id === 'seed') game.set(new CreateScene(this.urlSeed));
     else if (id === 'hof') game.set(new HofScene());
-    else if (id === 'help') game.set(new HelpScene());
+    else if (id === 'help') openHelp();
     else game.set(new OptionsScene());
   }
   draw(ctx) {
@@ -55,6 +56,7 @@ export class TitleScene extends Scene {
     box(ctx, 16, 68, 128, h);
     this.menu.draw(ctx, 24, 73);
     const showRec = this.meta.runs && Math.floor(t0 / 180) % 2;
-    tiny(ctx, showRec ? t('title.record', { n: this.meta.runs, b: this.meta.best }) : t('title.hint'), 80, 139, showRec ? C.WHITE : C.ORANGE, 'center');
+    const hint = input.device === 'touch' ? t('title.tagline') : t('title.hint');
+    tiny(ctx, showRec ? t('title.record', { n: this.meta.runs, b: this.meta.best }) : hint, 80, 139, showRec ? C.WHITE : C.ORANGE, 'center');
   }
 }

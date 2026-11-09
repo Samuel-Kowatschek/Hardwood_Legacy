@@ -82,7 +82,9 @@ export class LegacyScene extends Scene {
     if (input.pressed('right')) { this.i = (this.i + 1) % menu.length; sfx.blip(); }
     if (input.pressed('left')) { this.i = (this.i + menu.length - 1) % menu.length; sfx.blip(); }
     if (input.pressed('b')) { this.i = 3; }
-    if (input.pressed('a')) {
+    const clicked = this.clickRow != null;
+    if (clicked) { this.i = this.clickRow; this.clickRow = null; }
+    if (input.pressed('a') || clicked) {
       sfx.select();
       if (this.i === 0 || this.i === 3) {
         Promise.all([import('./create.js'), import('../systems/rng.js'), import('./title.js')]).then(([c, r, tt]) => {
@@ -174,6 +176,7 @@ export class LegacyScene extends Scene {
     this.drawCard(ctx, this.t, true);
     t('legacy.menu').forEach((m, k) => {
       const x = 4 + k * 39;
+      input.region(x - 2, 131, 38, 12, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
       if (k === this.i) cursor(ctx, x, 134);
       tiny(ctx, m, x + 7, 135, k === this.i ? C.ORANGE : C.WHITE);
     });
