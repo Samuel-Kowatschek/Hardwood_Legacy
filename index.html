@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1e3a8a">
+<title>Hardwood Legacy</title>
+<style>
+  @font-face {
+    font-family: 'Press Start 2P';
+    src: url('assets/fonts/PressStart2P-Regular.ttf') format('truetype');
+    font-display: block;
+  }
+  :root { --bg: #1e3a8a; --dark: #142a63; --white: #ffffff; --orange: #f97316; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; touch-action: none;
+    -webkit-user-select: none; user-select: none; font-family: 'Press Start 2P', monospace; }
+  body { display: flex; flex-direction: column; }
+  #screen { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+  canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; background: var(--bg); }
+  #bar { height: 30px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--white); font-size: 8px; }
+  #bar span { opacity: 1; }
+  #mute { background: var(--bg); color: var(--white); border: 2px solid var(--white);
+    font: 8px 'Press Start 2P', monospace; padding: 5px 6px; cursor: pointer; }
+  @media (pointer: coarse) { #bar span { display: none; } }
+  #mute:focus { outline: none; }
+  #pad { display: none; height: 190px; padding: 8px 16px calc(16px + env(safe-area-inset-bottom)); position: relative; }
+  @media (pointer: coarse) { #pad { display: block; } }
+  .dpad { position: absolute; left: 16px; top: 18px; width: 138px; height: 138px; }
+  .dpad div, .ab div, .start { position: absolute; background: var(--bg); border: 2px solid var(--white); color: var(--white);
+    display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .dpad div.on, .ab div.on { background: var(--orange); }
+  .dpad [data-btn=up] { left: 46px; top: 0; width: 46px; height: 46px; }
+  .dpad [data-btn=down] { left: 46px; top: 92px; width: 46px; height: 46px; }
+  .dpad [data-btn=left] { left: 0; top: 46px; width: 46px; height: 46px; }
+  .dpad [data-btn=right] { left: 92px; top: 46px; width: 46px; height: 46px; }
+  .ab { position: absolute; right: 16px; top: 28px; width: 150px; height: 120px; }
+  .ab div { border-radius: 50%; width: 64px; height: 64px; font-size: 14px; }
+  .ab [data-btn=a] { right: 0; top: 0; border-color: var(--orange); }
+  .ab [data-btn=b] { left: 0; top: 46px; }
+</style>
+</head>
+<body>
+  <div id="screen"><canvas id="game" width="160" height="144"></canvas></div>
+  <div id="bar"><span>PFEILE &middot; Z/SPACE = A &middot; X = B</span><button id="mute" aria-label="Ton an/aus">TON</button></div>
+  <div id="pad">
+    <div class="dpad">
+      <div data-btn="up">&#9650;</div><div data-btn="left">&#9664;</div>
+      <div data-btn="right">&#9654;</div><div data-btn="down">&#9660;</div>
+    </div>
+    <div class="ab"><div data-btn="b">B</div><div data-btn="a">A</div></div>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+{
+  "_comment": "Handgepflegte Parodien fuer Namen, bei denen die Auto-Regeln Quatsch erzeugen oder ein Wortwitz besser passt.",
+  "last": {
+    "Antetokounmpo": [
+      "Antetokumbo",
+      "Antetokoumpo"
+    ],
+    "Embiid": [
+      "Embeed"
+    ],
+    "Doncic": [
+      "Donkic",
+      "Dontchic"
+    ],
+    "Jokic": [
+      "Jolkic",
+      "Jokitch"
+    ],
+    "Tatum": [
+      "Tater"
+    ],
+    "Curry": [
+      "Currie",
+      "Kurry"
+    ],
+    "James": [
+      "Jaymes"
+    ],
+    "Durant": [
+      "Durand"
+    ],
+    "Leonard": [
+      "Lennard"
+    ],
+    "Lillard": [
+      "Lillyard"
+    ],
+    "Booker": [
+      "Bocker",
+      "Bookah"
+    ],
+    "Wembanyama": [
+      "Wembanyamba",
+      "Wembanyana"
+    ],
+    "Gilgeous-Alexander": [
+      "Gilgeous-Alex",
+      "Gilgus-Alexndr"
+    ],
+    "Edwards": [
+      "Edwerds"
+    ],
+    "Brunson": [
+      "Brunsen"
+    ],
+    "Mitchell": [
+      "Mitchel",
+      "Mitchelle"
+    ],
+    "Haliburton": [
+      "Haliburten"
+    ],
+    "Adebayo": [
+      "Adebayoh"
+    ],
+    "Butler": [
+      "Buttler"
+    ],
+    "Harden": [
+      "Hardin"
+    ],
+    "Westbrook": [
+      "Eastbrook",
+      "Westbrock"
+    ],
+    "Irving": [
+      "Irvine"
+    ],
+    "George": [
+      "Jorge"
+    ],
+    "Towns": [
+      "Townz"
+    ],
+    "Morant": [
+      "Moreant"
+    ],
+    "Young": [
+      "Yung"
+    ],
+    "Davis": [
+      "Davies"
+    ],
+    "Banchero": [
+      "Banchiro"
+    ],
+    "Holmgren": [
+      "Holmgreen"
+    ],
+    "Sabonis": [
+      "Sabonnis"
+    ],
+    "Fox": [
+      "Foxx"
+    ],
+    "Siakam": [
+      "Siakum"
+    ],
+    "Williamson": [
+      "Willyamson"
+    ],
+    "Ball": [
+      "Bawl"
+    ],
+    "Beal": [
+      "Beel"
+    ],
+    "Paul": [
+      "Pall"
+    ],
+    "Green": [
+      "Greene",
+      "Grean"
+    ],
+    "Thompson": [
+      "Tompsen"
+    ],
+    "Murray": [
+      "Murrey"
+    ],
+    "Porzingis": [
+      "Porzingiz"
+    ],
+    "Valanciunas": [
+      "Valanchunas"
+    ],
+    "Nurkic": [
+      "Nurkick"
+    ],
+    "Gobert": [
+      "Gobear"
+    ],
+    "Cunningham": [
+      "Cunnyham"
+    ]
+  },
+  "nickname": {
+    "Hawks": [
+      "Hocks",
+      "Hawx"
+    ],
+    "Celtics": [
+      "Seltics",
+      "Celtix"
+    ],
+    "Cavaliers": [
+      "Kavaliers",
+      "Cavaleers"
+    ],
+    "Pelicans": [
+      "Pelicanz",
+      "Pellicans"
+    ],
+    "Bulls": [
+      "Bullz",
+      "Bolls"
+    ],
+    "Mavericks": [
+      "Maverix",
+      "Mavricks"
+    ],
+    "Nuggets": [
+      "Nuggz",
+      "Nugglets"
+    ],
+    "Warriors": [
+      "Warriers",
+      "Worriors"
+    ],
+    "Rockets": [
+      "Rokkets",
+      "Rockitz"
+    ],
+    "Clippers": [
+      "Klippers",
+      "Clippahs"
+    ],
+    "Lakers": [
+      "Lackers",
+      "Lakerz"
+    ],
+    "Heat": [
+      "Heet"
+    ],
+    "Bucks": [
+      "Bux",
+      "Bocks"
+    ],
+    "Timberwolves": [
+      "Timberwoofs",
+      "Timberwolfs"
+    ],
+    "Nets": [
+      "Netz",
+      "Nettz"
+    ],
+    "Knicks": [
+      "Nicks",
+      "Knix"
+    ],
+    "Magic": [
+      "Majic",
+      "Magik"
+    ],
+    "Pacers": [
+      "Paysers",
+      "Pacerz"
+    ],
+    "76ers": [
+      "67ers",
+      "77ers"
+    ],
+    "Suns": [
+      "Sunz",
+      "Sonns"
+    ],
+    "Trail Blazers": [
+      "Trail Blazerz",
+      "Trail Blasers"
+    ],
+    "Kings": [
+      "Kingz",
+      "Keengs"
+    ],
+    "Spurs": [
+      "Spurz",
+      "Sporrs"
+    ],
+    "Thunder": [
+      "Thunda",
+      "Thunnder"
+    ],
+    "Raptors": [
+      "Raptorz",
+      "Rapters"
+    ],
+    "Jazz": [
+      "Jaz",
+      "Jazzz"
+    ],
+    "Grizzlies": [
+      "Grizzlys",
+      "Grizlies"
+    ],
+    "Wizards": [
+      "Wizzards",
+      "Wizerds"
+    ],
+    "Pistons": [
+      "Pystons",
+      "Pistonz"
+    ],
+    "Hornets": [
+      "Hornetz",
+      "Hornits"
+    ]
+  },
+  "city": {
+    "San Francisco": "Golden State"
+  }
+}

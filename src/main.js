@@ -1,0 +1,130 @@
+// Game-Loop, Scaling, Scene-Manager mit Transitions (Wipe / Kampf-Flash).
+import { W, H, C, initFont, text } from './gfx.js';
+import { input, initInput } from './input.js';
+import { initAudio, unlockAudio, setMuted, isMuted, sfx } from './systems/audio.js';
+import { save } from './systems/save.js';
+import { loadNameGen } from './names/nameGen.js';
+import { TitleScene } from './scenes/title.js';
+
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+function resize() {
+  const scr = document.getElementById('screen');
+  const s = Math.max(1, Math.floor(Math.min(scr.clientWidth / W, scr.clientHeight / H)));
+  canvas.style.width = W * s + 'px';
+  canvas.style.height = H * s + 'px';
+}
+window.addEventListener('resize', resize);
+
+export const game = {
+  scene: null, t: 0, names: null, trans: null,
+  // Szene setzen (optional mit Transition)
+  set(scene, transition = 'wipe') {
+    if (transition === 'none' || !this.scene) { this._enter(scene); return; }
+    this.trans = { type: transition, phase: 'out', t: 0, next: scene };
+    if (transition === 'flash') sfx.flash();
+  },
+  // Szene zeigen und auf ihr Ergebnis warten
+  show(scene, transition = 'wipe') {
+    return new Promise(res => { scene._resolve = res; this.set(scene, transition); });
+  },
+  _enter(scene) {
+    this.scene = scene;
+    scene.t = 0;
+    scene.enter?.(this);
+  },
+};
+
+const TRANS = { wipe: { out: 10, in: 10 }, flash: { out: 46, in: 14 } };
+
+function drawTransition(tr) {
+  const len = TRANS[tr.type][tr.phase];
+  const k = tr.t / len;
+  if (tr.type === 'wipe') {
+    ctx.fillStyle = C.DARK;
+    if (tr.phase === 'out') ctx.fillRect(0, 0, Math.ceil(W * k), H);
+    else ctx.fillRect(Math.floor(W * k), 0, W, H);
+    return;
+  }
+  // Flash: 3x weiss blinken, dann Wipe in Baendern von links nach rechts
+  if (tr.phase === 'out') {
+    if (tr.t < 24) {
+      if (Math.floor(tr.t / 4) % 2 === 0) { ctx.fillStyle = C.WHITE; ctx.fillRect(0, 0, W, H); }
+    } else {
+      const kk = (tr.t - 24) / 22;
+      for (let b = 0; b < 9; b++) {
+        const off = b % 2 ? 0 : 0.15;
+        const w = Math.max(0, Math.min(1, kk * 1.15 - off)) * W;
+        ctx.fillStyle = b % 2 ? C.WHITE : C.DARK;
+        if (b % 2) ctx.fillRect(W - w, b * 16, w, 16); else ctx.fillRect(0, b * 16, w, 16);
+      }
+    }
+  } else {
+    ctx.fillStyle = C.WHITE;
+    ctx.globalAlpha = 1 - k;
+    if (Math.floor(tr.t / 2) % 2 === 0) ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+  }
+}
+
+function frame() {
+  game.t++;
+  const tr = game.trans;
+  if (tr) {
+    tr.t++;
+    if (tr.phase === 'out' && tr.t >= TRANS[tr.type].out) { game._enter(tr.next); tr.phase = 'in'; tr.t = 0; }
+    else if (tr.phase === 'in' && tr.t >= TRANS[tr.type].in) game.trans = null;
+  } else if (game.scene) {
+    game.scene.t++;
+    game.scene.update?.(game);
+  }
+  ctx.fillStyle = C.BG;
+  ctx.fillRect(0, 0, W, H);
+  game.scene?.draw?.(ctx, game);
+  if (game.trans) drawTransition(game.trans);
+  input.endFrame();
+}
+
+let acc = 0, last = performance.now();
+function loop(now) {
+  acc += Math.min(100, now - last);
+  last = now;
+  // feste 60 Updates/s, unabhaengig von der Bildwiederholrate
+  while (acc >= 1000 / 60) { frame(); acc -= 1000 / 60; }
+  requestAnimationFrame(loop);
+}
+
+async function boot() {
+  resize();
+  ctx.fillStyle = C.BG; ctx.fillRect(0, 0, W, H);
+  initInput(canvas);
+  const settings = save.settings();
+  initAudio(settings.mute);
+  const muteBtn = document.getElementById('mute');
+  const refreshMute = () => { muteBtn.textContent = isMuted() ? 'TON AUS' : 'TON AN'; };
+  const toggleMute = () => { setMuted(!isMuted()); save.setSettings({ ...save.settings(), mute: isMuted() }); refreshMute(); };
+  muteBtn.addEventListener('click', () => { unlockAudio(); toggleMute(); muteBtn.blur(); });
+  refreshMute();
+  input.onAny(b => { unlockAudio(); if (b === 'mute') toggleMute(); });
+  game.toggleMute = toggleMute;
+
+  await initFont();
+  text(ctx, 'LADE...', 80, 68, C.WHITE, 'center');
+  try {
+    game.names = await loadNameGen();
+  } catch (e) {
+    ctx.fillStyle = C.BG; ctx.fillRect(0, 0, W, H);
+    text(ctx, 'FEHLER:', 4, 50, C.ORANGE);
+    text(ctx, 'NAMEN FEHLEN', 4, 62);
+    text(ctx, 'HTTP-SERVER', 4, 80);
+    text(ctx, 'NOETIG', 4, 92);
+    console.error(e);
+    return;
+  }
+  game.set(new TitleScene(), 'none');
+  requestAnimationFrame(loop);
+}
+
+boot();
