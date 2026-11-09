@@ -26,6 +26,7 @@ export function legacy(run) {
   add('allStar', a.allStar, s.allStar);
   add('roy', a.roy, s.roy);
   add('milestones', p.milestones.length, s.milestone);
+  add('hundred', p.flags.hundred ? 1 : 0, s.hundred); // 100-Punkte-Spiel zaehlt extra
   if (p.ringsChased > 0) parts.push(['ringChase', p.ringsChased, -Math.round(p.ringsChased * s.ring * (1 - B.ringChaseFactor))]);
   const seasons = p.career.seasons;
   if (p.teamsPlayed.length === 1 && seasons >= B.loyaltyMinSeasons) parts.push(['oneTeam', seasons, seasons * B.loyaltyPerSeason]);

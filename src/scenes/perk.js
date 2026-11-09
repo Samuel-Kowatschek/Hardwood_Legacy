@@ -50,9 +50,9 @@ export class PerkScene extends Scene {
       const y = 15 + k * 26;
       if (!this.box) input.region(0, y, 160, 26, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
       box(ctx, 0, y, 160, 26);
-      if (k === this.i) cursor(ctx, 5, y + 5);
-      text(ctx, pk.name, 12, y + 5, k === this.i ? C.ORANGE : C.WHITE);
-      tiny(ctx, t('perks.' + pk.id).slice(0, 36), 12, y + 16);
+      if (k === this.i) cursor(ctx, 7, y + 6);
+      text(ctx, pk.name, 15, y + 6, k === this.i ? C.ORANGE : C.WHITE);
+      tiny(ctx, t('perks.' + pk.id).slice(0, 34), 15, y + 16);
     });
     const syn = activeSynergies(p.perks);
     tiny(ctx, t('perk.activeList', { x: p.perks.map(id => perkById(id).name).join(', ') || '-' }).slice(0, 38), 2, 97);

@@ -1,6 +1,6 @@
 // Alle Tuning-Werte an einer Stelle.
 export const BALANCE = {
-  score: { ring: 100, mvp: 60, fmvp: 40, dpoy: 25, scoring: 20, allStar: 8, milestone: 15, roy: 10 },
+  score: { ring: 100, mvp: 60, fmvp: 40, dpoy: 25, scoring: 20, allStar: 8, milestone: 15, roy: 10, hundred: 60 },
   loyaltyMinSeasons: 5,
   loyaltyPerSeason: 10,
   fameBonusFactor: 0.6, // * Peak-Fame
@@ -16,6 +16,7 @@ export const BALANCE = {
   ],
   perkAfterSeasons: [1, 3, 6, 9, 12],
   milestones: [
+    { id: 'hundred', test: p => p.flags.hundred },
     { id: 'pts10', test: p => p.career.pts >= 10000 },
     { id: 'pts20', test: p => p.career.pts >= 20000 },
     { id: 'pts30', test: p => p.career.pts >= 30000 },

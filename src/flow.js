@@ -123,7 +123,10 @@ async function regularSeason(game, run) {
     if (stop.kind === 'spot') {
       if (st.out > 0) continue; // verletzt: kein Spotlight-Spiel
       // Milestone-Game (50 Punkte) ersetzt manchmal das Spotlight-Spiel
-      if (!run.p.flags.fifty && ovr(run.p) >= 72 && run.rng.chance(0.35)) await fiftyGame(game, run);
+      // Extrem selten: Chance auf ein 100-Punkte-Spiel
+      const o = ovr(run.p), hundredP = o >= 80 ? 0.02 : o >= 74 ? 0.008 : 0.002;
+      if (!run.p.flags.hundred && run.rng.chance(hundredP)) await hundredGame(game, run);
+      else if (!run.p.flags.fifty && o >= 72 && run.rng.chance(0.35)) await fiftyGame(game, run);
       else await spotlightGame(game, run);
     } else {
       await game.show(new CardScene(run, drawCard(run, stop.phase), stop.phase), 'wipe');
@@ -175,6 +178,25 @@ async function spotlightGame(game, run) {
   if (good) run.p.fame = clamp(run.p.fame + 2, 0, 100);
   await game.show(new MessageScene(good ? t('flow.spotGood') : t('flow.spotBad'),
     teamBanner(run, t('flow.spotL1'), good ? t('flow.spotL2Good') : t('flow.spotL2Bad'))), 'wipe');
+}
+
+async function hundredGame(game, run) {
+  const opp = run.rng.pick(run.teams.filter(x => x.id !== run.p.teamId));
+  sfx.crowd(2);
+  await game.show(new MessageScene(t('flow.hundredIntro'), teamBanner(run, t('flow.hundredL1'), t('flow.hundredL2'))));
+  const kind = pickArcadeKind(run, false);
+  const q = await keyGame(game, run, null, {
+    kind, title: t('flow.hundredTitle'), opp, pressure: 0.3, situation: t('flow.hundredSit'), scoreLine: [139, 118],
+  });
+  const ok = q >= 0.65;
+  run.p.flags.fifty = true;
+  if (ok) { run.p.flags.hundred = true; run.p.fame = clamp(run.p.fame + 20, 0, 100); }
+  else run.p.fame = clamp(run.p.fame + 8, 0, 100);
+  run.p.peakFame = Math.max(run.p.peakFame, run.p.fame);
+  applyRegularArcade(run, kind, Math.max(q, 0.6), ok ? 3 : 1.5);
+  if (ok) { sfx.fanfare(); sfx.crowd(3); }
+  await game.show(new MessageScene(ok ? t('flow.hundredOk') : t('flow.hundredNo'),
+    teamBanner(run, ok ? t('flow.hundredOkL1') : t('flow.hundredNoL1'), t('flow.hundredL1'))), 'wipe');
 }
 
 async function fiftyGame(game, run) {

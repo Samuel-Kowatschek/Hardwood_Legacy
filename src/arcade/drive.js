@@ -67,15 +67,17 @@ export class Drive {
     LANES.forEach(y => ctx.fillRect(0, y + 22, 160, 2));
     for (let i = 0; i < 10; i++) ctx.fillRect(((i * 20 - Math.floor(this.f * this.speed)) % 200 + 200) % 200 - 20, 92, 8, 1);
     const prog = clamp(this.f / DUR, 0, 1);
-    if (prog > 0.8 || this.end) {
-      const hx = 150 - Math.round((prog - 0.8) * 60);
+    // Korb erst einblenden, wenn keine Verteidiger mehr kommen (vorher zu frueh im Bild)
+    const since = this.f - DUR - 25;
+    if (!this.stripped && (since > 0 || this.end)) {
+      const hx = 176 - Math.min(40, Math.max(0, Math.round(since * 0.9)) + (this.end ? this.end : 0));
       ctx.fillStyle = C.WHITE; ctx.fillRect(hx + 6, 18, 2, 70);
       ctx.fillStyle = C.ORANGE; ctx.fillRect(hx - 6, 30, 12, 2);
     }
     const sorted = this.defs.slice().sort((a, b) => a.lane - b.lane);
     for (const d of sorted) drawSprite(ctx, opp.star.look, opp.colors, Math.round(d.x), LANES[d.lane], { frame: Math.floor(tt / 10) % 2 ? 'idle0' : 'idle1' });
     if (!(this.flash && Math.floor(this.flash / 3) % 2)) {
-      const ex = this.end ? Math.min(40, this.end * 3) : 0;
+      const ex = this.end && !this.stripped ? Math.min(104, this.end * 3) : 0;
       drawSprite(ctx, p.look, team.colors, PX + ex, Math.round(this.y) - (this.end ? Math.min(12, this.end) : 0), { view: 'side', frame: Math.floor(tt / 6) % 2 ? 'run0' : 'run1', age: p.age });
       if (!this.stripped) ball(ctx, PX + ex + 13, Math.round(this.y) + 12 + (Math.floor(tt / 6) % 2) * 4);
     }

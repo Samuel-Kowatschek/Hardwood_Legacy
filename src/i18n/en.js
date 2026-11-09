@@ -9,8 +9,10 @@ export default {
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
   ui: { help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
+  unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYPE', perk: 'PERK', locked: 'LOCKED', count: '{n}/{m} UNLOCKED' },
+  practice: { title: 'PRACTICE', reroll: 'NEW PLAYER', situation: 'PRACTICE', last: 'LAST {p}%' },
   title: {
-    newRun: 'NEW RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
+    unlocks: 'UNLOCKS', practice: 'PRACTICE', newRun: 'NEW RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
     tagline: 'ONE RUN = ONE CAREER', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} BACK  M SOUND',
   },
   options: {
@@ -43,6 +45,10 @@ export default {
   },
 
   flow: {
+    hundredIntro: 'Something historic is happening: 81 points after three quarters. Can you reach 100?',
+    hundredTitle: '100-POINT GAME', hundredSit: '81 PTS, Q4', hundredL1: 'HISTORY NIGHT', hundredL2: '81 POINTS',
+    hundredOk: '100 POINTS!!! The arena shakes. This night will be told for generations!',
+    hundredNo: '96 points. Not quite 100, but still the game of the century.', hundredOkL1: '100 POINTS!', hundredNoL1: '96 POINTS',
     spotTitles: ['RIVALRY GAME', 'CHRISTMAS GAME', 'PRIME TIME', 'STATEMENT GAME', 'SEASON OPENER'],
     spotIntro: '{event} vs the {nick}. The award voters are watching!',
     spotGood: 'Big night! The award voters noticed.', spotBad: 'Rough night. The voters noticed that too.',
@@ -86,7 +92,7 @@ export default {
     roy: 'ROOKIE OF THE YEAR', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE',
     ring: 'CHAMPION!', fmvp: 'FINALS MVP', teammate: 'TEAMMATE',
   },
-  milestone: { pts10: '10,000 POINTS', pts20: '20,000 POINTS', pts30: '30,000 POINTS', fifty: '50-POINT GAME', as10: '10X ALL-STAR' },
+  milestone: { hundred: '100-POINT GAME', pts10: '10,000 POINTS', pts20: '20,000 POINTS', pts30: '30,000 POINTS', fifty: '50-POINT GAME', as10: '10X ALL-STAR' },
   perk: {
     title: 'CHOOSE A PERK', active: '{n} ACTIVE', activated: '{name} activated!', synergy: ' SYNERGY: {names}!',
     activeList: 'ACTIVE: {x}', synList: 'SYNERGY: {x}', synHint: '-> SYNERGY {x}!',
@@ -106,6 +112,7 @@ export default {
     noBonus: 'NO BONUS', warnNext: 'NEXT WEAK SEASON: -{p}%', warn: 'WEAK SEASON = OVERSTAYED PENALTY',
     retire: 'RETIRE', more: 'ONE MORE SEASON',
   },
+  multShort: { onTop: 'ON TOP', lastDance: 'LAST DANCE', overstay: 'OVERSTAYED' },
   mult: { onTop: 'WENT OUT ON TOP', lastDance: 'LAST DANCE', overstay: 'OVERSTAYED' },
   legacy: {
     pctl: 'BETTER THAN {p}% OF CAREERS*', pctlNote: '*ESTIMATE VS SIMULATED CAREERS', localRank: 'YOUR RUN #{r} OF {n}',
@@ -113,7 +120,7 @@ export default {
     title: 'LEGACY', base: 'BASE', mult: 'MULTIPLIER', card: '{ok} = CARD', hofRank: 'HALL OF FAME #{n}',
     unlocked: 'UNLOCKED: {x}!', menu: ['NEW', 'PNG', 'SEED', 'MENU'],
     copied: 'SEED COPIED!', seedIs: 'SEED: {s}', pngOk: 'PNG SAVED!', pngErr: 'PNG ERROR', teams: 'TEAMS {x}', noBonus: 'NO BONUS',
-    parts: { rings: 'RINGS', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
+    parts: { hundred: '100-PT GAME', rings: 'RINGS', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
       milestones: 'MILESTONES', ringChase: 'RING CHASING', oneTeam: 'ONE-TEAM', fame: 'FAME' },
     rows: { rings: 'RINGS', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING', allStar: 'ALL-STAR', seasons: 'SEASONS', points: 'POINTS' },
     share: 'Hardwood Legacy seed {s} - score {score}: {url}',
@@ -121,6 +128,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Franchise Legend', 'Hall of Famer', 'GOAT Debate'],
 
   arcade: {
+    names: { shot: 'SHOT METER', clutch: 'BUZZER-BEATER', fast: 'FAST BREAK', defense: 'DEFENSE STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREE THROWS' },
     intro: {
       shot: 'SHOT METER! Press {ok} while the marker is in the orange zone. White center = AND ONE. 3 shots.',
       clutch: 'BUZZER-BEATER! One shot. Hit the zone before time runs out. Watch the fakes!',

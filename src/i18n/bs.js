@@ -9,8 +9,10 @@ export default {
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
   ui: { help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
+  unlocks: { title: 'OTKLJUČANO', archetype: 'ARHETIP', perk: 'PERK', locked: 'ZAKLJUČANO', count: '{n}/{m} OTKLJUČANO' },
+  practice: { title: 'TRENING', reroll: 'NOVI IGRAČ', situation: 'TRENING', last: 'ZADNJE {p}%' },
   title: {
-    newRun: 'NOVA KARIJERA', daily: 'DNEVNI SEED', seed: 'SEED {s}', hof: 'KUĆA SLAVNIH', help: 'KAKO SE IGRA', options: 'POSTAVKE',
+    unlocks: 'OTKLJUČANO', practice: 'TRENING', newRun: 'NOVA KARIJERA', daily: 'DNEVNI SEED', seed: 'SEED {s}', hof: 'KUĆA SLAVNIH', help: 'KAKO SE IGRA', options: 'POSTAVKE',
     tagline: 'JEDNA IGRA = JEDNA KARIJERA', record: 'IGRE {n}  REKORD {b}', hint: '{ok} OK  {back} NAZAD  M ZVUK',
   },
   options: {
@@ -43,6 +45,10 @@ export default {
   },
 
   flow: {
+    hundredIntro: 'Dešava se historija: 81 poen nakon tri četvrtine. Možeš li do 100?',
+    hundredTitle: 'UTAKMICA SA 100', hundredSit: '81 PTS, Q4', hundredL1: 'HISTORIJSKA NOĆ', hundredL2: '81 POEN',
+    hundredOk: '100 POENA!!! Dvorana se trese. O ovoj noći pričaće generacije!',
+    hundredNo: '96 poena. Nije 100, ali ipak utakmica stoljeća.', hundredOkL1: '100 POENA!', hundredNoL1: '96 POENA',
     spotTitles: ['DERBI', 'BOŽIĆNA UTAKMICA', 'PRIME TIME', 'VELIKA UTAKMICA', 'OTVARANJE SEZONE'],
     spotIntro: '{event} protiv {nick}. Glasači za nagrade gledaju!',
     spotGood: 'Velika večer! Glasači su to vidjeli.', spotBad: 'Loša večer. I to su glasači vidjeli.',
@@ -86,7 +92,7 @@ export default {
     roy: 'ROOKIE GODINE', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'NAJBOLJI STRIJELAC',
     ring: 'PRVAK!', fmvp: 'FINALS MVP', teammate: 'SAIGRAČ',
   },
-  milestone: { pts10: '10.000 POENA', pts20: '20.000 POENA', pts30: '30.000 POENA', fifty: 'UTAKMICA SA 50', as10: '10X ALL-STAR' },
+  milestone: { hundred: 'UTAKMICA SA 100', pts10: '10.000 POENA', pts20: '20.000 POENA', pts30: '30.000 POENA', fifty: 'UTAKMICA SA 50', as10: '10X ALL-STAR' },
   perk: {
     title: 'IZABERI PERK', active: '{n} AKTIVNO', activated: '{name} aktiviran!', synergy: ' SINERGIJA: {names}!',
     activeList: 'AKTIVNO: {x}', synList: 'SINERGIJA: {x}', synHint: '-> SINERGIJA {x}!',
@@ -106,6 +112,7 @@ export default {
     noBonus: 'BEZ BONUSA', warnNext: 'SLJEDEĆA SLABA SEZONA: -{p}%', warn: 'SLABA SEZONA = KAZNA ZA PREDUGO',
     retire: 'PENZIJA', more: 'JOŠ JEDNA SEZONA',
   },
+  multShort: { onTop: 'NA VRHU', lastDance: 'ZADNJI PLES', overstay: 'PREDUGO' },
   mult: { onTop: 'OTIŠAO NA VRHU', lastDance: 'POSLJEDNJI PLES', overstay: 'PREDUGO OSTAO' },
   legacy: {
     pctl: 'BOLJI OD {p}% KARIJERA*', pctlNote: '*PROCJENA PREMA SIMULIRANIM KARIJERAMA', localRank: 'TVOJA IGRA #{r} OD {n}',
@@ -113,7 +120,7 @@ export default {
     title: 'LEGACY', base: 'OSNOVA', mult: 'MNOŽITELJ', card: '{ok} = KARTICA', hofRank: 'KUĆA SLAVNIH #{n}',
     unlocked: 'OTKLJUČANO: {x}!', menu: ['NOVA', 'PNG', 'SEED', 'MENI'],
     copied: 'SEED KOPIRAN!', seedIs: 'SEED: {s}', pngOk: 'PNG SAČUVAN!', pngErr: 'PNG GREŠKA', teams: 'TIMOVI {x}', noBonus: 'BEZ BONUSA',
-    parts: { rings: 'PRSTENJE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'STRIJELAC', allStar: 'ALL-STAR', roy: 'ROOKIE GOD.',
+    parts: { hundred: 'UTAKMICA 100', rings: 'PRSTENJE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'STRIJELAC', allStar: 'ALL-STAR', roy: 'ROOKIE GOD.',
       milestones: 'PREKRETNICE', ringChase: 'LOV NA PRSTEN', oneTeam: 'JEDAN TIM', fame: 'SLAVA' },
     rows: { rings: 'PRSTENJE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'STRIJELAC', allStar: 'ALL-STAR', seasons: 'SEZONE', points: 'POENI' },
     share: 'Hardwood Legacy seed {s} - skor {score}: {url}',
@@ -121,6 +128,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Legenda kluba', 'Hall of Famer', 'GOAT debata'],
 
   arcade: {
+    names: { shot: 'ŠUT-METAR', clutch: 'NA SIRENU', fast: 'KONTRANAPAD', defense: 'ODBRANA', drive: 'PRODOR', rebound: 'SKOK', pass: 'PLEJMEJKER', ft: 'BACANJA' },
     intro: {
       shot: 'ŠUT-METAR! Pritisni {ok} kad je marker u narandžastoj zoni. Bijela sredina = AND ONE. 3 šuta.',
       clutch: 'ŠUT NA SIRENU! Jedan šut. Pogodi zonu prije isteka vremena. Pazi na fintu!',

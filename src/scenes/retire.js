@@ -46,9 +46,9 @@ export class RetireScene extends Scene {
     tiny(ctx, t('retire.legacy') + ': ???', 80, 71, C.WHITE, 'center');
     tiny(ctx, t('retire.multNow'), 80, 79, C.WHITE, 'center');
     bigText(ctx, 'X' + rm.mult.toFixed(2), 80, 86, rm.mult > 1 ? C.ORANGE : C.WHITE, 2);
-    const mp = rm.parts.map(([n, v]) => `${t('mult.' + n)} ${v > 0 ? '+' : ''}${Math.round(v * 100)}%`).join(' ');
+    const mp = rm.parts.map(([n, v]) => `${t('multShort.' + n)} ${v > 0 ? '+' : ''}${Math.round(v * 100)}%`).join('  ');
     const warn = run.retire.weakStreak ? t('retire.warnNext', { p: Math.round(BALANCE.retire.overstayStep * (run.retire.weakStreak + 1) * 100) }) : t('retire.warn');
-    tiny(ctx, (mp || warn).slice(0, 38), 80, 104, mp ? C.ORANGE : C.WHITE, 'center');
+    tiny(ctx, (mp || warn).slice(0, 34), 80, 103, mp ? C.ORANGE : C.WHITE, 'center');
 
     if (this.box) this.box.draw(ctx, this.t);
     else {

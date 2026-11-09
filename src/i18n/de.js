@@ -9,8 +9,10 @@ export default {
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
   ui: { help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
+  unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYP', perk: 'PERK', locked: 'GESPERRT', count: '{n}/{m} FREIGESCHALTET' },
+  practice: { title: 'TRAINING', reroll: 'NEUER SPIELER', situation: 'TRAINING', last: 'ZULETZT {p}%' },
   title: {
-    newRun: 'NEUER RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
+    unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
     tagline: 'EIN RUN = EINE KARRIERE', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} ZURÜCK  M TON',
   },
   options: {
@@ -43,6 +45,10 @@ export default {
   },
 
   flow: {
+    hundredIntro: 'Hier passiert Geschichte: 81 Punkte nach drei Vierteln. Schaffst du die 100?',
+    hundredTitle: '100-PUNKTE-SPIEL', hundredSit: '81 PKT, Q4', hundredL1: 'HISTORISCHE NACHT', hundredL2: '81 PUNKTE',
+    hundredOk: '100 PUNKTE!!! Die Halle bebt. Von dieser Nacht erzählt man noch in Generationen!',
+    hundredNo: '96 Punkte. Nicht ganz 100, aber trotzdem das Spiel des Jahrhunderts.', hundredOkL1: '100 PUNKTE!', hundredNoL1: '96 PUNKTE',
     spotTitles: ['RIVALEN-DUELL', 'CHRISTMAS GAME', 'PRIME TIME', 'STATEMENT GAME', 'SAISONAUFTAKT'],
     spotIntro: '{event} gegen die {nick}. Die Award-Wähler schauen zu!',
     spotGood: 'Großer Abend! Die Award-Wähler haben es gesehen.', spotBad: 'Schwacher Abend. Auch das haben die Wähler gesehen.',
@@ -86,7 +92,7 @@ export default {
     roy: 'ROOKIE OF THE YEAR', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE',
     ring: 'CHAMPION!', fmvp: 'FINALS MVP', teammate: 'MITSPIELER',
   },
-  milestone: { pts10: '10.000 PUNKTE', pts20: '20.000 PUNKTE', pts30: '30.000 PUNKTE', fifty: '50-PUNKTE-SPIEL', as10: '10X ALL-STAR' },
+  milestone: { hundred: '100-PUNKTE-SPIEL', pts10: '10.000 PUNKTE', pts20: '20.000 PUNKTE', pts30: '30.000 PUNKTE', fifty: '50-PUNKTE-SPIEL', as10: '10X ALL-STAR' },
   perk: {
     title: 'PERK WÄHLEN', active: '{n} AKTIV', activated: '{name} aktiviert!', synergy: ' SYNERGIE: {names}!',
     activeList: 'AKTIV: {x}', synList: 'SYNERGIE: {x}', synHint: '-> SYNERGIE {x}!',
@@ -106,6 +112,7 @@ export default {
     noBonus: 'KEIN BONUS', warnNext: 'NÄCHSTE SCHWACHE SEASON: -{p}%', warn: 'SCHWACHE SEASON = OVERSTAYED-MALUS',
     retire: 'RETIRE', more: 'NOCH EINE SEASON',
   },
+  multShort: { onTop: 'ON TOP', lastDance: 'LAST DANCE', overstay: 'OVERSTAYED' },
   mult: { onTop: 'WENT OUT ON TOP', lastDance: 'LAST DANCE', overstay: 'OVERSTAYED' },
   legacy: {
     pctl: 'BESSER ALS {p}% DER KARRIEREN*', pctlNote: '*SCHÄTZUNG GG. SIMULIERTE KARRIEREN', localRank: 'DEIN RUN #{r} VON {n}',
@@ -113,7 +120,7 @@ export default {
     title: 'LEGACY', base: 'BASIS', mult: 'MULTIPLIKATOR', card: '{ok} = KARTE', hofRank: 'HALL OF FAME PLATZ {n}',
     unlocked: 'FREIGESCHALTET: {x}!', menu: ['NEU', 'PNG', 'SEED', 'MENÜ'],
     copied: 'SEED KOPIERT!', seedIs: 'SEED: {s}', pngOk: 'PNG GESPEICHERT!', pngErr: 'PNG FEHLER', teams: 'TEAMS {x}', noBonus: 'KEIN BONUS',
-    parts: { rings: 'RINGE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
+    parts: { hundred: '100-PUNKTE', rings: 'RINGE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
       milestones: 'MEILENSTEINE', ringChase: 'RINGJAGD', oneTeam: 'ONE-TEAM', fame: 'FAME' },
     rows: { rings: 'RINGE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING', allStar: 'ALL-STAR', seasons: 'SEASONS', points: 'PUNKTE' },
     share: 'Hardwood Legacy Seed {s} - Score {score}: {url}',
@@ -121,6 +128,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Franchise Legend', 'Hall of Famer', 'GOAT-Debatte'],
 
   arcade: {
+    names: { shot: 'SHOT-METER', clutch: 'BUZZER-BEATER', fast: 'FAST-BREAK', defense: 'DEFENSE-STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREIWÜRFE' },
     intro: {
       shot: 'SHOT-METER! Drück {ok}, wenn der Marker in der orangen Zone ist. Weiße Mitte = AND ONE. 3 Würfe.',
       clutch: 'BUZZER-BEATER! Ein Wurf. Triff die Zone, bevor die Uhr abläuft. Achtung, Fakes!',

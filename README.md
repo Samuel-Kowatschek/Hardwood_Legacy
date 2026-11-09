@@ -33,7 +33,10 @@ Sprache (Englisch/Deutsch/Bosnisch) und Farbschema (Classic, LA Special, Black/W
 `Titel -> Spieler erstellen -> [Offseason-Karte -> Season-Sim (unterbrochen von Events) -> Playoffs (Key Games) -> Awards -> Retire?] -> Legacy-Karte`
 
 - **Spotlight-Spiele:** In der Regular Season gibt es Minigames, deren Ergebnis die Award-Chancen (MVP, All-Star, DPOY, Scoring Title) verschiebt. Playoff-Minigames zählen nur für Siegchance (Ring) und Finals MVP.
-- **Karten:** 71 Entscheidungs- und Event-Karten (Offseason, Saisonmitte, Saisonende), jede höchstens einmal pro Run.
+- **Training:** Im Hauptmenü alle 8 Minigames frei üben, mit einem zufällig generierten Spieler.
+- **Unlocks:** Popup mit allen Freischaltungen (gesperrte nur mit Namen).
+- **100-Punkte-Spiel:** extrem seltenes Event in der Regular Season.
+- **Karten:** 106 Entscheidungs- und Event-Karten (Offseason, Saisonmitte, Saisonende), jede höchstens einmal pro Run.
 
 - **Retire-Gamble:** Der Legacy-Score bleibt bis zum Retire verdeckt. Der Screen zeigt Multiplikator, Trend, Verletzungsrisiko und Resume. *Went Out On Top* (+25 %), *Last Dance* (+15 %), *Overstayed* (-10 % pro schwacher Season in Folge, kumulativ). Harter Cap: 15 Seasons oder Körper = 0.
 - **Arcade-Momente** (Play-In, Conf Finals, Finals, 50-Punkte-Chance): Shot-Meter (mit And-One-Mitte), Buzzer-Beater, Fast-Break, Defense-Stop, Drive, Rebound, Playmaker, Freiwürfe. Jeder Archetyp bekommt alle, nur unterschiedlich gewichtet. Skills und Perks verändern Zonen und Zeitfenster.
