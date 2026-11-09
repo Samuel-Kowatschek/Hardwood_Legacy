@@ -5,9 +5,10 @@ export const W = 160, H = 144;
 // Farbrollen. 'classic' ist das Haupt-Schema (Blau/Weiss/Orange), dazu Alternativen.
 export const SCHEMES = {
   classic: { BG: '#1e3a8a', DARK: '#142a63', WHITE: '#ffffff', ORANGE: '#f97316' },
-  pocket: { BG: '#306230', DARK: '#0f380f', WHITE: '#e0f8d0', ORANGE: '#c4f02a' },
   la: { BG: '#552583', DARK: '#3a1760', WHITE: '#ffffff', ORANGE: '#FDB927' },
   mono: { BG: '#000000', DARK: '#2a2a2a', WHITE: '#ffffff', ORANGE: '#a6a6a6' },
+  spaceship: { BG: '#CE1141', DARK: '#8a0b2b', WHITE: '#ffffff', ORANGE: '#000000' },
+  storm: { BG: '#007AC1', DARK: '#004f7e', WHITE: '#ffffff', ORANGE: '#EF3B24' },
 };
 export const SCHEME_LIST = Object.keys(SCHEMES);
 export const C = { ...SCHEMES.classic };
@@ -69,8 +70,32 @@ export function text(ctx, str, x, y, color = C.WHITE, align = 'left') {
   else if (align === 'right') x = x - str.length * 8;
   for (let i = 0; i < str.length; i++) {
     const ch = str[i];
-    if (ch !== ' ') ctx.drawImage(glyph(ch, color), x + i * 8, y);
+    if (ch === ' ') continue;
+    const acc = capAccent(ch);
+    if (acc) {
+      // Grossbuchstabe mit Akzent: Basisbuchstabe + eigene Akzent-Pixel darueber (die Schrift staucht sonst den Buchstaben)
+      ctx.drawImage(glyph(acc.base, color), x + i * 8, y);
+      ctx.fillStyle = color;
+      for (const [dx, dy] of acc.px) ctx.fillRect(x + i * 8 + dx, y + dy, 1, 1);
+    } else ctx.drawImage(glyph(ch, color), x + i * 8, y);
   }
+}
+
+const ACCENT_PX = {
+  '\u0301': [[4, -2], [3, -1]], '\u0300': [[2, -2], [3, -1]], '\u030C': [[2, -2], [4, -2], [3, -1]],
+  '\u0308': [[1, -1], [2, -1], [4, -1], [5, -1]], '\u0302': [[3, -2], [2, -1], [4, -1]], '\u0303': [[1, -1], [2, -2], [3, -1], [4, -2]],
+};
+const accCache = new Map();
+function capAccent(ch) {
+  if (accCache.has(ch)) return accCache.get(ch);
+  let r = null;
+  if (ch === 'Đ') r = { base: 'D', px: [[0, 3], [1, 3], [2, 3], [3, 3]] };
+  else if (ch !== ch.toLowerCase()) {
+    const d = ch.normalize('NFD');
+    if (d.length === 2 && /[A-Z]/.test(d[0]) && ACCENT_PX[d[1]]) r = { base: d[0], px: ACCENT_PX[d[1]] };
+  }
+  accCache.set(ch, r);
+  return r;
 }
 
 // ---- 3x5 Mini-Font (4px Vorschub) fuer dichte Stat-Anzeigen ----
@@ -131,11 +156,11 @@ const TINY = {
   '&': '.#.#.#.#.#.#.##',
   '$': '.####..#..####.',
 };
-const UMLAUT = { 'Ä': 'AE', 'Ö': 'OE', 'Ü': 'UE', 'ß': 'SS', 'ä': 'AE', 'ö': 'OE', 'ü': 'UE' };
+const UMLAUT = { 'Ä': 'AE', 'Ö': 'OE', 'Ü': 'UE', 'ß': 'SS', 'ä': 'AE', 'ö': 'OE', 'ü': 'UE', 'Đ': 'DJ', 'đ': 'DJ' };
 
 export function tinyWidth(str) { return tinyNorm(str).length * 4 - 1; }
 export function tinyNorm(str) {
-  return String(str).replace(/[ÄÖÜäöüß]/g, m => UMLAUT[m]).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+  return String(str).replace(/[ÄÖÜäöüßĐđ]/g, m => UMLAUT[m]).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
 }
 
 export function tiny(ctx, str, x, y, color = C.WHITE, align = 'left') {

@@ -7,6 +7,7 @@ import { initAudio, unlockAudio, setMuted, isMuted, sfx } from './systems/audio.
 import { save } from './systems/save.js';
 import { loadNameGen } from './names/nameGen.js';
 import { TitleScene } from './scenes/title.js';
+import { HelpScene } from './scenes/help.js';
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -137,6 +138,8 @@ async function boot() {
     return;
   }
   game.set(new TitleScene(), 'none');
+  // Beim Laden der Seite: How-to-Play als Popup
+  game.overlay = new HelpScene({ popup: true, game });
   requestAnimationFrame(loop);
 }
 

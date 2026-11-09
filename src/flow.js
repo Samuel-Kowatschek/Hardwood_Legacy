@@ -6,7 +6,7 @@ import { archetypeById } from './data/archetypes.js';
 import { drawCard } from './data/cards.js';
 import { arcadeMods } from './data/perks.js';
 import { ovr, freshSeason, startSeason, finishSeason, gameProb, simSeries, confSeeds, PAIRS, applyAging, driftTeams } from './systems/sim.js';
-import { computeAwards } from './systems/awards.js';
+import { computeAwards, applyRegularArcade } from './systems/awards.js';
 import { updateOverstay } from './systems/legacy.js';
 import { playMusic, sfx } from './systems/audio.js';
 import { t } from './i18n/index.js';
@@ -100,22 +100,23 @@ async function regularSeason(game, run) {
   const st = startSeason(run);
   const sim = new SimScene(run, st);
   game.set(sim, 'wipe');
+  // Unterbrechungen: Event (Saisonmitte), Spotlight-Spiel (Minigame, zaehlt fuer Awards), Event (Saisonende)
   const stops = [
-    { at: rngStop(run, 0.3, 0.42), phase: 'mid', chance: 1 },
-    { at: rngStop(run, 0.62, 0.78), phase: 'late', chance: 0.6 },
+    { at: rngStop(run, 0.28, 0.38), kind: 'card', phase: 'mid', chance: 1 },
+    { at: rngStop(run, 0.45, 0.58), kind: 'spot', chance: 0.8 },
+    { at: rngStop(run, 0.66, 0.8), kind: 'card', phase: 'late', chance: 0.6 },
   ];
-  let fiftyDone = false;
   for (const stop of stops) {
     await sim.playTo(stop.at);
-    // Milestone-Game als Saison-Event
-    if (!fiftyDone && !run.p.flags.fifty && ovr(run.p) >= 72 && st.out === 0 && run.rng.chance(0.25)) {
-      fiftyDone = true;
-      await fiftyGame(game, run);
-      game.set(sim, 'wipe');
-      continue;
-    }
     if (!run.rng.chance(stop.chance)) continue;
-    await game.show(new CardScene(run, drawCard(run, stop.phase), stop.phase), 'wipe');
+    if (stop.kind === 'spot') {
+      if (st.out > 0) continue; // verletzt: kein Spotlight-Spiel
+      // Milestone-Game (50 Punkte) ersetzt manchmal das Spotlight-Spiel
+      if (!run.p.flags.fifty && ovr(run.p) >= 72 && run.rng.chance(0.35)) await fiftyGame(game, run);
+      else await spotlightGame(game, run);
+    } else {
+      await game.show(new CardScene(run, drawCard(run, stop.phase), stop.phase), 'wipe');
+    }
     game.set(sim, 'wipe');
   }
   await sim.playTo(1);
@@ -148,6 +149,23 @@ async function keyGame(game, run, back, opts) {
   return q;
 }
 
+// Spotlight-Spiel in der Regular Season: Ergebnis verschiebt die Award-Chancen (MVP, All-Star, DPOY, Scoring)
+async function spotlightGame(game, run) {
+  const rng = run.rng;
+  const rivalT = run.teams[run.rival.teamId];
+  const opp = rivalT.id !== run.p.teamId && rng.chance(0.4) ? rivalT : rng.pick(run.teams.filter(x => x.id !== run.p.teamId && x.base >= 55).concat(rivalT).filter(x => x.id !== run.p.teamId));
+  const title = rng.pick(t('flow.spotTitles'));
+  await game.show(new MessageScene(t('flow.spotIntro', { event: title, nick: opp.nick }), teamBanner(run, t('flow.spotL1'), title)));
+  const kind = pickArcadeKind(run, false);
+  const a = rng.int(88, 104);
+  const q = await keyGame(game, run, null, { kind, title, opp, pressure: 0.15, situation: title, scoreLine: [a, a + rng.int(-2, 3)] });
+  applyRegularArcade(run, kind, q);
+  const good = q >= 0.5;
+  if (good) run.p.fame = clamp(run.p.fame + 2, 0, 100);
+  await game.show(new MessageScene(good ? t('flow.spotGood') : t('flow.spotBad'),
+    teamBanner(run, t('flow.spotL1'), good ? t('flow.spotL2Good') : t('flow.spotL2Bad'))), 'wipe');
+}
+
 async function fiftyGame(game, run) {
   const opp = run.rng.pick(run.teams.filter(x => x.id !== run.p.teamId));
   await game.show(new MessageScene(t('flow.fiftyIntro'), teamBanner(run, t('flow.fiftyL1'), t('flow.fiftyL2'))));
@@ -157,6 +175,7 @@ async function fiftyGame(game, run) {
   });
   const ok = q >= 0.55;
   if (ok) { run.p.flags.fifty = true; run.p.fame = clamp(run.p.fame + 6, 0, 100); }
+  applyRegularArcade(run, run.lastKinds[0], q, 1.2);
   await game.show(new MessageScene(ok ? t('flow.fiftyOk') : t('flow.fiftyNo'),
     teamBanner(run, ok ? t('flow.fiftyOkL1') : t('flow.fiftyNoL1'), ok ? t('flow.fiftyOkL2') : t('flow.fiftyNoL2'))), 'wipe');
 }

@@ -1,4 +1,5 @@
 // Hilfe-Seiten: alle Mechaniken und das Spielprinzip.
+// Als Szene (Menue "How to play") oder als Popup-Overlay beim Laden der Seite (popup = true).
 import { Scene } from './scene.js';
 import { C, text, tiny, box, wrap, tinyNorm } from '../gfx.js';
 import { header } from '../ui.js';
@@ -7,7 +8,7 @@ import { sfx } from '../systems/audio.js';
 import { t } from '../i18n/index.js';
 
 export class HelpScene extends Scene {
-  constructor(back = null) { super(); this.backScene = back; this.page = 0; this.noStats = true; }
+  constructor({ popup = false, game = null } = {}) { super(); this.popup = popup; this.game = game; this.page = 0; this.noStats = true; }
   enter(game) { this.game = game; }
   update() {
     const pages = t('help.pages');
@@ -19,17 +20,28 @@ export class HelpScene extends Scene {
   }
   close() {
     sfx.back();
-    if (this.backScene) this.game.set(this.backScene, 'none');
-    else import('./title.js').then(m => this.game.set(new m.TitleScene()));
+    if (this.popup) { this.game.overlay = null; return; }
+    import('./title.js').then(m => this.game.set(new m.TitleScene()));
   }
   draw(ctx) {
     const pages = t('help.pages');
     const pg = pages[this.page];
-    header(ctx, t('help.title'), `${this.page + 1}/${pages.length}`);
-    box(ctx, 0, 14, 160, 118);
-    text(ctx, pg.t.slice(0, 18), 7, 20, C.ORANGE);
-    const lines = wrap(tinyNorm(t('help.pages.' + this.page + '.b')), 37);
-    lines.slice(0, 15).forEach((ln, i) => tiny(ctx, ln, 7, 32 + i * 6.5 | 0, C.WHITE));
-    tiny(ctx, t('help.nav'), 80, 136, C.WHITE, 'center');
+    if (this.popup) {
+      // Popup-Fenster ueber dem Titelbild
+      ctx.fillStyle = C.BG; ctx.fillRect(0, 0, 160, 144);
+      box(ctx, 2, 2, 156, 140);
+      tiny(ctx, t('help.title'), 9, 8, C.ORANGE);
+      tiny(ctx, `${this.page + 1}/${pages.length}`, 151, 8, C.WHITE, 'right');
+      ctx.fillStyle = C.WHITE; ctx.fillRect(8, 15, 144, 1);
+    } else {
+      header(ctx, t('help.title'), `${this.page + 1}/${pages.length}`);
+      box(ctx, 0, 14, 160, 118);
+    }
+    const y0 = this.popup ? 19 : 20;
+    text(ctx, pg.t.slice(0, 17), 9, y0, C.ORANGE);
+    const lines = wrap(tinyNorm(t('help.pages.' + this.page + '.b')), 35);
+    lines.slice(0, 15).forEach((ln, i) => tiny(ctx, ln, 9, (y0 + 12 + i * 6.5) | 0, C.WHITE));
+    const nav = this.popup ? t('help.navPopup') : t('help.nav');
+    tiny(ctx, nav, 80, this.popup ? 133 : 136, this.popup ? C.ORANGE : C.WHITE, 'center');
   }
 }

@@ -14,7 +14,7 @@ export function ovr(p) {
 }
 
 export function freshSeason() {
-  return { power: 0, playoffPower: 0, usage: 0, injuryGames: 0, rivalBoost: 0, events: [] };
+  return { power: 0, playoffPower: 0, usage: 0, injuryGames: 0, rivalBoost: 0, events: [], award: { all: 0, mvp: 0, dpoy: 0, ppg: 0 } };
 }
 
 export function myPower(run, playoffs = false) {

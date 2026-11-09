@@ -1,9 +1,10 @@
 // Mini-i18n: t('pfad.zum.key', {param}). Fallback: Englisch. Neue Sprache = neue Datei + Eintrag in LANGS.
 import en from './en.js';
 import de from './de.js';
+import bs from './bs.js';
 import { input } from '../input.js';
 
-export const LANGS = { en, de };
+export const LANGS = { en, de, bs };
 export const LANG_LIST = Object.keys(LANGS);
 let cur = 'en';
 

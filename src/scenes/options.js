@@ -1,6 +1,6 @@
 // Optionen: Sprache, Farbschema, Ton.
 import { Scene } from './scene.js';
-import { C, text, tiny, box, cursor, SCHEME_LIST, setScheme } from '../gfx.js';
+import { C, text, tiny, box, cursor, SCHEME_LIST, SCHEMES, setScheme } from '../gfx.js';
 import { header } from '../ui.js';
 import { input } from '../input.js';
 import { save } from '../systems/save.js';
@@ -13,7 +13,7 @@ export class OptionsScene extends Scene {
     const s = save.settings();
     return [
       { id: 'lang', label: t('options.lang'), value: t('langName.' + lang()) },
-      { id: 'scheme', label: t('options.colors'), value: t('options.schemes.' + (s.scheme || 'classic')) },
+      { id: 'scheme', label: t('options.colors'), value: t('options.schemes.' + (SCHEMES[s.scheme] ? s.scheme : 'classic')) },
       { id: 'sound', label: t('options.sound'), value: isMuted() ? t('options.off') : t('options.on') },
       { id: 'back', label: t('options.back') },
     ];
@@ -24,7 +24,7 @@ export class OptionsScene extends Scene {
       const l = LANG_LIST[(LANG_LIST.indexOf(lang()) + dir + LANG_LIST.length) % LANG_LIST.length];
       setLang(l); save.setSettings({ ...s, lang: l });
     } else if (id === 'scheme') {
-      const cur = s.scheme || 'classic';
+      const cur = SCHEMES[s.scheme] ? s.scheme : 'classic';
       const n = SCHEME_LIST[(SCHEME_LIST.indexOf(cur) + dir + SCHEME_LIST.length) % SCHEME_LIST.length];
       setScheme(n); save.setSettings({ ...s, scheme: n });
     } else if (id === 'sound') this.game.toggleMute();
