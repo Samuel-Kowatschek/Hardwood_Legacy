@@ -70,7 +70,7 @@ export function createRun(seedStr, names, { archId, look, name, hof = [] }) {
     seed: seedStr, rng, teams, p, rival,
     seasonNo: 1, year: new Date().getFullYear(),
     log: [], retire: { weakStreak: 0, overstay: 0 }, cur: null,
-    arcadeCount: 0, lastOvr: null,
+    usedCards: [], lastKinds: [],
   };
 }
 

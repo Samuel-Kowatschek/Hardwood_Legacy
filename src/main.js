@@ -1,5 +1,7 @@
 // Game-Loop, Scaling, Scene-Manager mit Transitions (Wipe / Kampf-Flash).
-import { W, H, C, initFont, text } from './gfx.js';
+import { W, H, C, initFont, text, setScheme } from './gfx.js';
+import { setLang } from './i18n/index.js';
+import { StatsScene } from './scenes/stats.js';
 import { input, initInput } from './input.js';
 import { initAudio, unlockAudio, setMuted, isMuted, sfx } from './systems/audio.js';
 import { save } from './systems/save.js';
@@ -12,14 +14,18 @@ ctx.imageSmoothingEnabled = false;
 
 function resize() {
   const scr = document.getElementById('screen');
-  const s = Math.max(1, Math.floor(Math.min(scr.clientWidth / W, scr.clientHeight / H)));
+  const fit = Math.min(scr.clientWidth / W, scr.clientHeight / H);
+  // Ganzzahliges Scaling; nur auf sehr kleinen Screens (< 1x) ausnahmsweise verkleinern
+  const s = fit >= 1 ? Math.floor(fit) : Math.max(0.5, fit);
   canvas.style.width = W * s + 'px';
   canvas.style.height = H * s + 'px';
 }
 window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 100));
+try { new ResizeObserver(resize).observe(document.getElementById('screen')); } catch { /* alt */ }
 
 export const game = {
-  scene: null, t: 0, names: null, trans: null,
+  scene: null, t: 0, names: null, trans: null, run: null, overlay: null,
   // Szene setzen (optional mit Transition)
   set(scene, transition = 'wipe') {
     if (transition === 'none' || !this.scene) { this._enter(scene); return; }
@@ -76,13 +82,18 @@ function frame() {
     tr.t++;
     if (tr.phase === 'out' && tr.t >= TRANS[tr.type].out) { game._enter(tr.next); tr.phase = 'in'; tr.t = 0; }
     else if (tr.phase === 'in' && tr.t >= TRANS[tr.type].in) game.trans = null;
+  } else if (game.overlay) {
+    game.overlay.t++;
+    game.overlay.update(game);
   } else if (game.scene) {
-    game.scene.t++;
-    game.scene.update?.(game);
+    // Stats-Overlay jederzeit waehrend eines Runs
+    if (game.run && input.pressed('stats') && !game.scene.noStats) { game.overlay = new StatsScene(game.run); input.endFrame(); }
+    else { game.scene.t++; game.scene.update?.(game); }
   }
   ctx.fillStyle = C.BG;
   ctx.fillRect(0, 0, W, H);
   game.scene?.draw?.(ctx, game);
+  if (game.overlay) game.overlay.draw(ctx, game);
   if (game.trans) drawTransition(game.trans);
   input.endFrame();
 }
@@ -102,24 +113,22 @@ async function boot() {
   initInput(canvas);
   const settings = save.settings();
   initAudio(settings.mute);
-  const muteBtn = document.getElementById('mute');
-  const refreshMute = () => { muteBtn.textContent = isMuted() ? 'TON AUS' : 'TON AN'; };
-  const toggleMute = () => { setMuted(!isMuted()); save.setSettings({ ...save.settings(), mute: isMuted() }); refreshMute(); };
-  muteBtn.addEventListener('click', () => { unlockAudio(); toggleMute(); muteBtn.blur(); });
-  refreshMute();
+  setLang(settings.lang || 'en');
+  setScheme(settings.scheme || 'classic');
+  const toggleMute = () => { setMuted(!isMuted()); save.setSettings({ ...save.settings(), mute: isMuted() }); };
   input.onAny(b => { unlockAudio(); if (b === 'mute') toggleMute(); });
   game.toggleMute = toggleMute;
 
   await initFont();
-  text(ctx, 'LADE...', 80, 68, C.WHITE, 'center');
+  text(ctx, 'LOADING...', 80, 68, C.WHITE, 'center');
   try {
     game.names = await loadNameGen();
   } catch (e) {
     ctx.fillStyle = C.BG; ctx.fillRect(0, 0, W, H);
-    text(ctx, 'FEHLER:', 4, 50, C.ORANGE);
-    text(ctx, 'NAMEN FEHLEN', 4, 62);
-    text(ctx, 'HTTP-SERVER', 4, 80);
-    text(ctx, 'NOETIG', 4, 92);
+    text(ctx, 'ERROR:', 4, 50, C.ORANGE);
+    text(ctx, 'NAMES MISSING', 4, 62);
+    text(ctx, 'NEEDS A', 4, 80);
+    text(ctx, 'HTTP SERVER', 4, 92);
     console.error(e);
     return;
   }

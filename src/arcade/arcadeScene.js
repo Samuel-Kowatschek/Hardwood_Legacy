@@ -1,21 +1,23 @@
-// Arcade-Moment (Key Game): Intro -> Minispiel (5-15 Sek.) -> Ergebnis. Liefert Qualitaet 0..1 an den Flow.
+// Arcade-Moment (Key Game): Intro (inkl. aktiver Boni) -> Minigame (5-15 Sek.) -> Ergebnis. Liefert Qualitaet 0..1.
 import { Scene } from '../scenes/scene.js';
 import { TextBox } from '../ui.js';
 import { C, tiny } from '../gfx.js';
 import { playMusic } from '../systems/audio.js';
+import { t } from '../i18n/index.js';
 import { drawBattle } from './common.js';
 import { ShotMeter } from './shotMeter.js';
 import { Clutch } from './clutch.js';
 import { FastBreak } from './fastBreak.js';
 import { DefenseStop } from './defenseStop.js';
+import { Drive } from './drive.js';
+import { Rebound } from './rebound.js';
+import { Pass } from './pass.js';
+import { FreeThrow } from './freeThrow.js';
 
-const GAMES = { shot: ShotMeter, clutch: Clutch, fast: FastBreak, defense: DefenseStop };
-const INTRO = {
-  shot: 'SHOT-METER! Druecke A, wenn der Marker in der orangen Zone ist. 3 Wuerfe.',
-  clutch: 'BUZZER-BEATER! Ein Wurf. Triff die Zone, bevor die Uhr ablaeuft. Achtung, Fakes!',
-  fast: 'FAST-BREAK! Haemmere A fuer Tempo, dann A in der Mitte fuer den Dunk!',
-  defense: 'DEFENSE-STOP! Druecke die Richtung, bevor der Kreis zu ist. Spaet = Steal!',
-};
+const GAMES = { shot: ShotMeter, clutch: Clutch, fast: FastBreak, defense: DefenseStop, drive: Drive, rebound: Rebound, pass: Pass, ft: FreeThrow };
+export const ARCADE_KINDS = Object.keys(GAMES);
+// Welche Perk-Modifikatoren fuer welches Minigame zaehlen
+const MOD_KEYS = { shot: ['zone'], clutch: ['zone', 'time'], fast: ['fast'], defense: ['def'], drive: ['drive'], rebound: ['reb'], pass: ['pass'], ft: ['ft'] };
 
 export class ArcadeScene extends Scene {
   constructor(run, opts) {
@@ -23,11 +25,14 @@ export class ArcadeScene extends Scene {
     this.run = run;
     this.opts = { scoreLine: [98, 99], situation: '', pressure: 0.2, ...opts };
     this.phase = 'intro';
+    this.noStats = true;
+    const src = new Set();
+    for (const k of MOD_KEYS[this.opts.kind] || []) for (const n of this.opts.mods?.src?.[k] || []) src.add(n);
+    this.bonus = [...src];
   }
   enter() {
     playMusic('arcade');
-    const o = this.opts;
-    this.box = new TextBox(`${o.title}! ${INTRO[o.kind]}`);
+    this.box = new TextBox(`${this.opts.title}! ${t('arcade.intro.' + this.opts.kind)}`);
   }
   update() {
     if (this.phase === 'intro') {
@@ -39,8 +44,9 @@ export class ArcadeScene extends Scene {
   }
   draw(ctx) {
     if (this.phase === 'intro') {
-      drawBattle(ctx, this, this.t, { showHoop: this.opts.kind !== 'defense' });
+      drawBattle(ctx, this, this.t, { showHoop: !['defense', 'pass'].includes(this.opts.kind) });
       tiny(ctx, this.opts.title, 6, 32, C.ORANGE);
+      if (this.bonus.length) tiny(ctx, t('arcade.bonus', { x: this.bonus.join(', ').toUpperCase() }).slice(0, 18), 6, 39, C.WHITE);
       this.box.draw(ctx, this.t);
       return;
     }

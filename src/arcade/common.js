@@ -44,3 +44,25 @@ export function drawBattle(ctx, s, t, { oppDx = 0, myFrame = null, showHoop = tr
 }
 
 export { C, text, tiny, box, bar, ball };
+
+// Horizontaler Meter mit oranger Zone und weisser And-One-Mitte
+export const MX = 12, MW = 136;
+export function drawMeter(ctx, m, zc, zw, inner, y = 117) {
+  ctx.fillStyle = C.WHITE; ctx.fillRect(MX - 1, y, MW + 2, 10);
+  ctx.fillStyle = C.DARK; ctx.fillRect(MX, y + 1, MW, 8);
+  ctx.fillStyle = C.ORANGE;
+  ctx.fillRect(MX + Math.round((zc - zw / 2) * MW), y + 1, Math.max(2, Math.round(zw * MW)), 8);
+  if (inner) {
+    ctx.fillStyle = C.WHITE;
+    ctx.fillRect(MX + Math.round((zc - inner / 2) * MW), y + 2, Math.max(1, Math.round(inner * MW)), 6);
+  }
+  ctx.fillStyle = C.WHITE;
+  ctx.fillRect(MX + Math.round(m * MW) - 1, y - 3, 3, 16);
+  ctx.fillStyle = C.DARK;
+  ctx.fillRect(MX + Math.round(m * MW), y - 2, 1, 14);
+}
+// Ergebnis eines Meter-Treffers
+export function meterHit(m, zc, zw, inner) {
+  const d = Math.abs(m - zc);
+  return { make: d <= zw / 2, andOne: d <= inner / 2 };
+}

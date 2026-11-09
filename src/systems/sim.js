@@ -30,45 +30,77 @@ export function injuryChance(p) {
   return clamp(c * perkProduct(p.perks, 'injury'), 0.02, 0.6);
 }
 
-export function simulateSeason(run) {
+// ---- Season in Abschnitten simulieren (fuer Unterbrechungen durch Events) ----
+export function startSeason(run) {
+  return {
+    g: 0, out: 0, restApplied: 0, injury: null,
+    recs: run.teams.map(t => ({ id: t.id, w: 0, l: 0, pct: 0, conf: t.conf })),
+    pts: 0, reb: 0, ast: 0, gp: 0,
+  };
+}
+
+// Simuliert bis Spiel toGame (inkl.). Liefert ggf. eine neue Verletzung zurueck.
+export function simTo(run, st, toGame) {
   const { p, rng } = run;
-  const teams = run.teams;
-  const avg = teams.reduce((s, t) => s + powerOf(run, t.id), 0) / teams.length;
-  const recs = teams.map(t => {
-    const pw = powerOf(run, t.id);
-    const pct = clamp(0.5 + (pw - avg) * S.winSlope + rng.gauss(0, 0.04), 0.12, 0.88);
-    let w = 0;
-    for (let g = 0; g < S.games; g++) if (rng.next() < pct) w++;
-    return { id: t.id, w, l: S.games - w, pct: w / S.games, conf: t.conf };
-  });
-  // Verletzung waehrend der Saison
+  const n = Math.min(S.games, toGame) - st.g;
+  if (n <= 0) return null;
+  // Geplante Pausen aus Karten (Load Management etc.)
+  const rest = (run.cur.injuryGames || 0) - st.restApplied;
+  if (rest > 0) { st.out += rest; st.restApplied += rest; }
   let injury = null;
-  let gp = S.games - run.cur.injuryGames;
-  if (rng.chance(injuryChance(p))) {
+  if (!st.injury && rng.chance(injuryChance(p) * n / S.games * 1.2)) {
     const major = rng.chance(0.25);
-    const games = major ? rng.int(30, 55) : rng.int(6, 20);
-    injury = { major, games };
-    gp -= games;
+    injury = { major, games: major ? rng.int(25, 50) : rng.int(5, 16) };
+    st.injury = injury;
+    st.out += injury.games;
     p.body = clamp(p.body - (major ? 14 : 5), 0, 100);
     if (major) p.form = clamp(p.form - 3, 20, 99);
   }
-  gp = clamp(gp, 5, S.games);
-  // Eigenes Team: Record leicht nach Ausfaellen korrigieren
-  const mine = recs[p.teamId];
-  if (gp < S.games) {
-    const miss = S.games - gp;
-    const lost = Math.round(miss * 0.15);
-    mine.w = clamp(mine.w - lost, 5, S.games); mine.l = S.games - mine.w; mine.pct = mine.w / S.games;
+  const outNow = Math.min(n, st.out);
+  st.out -= outNow;
+  const played = n - outNow;
+  const teams = run.teams;
+  const avg = teams.reduce((sum, t) => sum + powerOf(run, t.id), 0) / teams.length;
+  for (const r of st.recs) {
+    let pw = powerOf(run, r.id);
+    if (r.id === p.teamId && n) pw -= (outNow / n) * (ovr(p) - S.leagueStarOvr) * (1 - S.teamWeight) + (outNow / n) * 1.5;
+    const pct = clamp(0.5 + (pw - avg) * S.winSlope + rng.gauss(0, 0.05), 0.1, 0.9);
+    for (let g = 0; g < n; g++) if (rng.next() < pct) r.w++; else r.l++;
+    r.pct = r.w / Math.max(1, r.w + r.l);
   }
   const o = ovr(p), arch = archetypeById(p.arch);
   const ppg = clamp(4 + (o - 45) * 0.75 + arch.ppg + run.cur.usage + rng.gauss(0, 1.5), 2, 38);
   const rpg = clamp(2.5 + (o - 45) * 0.12 + arch.rpg + perkSum(p.perks, 'rpg') + rng.gauss(0, 0.8), 1, 16);
-  const apg = clamp(1.5 + (o - 45) * 0.1 + arch.apg + rng.gauss(0, 0.7), 0.5, 12);
+  const apg = clamp(1.5 + (o - 45) * 0.1 + arch.apg + perkSum(p.perks, 'apg') + rng.gauss(0, 0.7), 0.5, 12);
+  st.pts += ppg * played; st.reb += rpg * played; st.ast += apg * played; st.gp += played;
+  st.g += n;
+  return injury;
+}
+
+export function standingsOf(st) {
   const standings = { E: [], W: [] };
-  recs.slice().sort((a, b) => b.pct - a.pct || b.id - a.id).forEach(r => standings[r.conf].push(r));
-  const conf = teams[p.teamId].conf;
+  st.recs.slice().sort((a, b) => b.pct - a.pct || b.w - a.w || b.id - a.id).forEach(r => standings[r.conf].push(r));
+  return standings;
+}
+
+export function finishSeason(run, st) {
+  const p = run.p;
+  const standings = standingsOf(st);
+  const conf = run.teams[p.teamId].conf;
   const rank = standings[conf].findIndex(r => r.id === p.teamId) + 1;
-  return { recs, standings, conf, rank, w: mine.w, l: mine.l, pct: mine.pct, gp, ppg, rpg, apg, ovr: o, injury };
+  const mine = st.recs[p.teamId];
+  const gp = Math.max(1, st.gp);
+  return {
+    recs: st.recs, standings, conf, rank, w: mine.w, l: mine.l, pct: mine.pct, gp: st.gp,
+    ppg: st.pts / gp, rpg: st.reb / gp, apg: st.ast / gp, ovr: ovr(p), injury: st.injury,
+  };
+}
+
+// Kompletter Durchlauf (Tests/Balancing)
+export function simulateSeason(run) {
+  const st = startSeason(run);
+  simTo(run, st, S.games);
+  return finishSeason(run, st);
 }
 
 // Siegchance eines einzelnen Playoff-Spiels (aus Sicht Team a)

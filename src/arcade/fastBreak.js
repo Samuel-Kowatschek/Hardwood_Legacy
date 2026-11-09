@@ -1,9 +1,10 @@
 // Fast-Break: A haemmern fuer Tempo, dann A im richtigen Moment fuer den Dunk.
-import { C, text, tiny, box, ball, hoop, platform } from './common.js';
+import { C, text, tiny, box, ball, drawMeter, MX, MW } from './common.js';
+import { t } from '../i18n/index.js';
 import { input } from '../input.js';
 import { sfx } from '../systems/audio.js';
 import { clamp } from '../systems/rng.js';
-import { drawSprite, renderSprite } from '../sprites/spriteGen.js';
+import { drawSprite } from '../sprites/spriteGen.js';
 
 const GOAL = 104;
 
@@ -35,17 +36,17 @@ export class FastBreak {
       if (this.tm > 1) { this.tm = 1; this.tdir = -1; } else if (this.tm < 0) { this.tm = 0; this.tdir = 1; }
       if (input.pressed('a') || this.f > 150) {
         const d = Math.abs(this.tm - 0.5);
-        this.timing = this.f > 150 ? 0.1 : d <= this.win / 2 ? (d <= this.win * 0.15 ? 1 : 0.85) : d <= this.win ? 0.5 : 0.15;
+        this.timing = this.f > 150 ? 0.1 : d <= this.win / 8 ? 1 : d <= this.win / 2 ? 0.85 : d <= this.win ? 0.5 : 0.15;
         this.phase = 'dunk'; this.f = 0;
-        if (this.timing >= 0.85) { sfx.dunk(); sfx.crowd(1.5); } else if (this.timing >= 0.5) sfx.swish(); else sfx.miss();
+        if (this.timing >= 0.85) { sfx.dunk(); sfx.crowd(1.5); if (this.timing >= 1) sfx.fanfare(); } else if (this.timing >= 0.5) sfx.swish(); else sfx.miss();
       }
     } else if (this.f > 60) {
       this.done = true;
       this.q = clamp(0.4 * this.mash + 0.6 * this.timing - (this.caught ? 0.1 : 0), 0, 1);
-      this.resultText = this.timing >= 0.85 ? 'POSTER-DUNK! Die Bank flippt aus.' : this.timing >= 0.5 ? 'Korbleger rein. Nicht schoen, aber zaehlt.' : 'Geblockt! Der Verteidiger war da.';
+      this.resultText = this.timing >= 1 ? t('arcade.fastPoster') : this.timing >= 0.85 ? t('arcade.fastDunk') : this.timing >= 0.5 ? t('arcade.fastLay') : t('arcade.fastBlock');
     }
   }
-  draw(ctx, t) {
+  draw(ctx, tt) {
     const { run, opts } = this.s;
     const p = run.p, team = run.teams[p.teamId], opp = opts.opp;
     // Court in Seitenansicht
@@ -59,9 +60,9 @@ export class FastBreak {
     tiny(ctx, `${opts.scoreLine[0]}-${opts.scoreLine[1]}  ${opts.situation}`.slice(0, 36), 4, 11, C.ORANGE);
     // Verfolger
     if (this.phase === 'run') {
-      drawSprite(ctx, opp.star.look, opp.colors, Math.round(this.chaseX), 50, { view: 'side', frame: Math.floor(t / 8) % 2 ? 'run0' : 'run1' });
-      drawSprite(ctx, p.look, team.colors, Math.round(this.x), 50, { view: 'side', frame: Math.floor(t / (this.speed > 1 ? 4 : 8)) % 2 ? 'run0' : 'run1', age: p.age });
-      ball(ctx, Math.round(this.x) + 12, 62 + (Math.floor(t / 6) % 2) * 6);
+      drawSprite(ctx, opp.star.look, opp.colors, Math.round(this.chaseX), 50, { view: 'side', frame: Math.floor(tt / 8) % 2 ? 'run0' : 'run1' });
+      drawSprite(ctx, p.look, team.colors, Math.round(this.x), 50, { view: 'side', frame: Math.floor(tt / (this.speed > 1 ? 4 : 8)) % 2 ? 'run0' : 'run1', age: p.age });
+      ball(ctx, Math.round(this.x) + 12, 62 + (Math.floor(tt / 6) % 2) * 6);
     } else {
       const k = this.phase === 'jump' ? Math.min(1, this.f / 20) : 1;
       const jx = GOAL + 6 * k, jy = 50 - 22 * k + (this.phase === 'dunk' ? Math.min(22, this.f) : 0);
@@ -72,22 +73,18 @@ export class FastBreak {
     }
     box(ctx, 0, 96, 160, 48);
     if (this.phase === 'run') {
-      text(ctx, 'A HAEMMERN!', 8, 104, C.ORANGE);
+      text(ctx, t('arcade.mash'), 8, 104, C.ORANGE);
       ctx.fillStyle = C.WHITE; ctx.fillRect(11, 117, 138, 8);
       ctx.fillStyle = C.DARK; ctx.fillRect(12, 118, 136, 6);
       ctx.fillStyle = C.ORANGE; ctx.fillRect(12, 118, Math.round(136 * clamp(this.x / GOAL, 0, 1)), 6);
-      tiny(ctx, 'TEMPO', 12, 129); 
+      tiny(ctx, t('arcade.speed'), 12, 129);
       ctx.fillStyle = C.WHITE; ctx.fillRect(36, 129, Math.round(this.speed / 2.6 * 112), 4);
     } else if (this.phase === 'jump') {
-      text(ctx, 'JETZT A!', 8, 104, C.ORANGE);
-      const MX = 12, MW = 136;
-      ctx.fillStyle = C.WHITE; ctx.fillRect(MX - 1, 117, MW + 2, 10);
-      ctx.fillStyle = C.DARK; ctx.fillRect(MX, 118, MW, 8);
-      ctx.fillStyle = C.ORANGE; ctx.fillRect(MX + Math.round((0.5 - this.win / 2) * MW), 118, Math.round(this.win * MW), 8);
-      ctx.fillStyle = C.WHITE; ctx.fillRect(MX + Math.round(this.tm * MW) - 1, 114, 3, 16);
-      tiny(ctx, 'IN DER MITTE = DUNK', 80, 135, C.WHITE, 'center');
+      text(ctx, t('arcade.now'), 8, 104, C.ORANGE);
+      drawMeter(ctx, this.tm, 0.5, this.win, this.win / 4);
+      tiny(ctx, t('arcade.center'), 80, 133, C.WHITE, 'center');
     } else {
-      text(ctx, this.timing >= 0.85 ? 'SLAM DUNK!' : this.timing >= 0.5 ? 'KORBLEGER' : 'GEBLOCKT!', 80, 116, this.timing >= 0.5 ? C.ORANGE : C.WHITE, 'center');
+      text(ctx, this.timing >= 1 ? t('arcade.poster') : this.timing >= 0.85 ? t('arcade.slam') : this.timing >= 0.5 ? t('arcade.layup') : t('arcade.blocked'), 80, 116, this.timing >= 0.5 ? C.ORANGE : C.WHITE, 'center');
     }
   }
 }

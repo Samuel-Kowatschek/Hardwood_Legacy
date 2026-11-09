@@ -2,7 +2,21 @@
 // 3x5-Mini-Font, Gen-1-Textboxen, Cursor/Pfeile.
 
 export const W = 160, H = 144;
-export const C = { BG: '#1e3a8a', DARK: '#142a63', WHITE: '#ffffff', ORANGE: '#f97316' };
+// Farbrollen. 'classic' ist das Haupt-Schema (Blau/Weiss/Orange), 'pocket' die Alternative.
+export const SCHEMES = {
+  classic: { BG: '#1e3a8a', DARK: '#142a63', WHITE: '#ffffff', ORANGE: '#f97316' },
+  pocket: { BG: '#306230', DARK: '#0f380f', WHITE: '#e0f8d0', ORANGE: '#c4f02a' },
+};
+export const SCHEME_LIST = Object.keys(SCHEMES);
+export const C = { ...SCHEMES.classic };
+export function setScheme(name) {
+  Object.assign(C, SCHEMES[name] || SCHEMES.classic);
+  try {
+    const r = document.documentElement.style;
+    r.setProperty('--bg', C.BG); r.setProperty('--dark', C.DARK); r.setProperty('--white', C.WHITE); r.setProperty('--orange', C.ORANGE);
+    document.querySelector('meta[name=theme-color]')?.setAttribute('content', C.BG);
+  } catch { /* kein DOM */ }
+}
 const FONT = '"Press Start 2P"';
 
 let fontOk = false;
@@ -118,7 +132,9 @@ const TINY = {
 const UMLAUT = { 'Ä': 'AE', 'Ö': 'OE', 'Ü': 'UE', 'ß': 'SS', 'ä': 'AE', 'ö': 'OE', 'ü': 'UE' };
 
 export function tinyWidth(str) { return tinyNorm(str).length * 4 - 1; }
-function tinyNorm(str) { return String(str).replace(/[ÄÖÜäöüß]/g, m => UMLAUT[m]).toUpperCase(); }
+export function tinyNorm(str) {
+  return String(str).replace(/[ÄÖÜäöüß]/g, m => UMLAUT[m]).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+}
 
 export function tiny(ctx, str, x, y, color = C.WHITE, align = 'left') {
   str = tinyNorm(str);

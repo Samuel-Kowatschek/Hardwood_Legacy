@@ -34,9 +34,7 @@ export class LogScene extends Scene {
     const p = this.run.p;
     const shown = this.lines.slice(-7);
     shown.forEach((l, i) => text(ctx, l.str.slice(0, 19), 2, 17 + i * 11, l.color));
-    if (!this.box) {
-      drawSprite(ctx, p.look, this.run.teams[p.teamId].colors, 140, 112, { frame: idleFrame(this.t), age: p.age });
-      if (!this.wait) tiny(ctx, '...', 80, 130, C.WHITE, 'center');
-    } else this.box.draw(ctx, this.t);
+    if (!this.box) drawSprite(ctx, p.look, this.run.teams[p.teamId].colors, 140, 112, { frame: idleFrame(this.t), age: p.age });
+    else this.box.draw(ctx, this.t);
   }
 }

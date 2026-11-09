@@ -16,11 +16,11 @@ export const BALANCE = {
   ],
   perkAfterSeasons: [1, 3, 6, 9, 12],
   milestones: [
-    { id: 'pts10', label: '10.000 PUNKTE', test: p => p.career.pts >= 10000 },
-    { id: 'pts20', label: '20.000 PUNKTE', test: p => p.career.pts >= 20000 },
-    { id: 'pts30', label: '30.000 PUNKTE', test: p => p.career.pts >= 30000 },
-    { id: 'fifty', label: '50-PUNKTE-SPIEL', test: p => p.flags.fifty },
-    { id: 'as10', label: '10X ALL-STAR', test: p => p.awards.allStar >= 10 },
+    { id: 'pts10', test: p => p.career.pts >= 10000 },
+    { id: 'pts20', test: p => p.career.pts >= 20000 },
+    { id: 'pts30', test: p => p.career.pts >= 30000 },
+    { id: 'fifty', test: p => p.flags.fifty },
+    { id: 'as10', test: p => p.awards.allStar >= 10 },
   ],
   sim: {
     games: 82,
@@ -41,5 +41,5 @@ export const BALANCE = {
 export function tierFor(score) {
   let idx = 0;
   BALANCE.tiers.forEach(([min], i) => { if (score >= min) idx = i; });
-  return { idx, name: BALANCE.tiers[idx][1] };
+  return { idx, name: BALANCE.tiers[idx][1] }; // Anzeigename: i18n 'tiers'[idx]
 }

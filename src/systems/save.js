@@ -16,7 +16,7 @@ function write(key, val) {
   try { localStorage.setItem(key, JSON.stringify(val)); } catch { /* Storage blockiert: Spiel laeuft trotzdem */ }
 }
 
-const META_DEFAULT = { runs: 0, best: 0, totalRings: 0, fmvps: 0, bestTier: 0, unlocked: [] };
+const META_DEFAULT = { runs: 0, best: 0, totalRings: 0, fmvps: 0, bestTier: 0, unlocked: [], scores: [] };
 
 export const save = {
   meta() { return read(KEYS.meta, META_DEFAULT); },

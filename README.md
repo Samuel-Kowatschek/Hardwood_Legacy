@@ -16,17 +16,23 @@ Dann `http://localhost:8000` öffnen. Eigener Seed: `http://localhost:8000/?seed
 
 | Aktion | Keyboard | Touch |
 |---|---|---|
-| A (OK / Werfen) | Space, Z, Enter | A-Button oder Tap auf den Screen |
-| B (Zurück / Reroll) | X, Esc | B-Button |
-| Richtung | Pfeiltasten / WASD | D-Pad |
-| Ton an/aus | M | TON-Button |
+| OK / Werfen | Space, Enter, Z | OK-Button oder Tap auf den Screen |
+| Zurück | Esc, X | BACK-Button |
+| Richtung | Pfeiltasten | D-Pad |
+| Stats (jederzeit im Run) | S | STATS-Button |
+| Ton an/aus | M | SOUND-Button |
+
+Sprache (Englisch/Deutsch) und Farbschema (Classic/Pocket) unter **Options**. Neue Sprache: `src/i18n/<lang>.js` + `cards.<lang>.js` anlegen und in `src/i18n/index.js` eintragen.
 
 ## Ablauf
 
-`Titel -> Spieler erstellen -> [Offseason-Karte -> Events -> Season-Sim -> Playoffs (Key Games) -> Awards -> Retire?] -> Legacy-Karte`
+`Titel -> Spieler erstellen -> [Offseason-Karte -> Season-Sim (unterbrochen von Events) -> Playoffs (Key Games) -> Awards -> Retire?] -> Legacy-Karte`
 
-- **Retire-Gamble:** Nach jeder Season zeigt der Screen den Legacy-Score "wenn du jetzt retirest", Trend, Verletzungsrisiko und Multiplikator. *Went Out On Top* (+25 %), *Last Dance* (+15 %), *Overstayed* (-10 % pro schwacher Season in Folge, kumulativ). Harter Cap: 15 Seasons oder Körper = 0.
-- **Arcade-Momente** (Play-In, Conf Finals, Finals, 50-Punkte-Chance): Shot-Meter, Buzzer-Beater (Clutch), Fast-Break, Defense-Stop. Ergebnis verschiebt die Siegchance, ist aber kein reines Pass/Fail.
+- **Karten:** 71 Entscheidungs- und Event-Karten (Offseason, Saisonmitte, Saisonende), jede höchstens einmal pro Run.
+
+- **Retire-Gamble:** Der Legacy-Score bleibt bis zum Retire verdeckt. Der Screen zeigt Multiplikator, Trend, Verletzungsrisiko und Resume. *Went Out On Top* (+25 %), *Last Dance* (+15 %), *Overstayed* (-10 % pro schwacher Season in Folge, kumulativ). Harter Cap: 15 Seasons oder Körper = 0.
+- **Arcade-Momente** (Play-In, Conf Finals, Finals, 50-Punkte-Chance): Shot-Meter (mit And-One-Mitte), Buzzer-Beater, Fast-Break, Defense-Stop, Drive, Rebound, Playmaker, Freiwürfe. Jeder Archetyp bekommt alle, nur unterschiedlich gewichtet. Skills und Perks verändern Zonen und Zeitfenster.
+- **Ende:** lokaler Rang, persönlicher Rekord und ein geschätztes Perzentil (Referenz: simulierte Karrieren in `src/data/scoreDist.js`). Hall of Fame und Rekorde liegen im `localStorage` des Browsers.
 - **Perks** nach Season 1, 3, 6, 9, 12 (1 aus 3) mit Synergien.
 - **Meta-Progress:** Playmaker, Lockdown und einige Perks werden freigeschaltet; Hall of Fame (Top 10) in `localStorage`; frühere Spieler können als Rivalen zurückkehren.
 
@@ -41,8 +47,9 @@ src/main.js              Game-Loop, Scaling, Szenen + Transitions
 src/flow.js              Run-Ablauf (Season-Loop, Playoffs, Key Games)
 src/gfx.js, src/ui.js    Pixel-Font, Mini-Font, Textboxen, Menüs
 src/input.js             Keyboard + Touch
-src/scenes/              title, create, card, sim, log (Playoffs), awards, perk, retire, legacy, hof
-src/arcade/              shotMeter, clutch, fastBreak, defenseStop
+src/scenes/              title, options, help, create, card, sim, log (Playoffs), awards, perk, retire, legacy, hof, stats
+src/i18n/                en.js, de.js (+ cards.<lang>.js)
+src/arcade/              shotMeter, clutch, fastBreak, defenseStop, drive, rebound, pass, freeThrow
 src/sprites/             prozeduraler Sprite-Generator (Layer + Palette-Swap)
 src/names/               nameGen.js + overrides.json
 src/systems/             rng, league, sim, awards, legacy, save, audio

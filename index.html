@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1e3a8a">
+<meta name="description" content="Hardwood Legacy - a roguelike basketball career game. One run = one career.">
 <title>Hardwood Legacy</title>
 <style>
   @font-face {
@@ -13,42 +14,58 @@
   }
   :root { --bg: #1e3a8a; --dark: #142a63; --white: #ffffff; --orange: #f97316; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; touch-action: none;
-    -webkit-user-select: none; user-select: none; font-family: 'Press Start 2P', monospace; }
-  body { display: flex; flex-direction: column; }
-  #screen { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; }
+  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; touch-action: none; overscroll-behavior: none;
+    -webkit-user-select: none; user-select: none; font-family: 'Press Start 2P', monospace; color: var(--white); }
+  body { display: flex; flex-direction: column; height: 100dvh; padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left); }
+  #screen { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; min-width: 0; }
   canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; background: var(--bg); }
-  #bar { height: 30px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--white); font-size: 8px; }
-  #bar span { opacity: 1; }
-  #mute { background: var(--bg); color: var(--white); border: 2px solid var(--white);
-    font: 8px 'Press Start 2P', monospace; padding: 5px 6px; cursor: pointer; }
-  @media (pointer: coarse) { #bar span { display: none; } }
-  #mute:focus { outline: none; }
-  #pad { display: none; height: 190px; padding: 8px 16px calc(16px + env(safe-area-inset-bottom)); position: relative; }
-  @media (pointer: coarse) { #pad { display: block; } }
-  .dpad { position: absolute; left: 16px; top: 18px; width: 138px; height: 138px; }
-  .dpad div, .ab div, .start { position: absolute; background: var(--bg); border: 2px solid var(--white); color: var(--white);
-    display: flex; align-items: center; justify-content: center; font-size: 12px; }
-  .dpad div.on, .ab div.on { background: var(--orange); }
-  .dpad [data-btn=up] { left: 46px; top: 0; width: 46px; height: 46px; }
-  .dpad [data-btn=down] { left: 46px; top: 92px; width: 46px; height: 46px; }
-  .dpad [data-btn=left] { left: 0; top: 46px; width: 46px; height: 46px; }
-  .dpad [data-btn=right] { left: 92px; top: 46px; width: 46px; height: 46px; }
-  .ab { position: absolute; right: 16px; top: 28px; width: 150px; height: 120px; }
-  .ab div { border-radius: 50%; width: 64px; height: 64px; font-size: 14px; }
+  #pad { display: none; position: relative; height: 200px; flex: none; padding-bottom: env(safe-area-inset-bottom); }
+  .btn { position: absolute; background: var(--bg); border: 2px solid var(--white); color: var(--white);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; touch-action: none; }
+  .btn.on { background: var(--orange); }
+  .dpad { position: absolute; left: 14px; top: 16px; width: 150px; height: 150px; }
+  .dpad .btn { width: 50px; height: 50px; }
+  .dpad [data-btn=up] { left: 50px; top: 0; } .dpad [data-btn=down] { left: 50px; top: 100px; }
+  .dpad [data-btn=left] { left: 0; top: 50px; } .dpad [data-btn=right] { left: 100px; top: 50px; }
+  .ab { position: absolute; right: 14px; top: 22px; width: 160px; height: 140px; }
+  .ab .round { border-radius: 50%; width: 70px; height: 70px; font-size: 10px; }
   .ab [data-btn=a] { right: 0; top: 0; border-color: var(--orange); }
-  .ab [data-btn=b] { left: 0; top: 46px; }
+  .ab [data-btn=b] { left: 0; top: 50px; }
+  .meta { position: absolute; left: 50%; transform: translateX(-50%); bottom: 10px; display: flex; gap: 10px; }
+  .meta .btn { position: static; padding: 6px 8px; font-size: 8px; }
+  /* Schmale Handys: Pad kompakter */
+  @media (max-width: 380px) {
+    .dpad { left: 8px; width: 126px; height: 126px; }
+    .dpad .btn { width: 42px; height: 42px; }
+    .dpad [data-btn=up] { left: 42px; } .dpad [data-btn=down] { left: 42px; top: 84px; }
+    .dpad [data-btn=left] { top: 42px; } .dpad [data-btn=right] { left: 84px; top: 42px; }
+    .ab { right: 8px; width: 124px; }
+    .ab .round { width: 58px; height: 58px; }
+  }
+  /* Touch-Geraete: Pad anzeigen */
+  @media (pointer: coarse) { #pad { display: block; } }
+  /* Touch + Querformat: Pad links/rechts neben dem Screen */
+  @media (pointer: coarse) and (orientation: landscape) {
+    body { flex-direction: row; }
+    #pad { position: absolute; inset: 0; height: auto; pointer-events: none; }
+    #pad .btn { pointer-events: auto; }
+    .dpad { left: 12px; top: 50%; transform: translateY(-50%); }
+    .ab { right: 12px; top: 50%; transform: translateY(-50%); width: 120px; height: 160px; }
+    .ab [data-btn=a] { right: 0; top: 0; } .ab [data-btn=b] { left: 0; top: 80px; }
+    .meta { left: 12px; bottom: 8px; transform: none; flex-direction: column; }
+    #screen { padding: 0 170px; }
+  }
 </style>
 </head>
 <body>
   <div id="screen"><canvas id="game" width="160" height="144"></canvas></div>
-  <div id="bar"><span>PFEILE &middot; Z/SPACE = A &middot; X = B</span><button id="mute" aria-label="Ton an/aus">TON</button></div>
   <div id="pad">
     <div class="dpad">
-      <div data-btn="up">&#9650;</div><div data-btn="left">&#9664;</div>
-      <div data-btn="right">&#9654;</div><div data-btn="down">&#9660;</div>
+      <div class="btn" data-btn="up">&#9650;</div><div class="btn" data-btn="left">&#9664;</div>
+      <div class="btn" data-btn="right">&#9654;</div><div class="btn" data-btn="down">&#9660;</div>
     </div>
-    <div class="ab"><div data-btn="b">B</div><div data-btn="a">A</div></div>
+    <div class="ab"><div class="btn round" data-btn="b">BACK</div><div class="btn round" data-btn="a">OK</div></div>
+    <div class="meta"><div class="btn" data-btn="stats">STATS</div><div class="btn" data-btn="mute">SOUND</div></div>
   </div>
   <script type="module" src="src/main.js"></script>
 </body>

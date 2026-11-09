@@ -3,9 +3,9 @@ import { C, text, tiny, box, drawBattle } from './common.js';
 import { input } from '../input.js';
 import { sfx } from '../systems/audio.js';
 import { clamp } from '../systems/rng.js';
+import { t } from '../i18n/index.js';
 
 const DIRS = ['up', 'down', 'left', 'right'];
-const LABEL = { up: 'HOCH', down: 'RUNTER', left: 'LINKS', right: 'RECHTS' };
 
 function arrow(ctx, cx, cy, dir, color) {
   ctx.fillStyle = color;
@@ -52,29 +52,29 @@ export class DefenseStop {
       const perfect = ok && this.cur.t >= this.win * 0.55;
       if (ok) { this.hits++; sfx.hit(); } else sfx.miss();
       if (perfect) this.perfects++;
-      this.fb = { t: 20, s: !pressed ? 'ZU LANGSAM' : !ok ? 'FALSCH!' : perfect ? 'STEAL!' : 'GESTOPPT!', ok };
+      this.fb = { t: 20, s: !pressed ? t('arcade.slow') : !ok ? t('arcade.wrong') : perfect ? t('arcade.steal') : t('arcade.stopped'), ok };
       this.lastDir = this.cur.dir;
       this.cur = null; this.f = -this.gap; this.i++;
       if (this.i >= this.n) {
         this.done = true;
         this.q = clamp((this.hits + 0.2 * this.perfects) / this.n, 0, 1);
-        this.resultText = `${this.hits}/${this.n} Moves gestoppt!` + (this.perfects ? ` ${this.perfects} Steals.` : '');
+        this.resultText = t('arcade.defRes', { h: this.hits, n: this.n }) + (this.perfects ? t('arcade.defSteals', { n: this.perfects }) : '');
       }
     }
   }
-  draw(ctx, t) {
+  draw(ctx, tt) {
     const dx = this.cur ? (this.cur.dir === 'left' ? -6 : this.cur.dir === 'right' ? 6 : 0) : 0;
-    drawBattle(ctx, this.s, t, { oppDx: dx, showHoop: false });
+    drawBattle(ctx, this.s, tt, { oppDx: dx, showHoop: false });
     box(ctx, 0, 96, 160, 48);
-    text(ctx, `MOVE ${Math.min(this.i + 1, this.n)}/${this.n}`, 8, 104);
-    tiny(ctx, `STOPS ${this.hits}`, 152, 105, C.ORANGE, 'right');
+    text(ctx, t('arcade.move', { i: Math.min(this.i + 1, this.n), n: this.n }), 8, 104);
+    tiny(ctx, t('arcade.stops', { n: this.hits }), 152, 105, C.ORANGE, 'right');
     if (this.cur) {
       const k = 1 - this.cur.t / this.win;
       ring(ctx, 80, 126, 3 + Math.round(12 * k), this.cur.t >= this.win * 0.55 ? C.ORANGE : C.WHITE);
       arrow(ctx, 80, 126, this.cur.dir, C.WHITE);
-      tiny(ctx, LABEL[this.cur.dir], 104, 124, C.WHITE);
+      tiny(ctx, t('arcade.dirs.' + this.cur.dir), 104, 124, C.WHITE);
       arrow(ctx, 96, 40, this.cur.dir, C.ORANGE);
     } else if (this.fb) text(ctx, this.fb.s, 80, 122, this.fb.ok ? C.ORANGE : C.WHITE, 'center');
-    else tiny(ctx, 'RICHTUNG IM TAKT DRUECKEN', 80, 124, C.WHITE, 'center');
+    else tiny(ctx, t('arcade.defHint'), 80, 124, C.WHITE, 'center');
   }
 }

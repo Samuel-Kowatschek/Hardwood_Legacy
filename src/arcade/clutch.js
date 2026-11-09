@@ -1,10 +1,9 @@
-// Clutch-Shot: Buzzer-Beater, 1 Wurf, kleine Zone, Uhr laeuft, Verteidiger tauscht per Fake die Zone.
-import { C, text, tiny, box, ball, drawBattle } from './common.js';
+// Clutch-Shot: Buzzer-Beater, 1 Wurf, kleine Zone, Uhr laeuft, Verteidiger verschiebt per Fake die Zone.
+import { C, text, tiny, box, ball, drawBattle, drawMeter, meterHit } from './common.js';
 import { input } from '../input.js';
 import { sfx } from '../systems/audio.js';
 import { clamp } from '../systems/rng.js';
-
-const MX = 12, MW = 136;
+import { t } from '../i18n/index.js';
 
 export class Clutch {
   constructor(s) {
@@ -12,7 +11,8 @@ export class Clutch {
     const p = s.run.p, m = s.opts.mods, pr = s.opts.pressure, rng = s.run.rng;
     this.total = Math.round((5 + m.time + (p.skills.clu - 50) / 40) * 60);
     this.clock = this.total;
-    this.zw = clamp(0.11 * (0.75 + p.skills.clu / 200) * (1 + m.zone) * (1 - pr * 0.3), 0.05, 0.3);
+    this.zw = clamp(0.11 * (0.7 + (p.skills.clu + p.skills.sho) / 300) * (1 + m.zone) * (1 - pr * 0.3), 0.05, 0.32);
+    this.inner = this.zw * 0.25;
     this.zc = rng.float(0.2, 0.8);
     this.m = 0; this.dir = 1; this.v = 0.026 * (1 + pr * 0.4);
     this.fakeIn = rng.int(40, 70); this.oppDx = 0; this.fakeT = 0;
@@ -31,7 +31,6 @@ export class Clutch {
     if (this.clock % 60 === 0) sfx.tick();
     this.m += this.v * this.dir;
     if (this.m > 1) { this.m = 1; this.dir = -1; } else if (this.m < 0) { this.m = 0; this.dir = 1; }
-    // Fake-Defender-Bewegung: springt zur Seite und verschiebt die Zone
     if (--this.fakeIn <= 0) {
       this.fakeIn = rng.int(45, 80);
       this.oppDx = rng.chance(0.5) ? -8 : 8;
@@ -41,9 +40,7 @@ export class Clutch {
     }
     if (this.fakeT > 0 && --this.fakeT === 0) this.oppDx = 0;
     if (input.pressed('a')) {
-      const d = Math.abs(this.m - this.zc);
-      const make = d <= this.zw / 2;
-      this.res = { make, perfect: make && d <= this.zw * 0.2 };
+      this.res = meterHit(this.m, this.zc, this.zw, this.inner);
       this.fly = 1;
     } else if (this.clock <= 0) {
       this.res = { make: false, timeout: true };
@@ -54,11 +51,11 @@ export class Clutch {
   finish() {
     this.done = true;
     const r = this.res;
-    this.q = r.timeout ? 0 : r.perfect ? 1 : r.make ? 0.9 : 0.15;
-    this.resultText = r.timeout ? 'Die Uhr ist abgelaufen! Kein Wurf.' : r.make ? 'BUZZER-BEATER! Die Halle explodiert!' : 'Der Wurf ist zu kurz...';
+    this.q = r.timeout ? 0 : r.andOne ? 1 : r.make ? 0.9 : 0.15;
+    this.resultText = r.timeout ? t('arcade.clutchTime') : r.andOne ? t('arcade.clutchAnd') : r.make ? t('arcade.clutchMake') : t('arcade.clutchMiss');
   }
-  draw(ctx, t) {
-    drawBattle(ctx, this.s, t, { oppDx: this.oppDx, myFrame: this.fly && this.fly < 20 ? 'shoot' : null });
+  draw(ctx, tt) {
+    drawBattle(ctx, this.s, tt, { oppDx: this.oppDx, myFrame: this.fly && this.fly < 20 ? 'shoot' : null });
     if (this.fakeT > 0) text(ctx, '!', 126 + this.oppDx, 0, C.ORANGE);
     if (this.fly && !this.res.timeout) {
       const k = Math.min(1, this.fly / 26);
@@ -70,15 +67,12 @@ export class Clutch {
     } else if (!this.fly) ball(ctx, 30, 40);
     box(ctx, 0, 96, 160, 48);
     const sec = Math.max(0, this.clock / 60);
-    text(ctx, `0:0${sec.toFixed(1)}`, 8, 104, sec < 2 ? C.ORANGE : C.WHITE);
-    tiny(ctx, 'BUZZER-BEATER', 152, 105, C.ORANGE, 'right');
-    ctx.fillStyle = C.WHITE; ctx.fillRect(MX - 1, 117, MW + 2, 10);
-    ctx.fillStyle = C.DARK; ctx.fillRect(MX, 118, MW, 8);
-    ctx.fillStyle = C.ORANGE;
-    ctx.fillRect(MX + Math.round((this.zc - this.zw / 2) * MW), 118, Math.max(2, Math.round(this.zw * MW)), 8);
-    ctx.fillStyle = C.WHITE;
-    ctx.fillRect(MX + Math.round(this.m * MW) - 1, 114, 3, 16);
-    if (this.fly > 22) text(ctx, this.res.timeout ? 'ZU SPAET!' : this.res.make ? 'DRIN!!!' : 'DANEBEN', 80, 132, this.res.make ? C.ORANGE : C.WHITE, 'center');
-    else tiny(ctx, 'A = WERFEN', 80, 133, C.WHITE, 'center');
+    text(ctx, `0:0${sec.toFixed(1)}`, 8, 103, sec < 2 ? C.ORANGE : C.WHITE);
+    tiny(ctx, t('arcade.clutchLabel'), 152, 104, C.ORANGE, 'right');
+    drawMeter(ctx, this.m, this.zc, this.zw, this.inner);
+    if (this.fly > 22) {
+      const r = this.res;
+      text(ctx, r.timeout ? t('arcade.tooLate') : r.andOne ? t('arcade.andOne') : r.make ? t('arcade.good') : t('arcade.miss'), 80, 131, r.make ? C.ORANGE : C.WHITE, 'center');
+    } else tiny(ctx, t('arcade.shoot'), 80, 133, C.WHITE, 'center');
   }
 }

@@ -1,271 +1,271 @@
 {
-  "_comment": "Handgepflegte Parodien fuer Namen, bei denen die Auto-Regeln Quatsch erzeugen oder ein Wortwitz besser passt.",
-  "last": {
-    "Antetokounmpo": [
-      "Antetokumbo",
-      "Antetokoumpo"
-    ],
-    "Embiid": [
-      "Embeed"
-    ],
-    "Doncic": [
-      "Donkic",
-      "Dontchic"
-    ],
-    "Jokic": [
-      "Jolkic",
-      "Jokitch"
-    ],
-    "Tatum": [
-      "Tater"
-    ],
-    "Curry": [
-      "Currie",
-      "Kurry"
-    ],
-    "James": [
-      "Jaymes"
-    ],
-    "Durant": [
-      "Durand"
-    ],
-    "Leonard": [
-      "Lennard"
-    ],
-    "Lillard": [
-      "Lillyard"
-    ],
-    "Booker": [
-      "Bocker",
-      "Bookah"
-    ],
-    "Wembanyama": [
-      "Wembanyamba",
-      "Wembanyana"
-    ],
-    "Gilgeous-Alexander": [
-      "Gilgeous-Alex",
-      "Gilgus-Alexndr"
-    ],
-    "Edwards": [
-      "Edwerds"
-    ],
-    "Brunson": [
-      "Brunsen"
-    ],
-    "Mitchell": [
-      "Mitchel",
-      "Mitchelle"
-    ],
-    "Haliburton": [
-      "Haliburten"
-    ],
-    "Adebayo": [
-      "Adebayoh"
-    ],
-    "Butler": [
-      "Buttler"
-    ],
-    "Harden": [
-      "Hardin"
-    ],
-    "Westbrook": [
-      "Eastbrook",
-      "Westbrock"
-    ],
-    "Irving": [
-      "Irvine"
-    ],
-    "George": [
-      "Jorge"
-    ],
-    "Towns": [
-      "Townz"
-    ],
-    "Morant": [
-      "Moreant"
-    ],
-    "Young": [
-      "Yung"
-    ],
-    "Davis": [
-      "Davies"
-    ],
-    "Banchero": [
-      "Banchiro"
-    ],
-    "Holmgren": [
-      "Holmgreen"
-    ],
-    "Sabonis": [
-      "Sabonnis"
-    ],
-    "Fox": [
-      "Foxx"
-    ],
-    "Siakam": [
-      "Siakum"
-    ],
-    "Williamson": [
-      "Willyamson"
-    ],
-    "Ball": [
-      "Bawl"
-    ],
-    "Beal": [
-      "Beel"
-    ],
-    "Paul": [
-      "Pall"
-    ],
-    "Green": [
-      "Greene",
-      "Grean"
-    ],
-    "Thompson": [
-      "Tompsen"
-    ],
-    "Murray": [
-      "Murrey"
-    ],
-    "Porzingis": [
-      "Porzingiz"
-    ],
-    "Valanciunas": [
-      "Valanchunas"
-    ],
-    "Nurkic": [
-      "Nurkick"
-    ],
-    "Gobert": [
-      "Gobear"
-    ],
-    "Cunningham": [
-      "Cunnyham"
-    ]
-  },
-  "nickname": {
-    "Hawks": [
-      "Hocks",
-      "Hawx"
-    ],
-    "Celtics": [
-      "Seltics",
-      "Celtix"
-    ],
-    "Cavaliers": [
-      "Kavaliers",
-      "Cavaleers"
-    ],
-    "Pelicans": [
-      "Pelicanz",
-      "Pellicans"
-    ],
-    "Bulls": [
-      "Bullz",
-      "Bolls"
-    ],
-    "Mavericks": [
-      "Maverix",
-      "Mavricks"
-    ],
-    "Nuggets": [
-      "Nuggz",
-      "Nugglets"
-    ],
-    "Warriors": [
-      "Warriers",
-      "Worriors"
-    ],
-    "Rockets": [
-      "Rokkets",
-      "Rockitz"
-    ],
-    "Clippers": [
-      "Klippers",
-      "Clippahs"
-    ],
-    "Lakers": [
-      "Lackers",
-      "Lakerz"
-    ],
-    "Heat": [
-      "Heet"
-    ],
-    "Bucks": [
-      "Bux",
-      "Bocks"
-    ],
-    "Timberwolves": [
-      "Timberwoofs",
-      "Timberwolfs"
-    ],
-    "Nets": [
-      "Netz",
-      "Nettz"
-    ],
-    "Knicks": [
-      "Nicks",
-      "Knix"
-    ],
-    "Magic": [
-      "Majic",
-      "Magik"
-    ],
-    "Pacers": [
-      "Paysers",
-      "Pacerz"
-    ],
-    "76ers": [
-      "67ers",
-      "77ers"
-    ],
-    "Suns": [
-      "Sunz",
-      "Sonns"
-    ],
-    "Trail Blazers": [
-      "Trail Blazerz",
-      "Trail Blasers"
-    ],
-    "Kings": [
-      "Kingz",
-      "Keengs"
-    ],
-    "Spurs": [
-      "Spurz",
-      "Sporrs"
-    ],
-    "Thunder": [
-      "Thunda",
-      "Thunnder"
-    ],
-    "Raptors": [
-      "Raptorz",
-      "Rapters"
-    ],
-    "Jazz": [
-      "Jaz",
-      "Jazzz"
-    ],
-    "Grizzlies": [
-      "Grizzlys",
-      "Grizlies"
-    ],
-    "Wizards": [
-      "Wizzards",
-      "Wizerds"
-    ],
-    "Pistons": [
-      "Pystons",
-      "Pistonz"
-    ],
-    "Hornets": [
-      "Hornetz",
-      "Hornits"
-    ]
-  },
-  "city": {
-    "San Francisco": "Golden State"
-  }
+ "_comment": "Handgepflegte Parodien fuer Namen, bei denen die Auto-Regeln Quatsch erzeugen oder ein Wortwitz besser passt.",
+ "last": {
+  "Haliburton": [
+   "Halibut"
+  ],
+  "Brunson": [
+   "Brunch"
+  ],
+  "Booker": [
+   "Bookworm"
+  ],
+  "Durant": [
+   "Durable"
+  ],
+  "Tatum": [
+   "Tater",
+   "Tatertot"
+  ],
+  "Curry": [
+   "Currywurst"
+  ],
+  "Holmgren": [
+   "Holmes"
+  ],
+  "Mitchell": [
+   "Mitten"
+  ],
+  "Edwards": [
+   "Edweirdo"
+  ],
+  "Butler": [
+   "Butter"
+  ],
+  "Harden": [
+   "Hardwood"
+  ],
+  "George": [
+   "Gorgeous"
+  ],
+  "Young": [
+   "Youngster"
+  ],
+  "Davis": [
+   "Daffodil"
+  ],
+  "Ball": [
+   "Ballet"
+  ],
+  "Green": [
+   "Greenbean"
+  ],
+  "James": [
+   "Jammies"
+  ],
+  "Leonard": [
+   "Leopard"
+  ],
+  "Lillard": [
+   "Lillypad"
+  ],
+  "Jokic": [
+   "Jokester"
+  ],
+  "Doncic": [
+   "Donkeykick"
+  ],
+  "Embiid": [
+   "Embeedle"
+  ],
+  "Westbrook": [
+   "Eastbrook"
+  ],
+  "Irving": [
+   "Irvine"
+  ],
+  "Towns": [
+   "Townhouse"
+  ],
+  "Morant": [
+   "Morantula"
+  ],
+  "Antetokounmpo": [
+   "Antetokumbo",
+   "Antetokounbro"
+  ],
+  "Wembanyama": [
+   "Wembanyamba",
+   "Wembanana"
+  ],
+  "Gilgeous-Alexander": [
+   "Gorgeous-Alex"
+  ],
+  "Adebayo": [
+   "Adebanjo"
+  ],
+  "Banchero": [
+   "Banjero"
+  ],
+  "Sabonis": [
+   "Sabonbon"
+  ],
+  "Fox": [
+   "Foxtrot"
+  ],
+  "Siakam": [
+   "Siakumquat"
+  ],
+  "Williamson": [
+   "Willywonka"
+  ],
+  "Beal": [
+   "Beagle"
+  ],
+  "Paul": [
+   "Paella"
+  ],
+  "Thompson": [
+   "Thumbson"
+  ],
+  "Murray": [
+   "Murmur"
+  ],
+  "Porzingis": [
+   "Porcupingis"
+  ],
+  "Valanciunas": [
+   "Valanchunas"
+  ],
+  "Nurkic": [
+   "Nurkick"
+  ],
+  "Gobert": [
+   "Gobbler"
+  ],
+  "Cunningham": [
+   "Cunningbacon"
+  ]
+ },
+ "nickname": {
+  "Hawks": [
+   "Squawks",
+   "Hawkers",
+   "Talons"
+  ],
+  "Celtics": [
+   "Shamrocks",
+   "Clovers",
+   "Seltzers"
+  ],
+  "Cavaliers": [
+   "Cavemen",
+   "Chevaliers"
+  ],
+  "Pelicans": [
+   "Pelicants",
+   "Seagulls"
+  ],
+  "Bulls": [
+   "Bulldozers",
+   "Bullfrogs",
+   "Bison"
+  ],
+  "Mavericks": [
+   "Rebels",
+   "Mavenwicks"
+  ],
+  "Nuggets": [
+   "Miners",
+   "Nuggies",
+   "Prospectors"
+  ],
+  "Warriors": [
+   "Worriers",
+   "Warlocks"
+  ],
+  "Rockets": [
+   "Pockets",
+   "Rocketeers"
+  ],
+  "Clippers": [
+   "Clickers",
+   "Snippers",
+   "Flippers"
+  ],
+  "Lakers": [
+   "Fakers",
+   "Bakers",
+   "Shakers"
+  ],
+  "Heat": [
+   "Heaters",
+   "Sweat"
+  ],
+  "Bucks": [
+   "Megabucks",
+   "Antlers"
+  ],
+  "Timberwolves": [
+   "Lumberwolves",
+   "Timberwoofs"
+  ],
+  "Nets": [
+   "Netters",
+   "Nettles"
+  ],
+  "Knicks": [
+   "Knickknacks",
+   "Knacks"
+  ],
+  "Magic": [
+   "Tragic",
+   "Illusionists"
+  ],
+  "Pacers": [
+   "Racers",
+   "Pacemakers"
+  ],
+  "76ers": [
+   "Founders",
+   "Liberty Bells"
+  ],
+  "Suns": [
+   "Sunburns",
+   "Sunbeams"
+  ],
+  "Trail Blazers": [
+   "Trail Grazers",
+   "Rail Blazers"
+  ],
+  "Kings": [
+   "Kingpins",
+   "Jesters"
+  ],
+  "Spurs": [
+   "Sporks",
+   "Cowpokes"
+  ],
+  "Thunder": [
+   "Blunder",
+   "Thunderbirds"
+  ],
+  "Raptors": [
+   "Rappers",
+   "Dinos"
+  ],
+  "Jazz": [
+   "Jams",
+   "Jazzhands"
+  ],
+  "Grizzlies": [
+   "Drizzlies",
+   "Grizzlers"
+  ],
+  "Wizards": [
+   "Magicians",
+   "Lizards"
+  ],
+  "Pistons": [
+   "Pistols",
+   "Pistachios"
+  ],
+  "Hornets": [
+   "Bumblebees",
+   "Hornblowers"
+  ]
+ },
+ "city": {
+  "San Francisco": "Golden State"
+ }
 }

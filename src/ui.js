@@ -4,6 +4,7 @@ import { sfx } from './systems/audio.js';
 import { input } from './input.js';
 import { ovr } from './systems/sim.js';
 import { drawSprite, idleFrame } from './sprites/spriteGen.js';
+import { t as tr } from './i18n/index.js';
 
 export class Typewriter {
   constructor(str, cols = 18, rows = 3, speed = 1.5) {
@@ -86,20 +87,23 @@ export class Menu {
 }
 
 // Kompakte Status-Leiste oben: Sprite + Name + OVR + 4 Kernwerte
-export function drawStatus(ctx, run, t) {
+export function drawStatus(ctx, run, t, kind = '') {
   const p = run.p, team = run.teams[p.teamId];
   ctx.fillStyle = C.DARK; ctx.fillRect(0, 0, 160, 30);
   ctx.fillStyle = C.WHITE; ctx.fillRect(0, 30, 160, 1);
   drawSprite(ctx, p.look, team.colors, 3, 3, { frame: idleFrame(t), age: p.age });
   tiny(ctx, `${p.first[0]}. ${p.last}`, 22, 3);
-  tiny(ctx, `S${run.seasonNo} ${team.abbr} ${p.age}J`, 22, 10);
+  const line = tr('status.line', { s: run.seasonNo, team: team.abbr, age: p.age });
+  tiny(ctx, line, 22, 10);
+  if (kind) tiny(ctx, kind, 26 + line.length * 4, 10, C.ORANGE);
   text(ctx, String(ovr(p)), 158, 3, C.ORANGE, 'right');
-  tiny(ctx, 'OVR', 158 - 3 * 8 - 14, 4, C.WHITE);
-  const vals = [['FORM', p.form], ['KOERP', p.body], ['CHEM', p.chem], ['FAME', p.fame]];
+  tiny(ctx, tr('stat.ovr'), 158 - 3 * 8 - 14, 4, C.WHITE);
+  if (input.device !== 'touch') tiny(ctx, tr('status.hint'), 158, 12, C.WHITE, 'right');
+  const vals = [['form', p.form], ['body', p.body], ['chem', p.chem], ['fame', p.fame]];
   vals.forEach(([l, v], i) => {
-    const x = 22 + (i % 2) * 69, y = 17 + Math.floor(i / 2) * 6;
-    tiny(ctx, l, x, y);
-    bar(ctx, x + 22, y, 44, 5, v / 100);
+    const x = 22 + (i % 2) * 69, y = 18 + Math.floor(i / 2) * 6;
+    tiny(ctx, tr('stat.' + l).slice(0, 6), x, y);
+    bar(ctx, x + 26, y, 40, 5, v / 100);
   });
 }
 

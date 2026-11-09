@@ -34,6 +34,43 @@ const FIRST_RULES = [
 ];
 const VOWELS = 'aeiou';
 
+// Wortspiele: Wort mit gleichem Anfang wie der Nachname (Haliburton -> Halibut)
+const PUN_WORDS = ('apple bacon badger bagel baker banjo banner barber barley basket beaver biscuit blanket blender blizzard blossom '
+  + 'bobble bonkers booster bucket buckle buffalo bumble butter button cabbage cactus camper candle canyon captain carrot castle '
+  + 'cheddar cherry chimney chowder cinnamon clover cobbler coconut cookie copper cracker crayon cricket crumble cupcake dagger '
+  + 'daisy dancer dazzle dimple dingo doodle dragon drizzle dumpling eagle falcon fiddle finch flapjack flipper fondue fritter '
+  + 'fumble gadget garlic giggles ginger goblin goose gopher gravy griddle guppy hamster hammer harbor hazel hiccup honey hopper '
+  + 'jackal jelly jester jigsaw jingle jogger juggler kettle kipper kiwi ladder lemon lobster lollipop mango marble meatball mitten '
+  + 'moose muffin mustard napkin nacho noodle nugget oyster paddle pancake panda parrot peanut pebble pepper pickle pigeon pillow '
+  + 'pinball pistachio pocket poodle popcorn potato pretzel puddle pumpkin puzzle rabbit radish raisin rocket rooster saddle salmon '
+  + 'sandwich sausage scooter shrimp skipper sparkle spatula sprinkle squirrel stapler sunny taco tater teapot thunder tickle '
+  + 'toaster toffee tornado trumpet tulip turnip turtle waffle walnut wiggle wizard wombat yogurt zipper halibut brunch bookworm '
+  + 'durable harpoon bubble buster bandit wrangler hustle tumble sizzle nibble shuffle scramble gumbo jambalaya marshmallow '
+  + 'mosquito bagpipe goulash ravioli lasagna burrito quesadilla tornado tumbleweed harmonica accordion avocado anchovy '
+  + 'gazelle gorilla koala llama mongoose narwhal ostrich pelican penguin platypus reindeer seahorse walrus weasel woodpecker '
+  + 'hotdog hamburger meringue mozzarella omelette parsnip popsicle porridge ricotta snorkel trampoline umbrella ukulele vanilla').split(' ');
+const FUN_SUFFIX = ['ster', 'ington', 'berg', 'wick', 'bottom', 'worth', 'sky', 'ini', 'inho', 'ovich', 'stein', 'ford', 'ley', 'ola', 'ozzi', 'meister'];
+
+function punWord(lower, rng) {
+  let best = [], bestLen = 0;
+  for (const w of PUN_WORDS) {
+    if (w === lower || w.length > 14) continue;
+    let k = 0;
+    while (k < w.length && k < lower.length && w[k] === lower[k]) k++;
+    if (k < 3) continue;
+    if (k > bestLen) { best = [w]; bestLen = k; } else if (k === bestLen) best.push(w);
+  }
+  return best.length ? rng.pick(best) : null;
+}
+
+function funSuffix(lower, rng) {
+  if (lower.length < 4) return null;
+  let pre = lower.slice(0, Math.max(3, Math.ceil(lower.length * 0.55)));
+  const suf = rng.pick(FUN_SUFFIX);
+  if (VOWELS.includes(pre[pre.length - 1]) && VOWELS.includes(suf[0])) pre = pre.slice(0, -1);
+  return pre + suf;
+}
+
 function applyRule(lower, rules, rng) {
   const ok = rules.filter(([re]) => re.test(lower));
   if (!ok.length) return null;
@@ -99,16 +136,19 @@ export function createNameGen(data, overrides = {}) {
       const c = rng.pick(lastOv[last]);
       if (validLast(last, c)) return c;
     }
-    const lower = last.toLowerCase();
-    const strategies = rng.shuffle(['letter', 'syllable', 'letter', 'syllable', 'letter2']);
-    for (let tries = 0; tries < 8; tries++) {
-      const s = strategies[tries % strategies.length];
+    const lower = last.toLowerCase().replace(/[^a-z]/g, '');
+    // Bevorzugt deutlich veraenderte Namen: Wortspiel > Spass-Endung > doppelte Buchstabenregel
+    const strategies = [...rng.shuffle(['pun', 'pun', 'suffix', 'letter2']), 'suffix', 'letter2', 'syllable', 'letter'];
+    for (let tries = 0; tries < strategies.length; tries++) {
+      const s = strategies[tries];
       let r = null;
-      if (s === 'letter') r = applyRule(lower, LETTER_RULES, rng);
+      if (s === 'pun') r = punWord(lower, rng);
+      else if (s === 'suffix') r = funSuffix(lower, rng);
+      else if (s === 'letter') r = applyRule(lower, LETTER_RULES, rng);
       else if (s === 'syllable') r = syllableTweak(lower, rng);
       else { r = applyRule(lower, LETTER_RULES, rng); if (r) r = syllableTweak(r, rng) || r; }
       if (r) {
-        const cand = restoreCase(last, r);
+        const cand = s === 'pun' || s === 'suffix' ? r[0].toUpperCase() + r.slice(1) : restoreCase(last, r);
         if (validLast(last, cand)) return cand;
       }
     }
@@ -146,7 +186,7 @@ export function createNameGen(data, overrides = {}) {
         last = parodyLast(p.last, rng);
       }
       if (!last) continue;
-      if (rng.chance(0.3)) first = parodyFirst(first, rng) || first;
+      if (rng.chance(0.4)) first = parodyFirst(first, rng) || first;
       if (!isSafe(first, last)) continue;
       return { first, last, src: p.first + ' ' + p.last };
     }

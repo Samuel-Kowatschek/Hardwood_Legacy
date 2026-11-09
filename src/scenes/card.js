@@ -1,14 +1,18 @@
-// Entscheidungs-/Event-Karte: Text (Typewriter) -> 2-3 Optionen mit Risiko-Hinweis -> Ergebnis.
+// Entscheidungs-/Event-Karte: Text (Typewriter) -> 2-3 Optionen mit Hinweis -> Ergebnis.
 import { Scene } from './scene.js';
 import { C, text, tiny, box, downArrow } from '../gfx.js';
 import { Typewriter, Menu, drawStatus } from '../ui.js';
 import { sfx } from '../systems/audio.js';
+import { t } from '../i18n/index.js';
+import { cardText, hintFor, applyOption } from '../data/cards.js';
 
 export class CardScene extends Scene {
-  constructor(run, card, kind) { super(); this.run = run; this.card = card; this.kind = kind; }
+  constructor(run, card, phase) { super(); this.run = run; this.card = card; this.phase0 = phase; }
   enter() {
-    this.tw = new Typewriter(this.card.text(this.run), 18, 4);
-    this.menu = new Menu(this.card.options.map(o => ({ label: o.label, hint: o.hint })), { rowH: 16 });
+    if (this.tw) return;
+    this.tw = new Typewriter(cardText(this.run, this.card), 18, 4);
+    const labels = t(`cards.${this.card.id}.o`);
+    this.menu = new Menu(this.card.opts.map((o, i) => ({ label: labels[i], hint: hintFor(o) })), { rowH: 16 });
     this.phase = 'text';
   }
   update() {
@@ -17,21 +21,17 @@ export class CardScene extends Scene {
     } else if (this.phase === 'choose') {
       const i = this.menu.update();
       if (i !== null) {
-        const opt = this.card.options[i];
-        const res = opt.apply(this.run) || 'Nichts passiert.';
-        this.run.cur.events.push(`${this.card.title}: ${opt.label}`);
-        this.res = new Typewriter(res, 18, 4);
+        this.res = new Typewriter(applyOption(this.run, this.card, i), 18, 4);
+        this.run.cur.events.push(this.card.id);
         this.phase = 'result';
         sfx.hit();
       }
     } else if (this.res.update()) this.finish();
   }
   draw(ctx) {
-    const run = this.run;
-    drawStatus(ctx, run, this.t);
+    drawStatus(ctx, this.run, this.t, t('status.' + this.phase0));
     box(ctx, 0, 31, 160, 58);
-    tiny(ctx, this.kind, 66, 10, C.ORANGE);
-    text(ctx, this.card.title.slice(0, 18), 8, 37, C.ORANGE);
+    text(ctx, t(`cards.${this.card.id}.t`).slice(0, 18), 8, 37, C.ORANGE);
     this.tw.draw(ctx, 8, 48, 9);
     box(ctx, 0, 88, 160, 56);
     if (this.phase === 'choose') this.menu.draw(ctx, 6, 94);

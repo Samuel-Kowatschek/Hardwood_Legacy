@@ -1,23 +1,19 @@
-// Entscheidungs- (Offseason) und Event-Karten. Gewichtet gezogen, mit Bedingungen (Alter, Team, Awards).
+// Entscheidungs- und Event-Karten (datengetrieben). Texte stehen in src/i18n/cards.<lang>.js.
+// when: 'off' (Offseason) | 'mid' (Saisonmitte) | 'late' (Saisonende) | 'any' (mid oder late)
+// Option: fx = Aenderungen, risk = { p, fx, msg } (versteckt), special = Sonderaktion, mystery = Hinweis '???'
+// Jede Karte kommt pro Run hoechstens einmal (erst wenn der Pool leer ist, wieder von vorn).
 import { clamp } from '../systems/rng.js';
 import { injuryChance } from '../systems/sim.js';
+import { t } from '../i18n/index.js';
 
-const LABEL = { form: 'FORM', body: 'KOERPER', chem: 'CHEMIE', fame: 'FAME', sho: 'WURF', pla: 'PLAY', def: 'DEF', ath: 'ATH', clu: 'CLUTCH' };
 const SKILLS = ['sho', 'pla', 'def', 'ath', 'clu'];
+const CORE = ['form', 'body', 'chem', 'fame'];
+const SEASON = ['power', 'playoffPower', 'usage', 'injuryGames', 'rivalBoost'];
 
-// Wendet Aenderungen an und liefert lesbare Zusammenfassung
-export function fx(run, ch) {
-  const p = run.p, out = [];
-  for (const [k, v] of Object.entries(ch)) {
-    if (!v) continue;
-    if (SKILLS.includes(k)) p.skills[k] = clamp(p.skills[k] + v, 0, 99);
-    else if (k in LABEL) p[k] = clamp(p[k] + v, 0, k === 'form' ? 99 : 100);
-    else { run.cur[k] = (run.cur[k] || 0) + v; continue; }
-    out.push(`${LABEL[k]}${v > 0 ? '+' : ''}${v}`);
-  }
-  if ('fame' in ch) p.peakFame = Math.max(p.peakFame, p.fame);
-  return out.join(' ');
-}
+const T = (run, id = run.p.teamId) => run.teams[id];
+const others = run => run.teams.filter(x => x.id !== run.p.teamId);
+const byBase = arr => arr.slice().sort((a, b) => b.base - a.base);
+const age = r => r.p.age;
 
 export function moveTeam(run, teamId) {
   const p = run.p;
@@ -25,220 +21,163 @@ export function moveTeam(run, teamId) {
   if (!p.teamsPlayed.includes(teamId)) p.teamsPlayed.push(teamId);
   p.chem = 45;
 }
-const T = (run, id = run.p.teamId) => run.teams[id];
-const tname = t => `${t.city} ${t.nick}`;
-const others = run => run.teams.filter(t => t.id !== run.p.teamId);
-const byBase = arr => arr.slice().sort((a, b) => b.base - a.base);
-const rivalN = run => `${run.rival.first} ${run.rival.last}`;
+
+// Wendet Aenderungen an und liefert eine lesbare Zusammenfassung
+export function fx(run, ch) {
+  const p = run.p, out = [];
+  for (const [k, v] of Object.entries(ch)) {
+    if (!v) continue;
+    const sg = v > 0 ? '+' : '';
+    if (SKILLS.includes(k)) { p.skills[k] = clamp(p.skills[k] + v, 0, 99); out.push(`${t('stat.' + k)}${sg}${v}`); }
+    else if (CORE.includes(k)) { p[k] = clamp(p[k] + v, 0, k === 'form' ? 99 : 100); out.push(`${t('stat.' + k)}${sg}${v}`); }
+    else if (k === 'base') { T(run).base = clamp(T(run).base + v, 30, 88); out.push(`${t('hintLbl.team')}${sg}${v}`); }
+    else if (SEASON.includes(k)) {
+      run.cur[k] = (run.cur[k] || 0) + v;
+      if (k === 'usage' && v > 0) out.push(t('hintLbl.pts') + '+');
+      if (k === 'power' || k === 'playoffPower') out.push(t(k === 'power' ? 'hintLbl.wins' : 'hintLbl.playoffs') + (v > 0 ? '+' : '-'));
+    }
+  }
+  if ('fame' in ch) p.peakFame = Math.max(p.peakFame, p.fame);
+  return out.join(' ');
+}
+
+// Hinweis-Text aus den sichtbaren Effekten (+ / ++ / -), Risiken nur als 'RISK?'
+const HINT_KEY = { base: 'team', power: 'wins', playoffPower: 'playoffs', usage: 'pts', injuryGames: 'rest', rivalBoost: 'rival' };
+export function hintFor(opt) {
+  if (opt.mystery) return '???';
+  const parts = [];
+  for (const k of opt.hint || []) parts.push(t('hintLbl.' + k));
+  for (const [k, v] of Object.entries(opt.fx || {})) {
+    if (!v || k === 'injuryGames' || k === 'rivalBoost') continue;
+    const lbl = HINT_KEY[k] ? t('hintLbl.' + HINT_KEY[k]) : t('stat.' + k);
+    parts.push(lbl + (v > 0 ? (v >= 8 ? '++' : '+') : '-'));
+  }
+  if (opt.risk) parts.push(t('hintLbl.risk'));
+  return parts.slice(0, 3).join(' ');
+}
+
+const SPECIAL = {
+  maxdeal: r => { const x = r.rng.pick(byBase(others(r)).slice(8, 20)); moveTeam(r, x.id); r.p.ringChase = false; return t('cardx.move', { abbr: x.abbr }); },
+  superteam: r => { const x = byBase(others(r))[r.rng.int(0, 1)]; moveTeam(r, x.id); r.p.ringChase = true; return t('cardx.move', { abbr: x.abbr }); },
+  trade: r => { const x = r.rng.pick(byBase(others(r)).slice(0, 14)); moveTeam(r, x.id); r.p.ringChase = false; return t('cardx.traded', { nick: x.nick }); },
+  traderandom: r => { const x = r.rng.pick(others(r)); moveTeam(r, x.id); r.p.ringChase = false; return t('cardx.traded', { nick: x.nick }); },
+  mentor: r => { if (r.rng.chance(0.4)) { r.cur.rivalBoost += 2; return t('cardx.jealous', { name: r.rival.last }); } return ''; },
+  coin: r => fx(r, { chem: r.rng.chance(0.5) ? 6 : -6 }),
+};
+
+// Bedingungs-Helfer
+const weak = r => T(r).base < 52, strong = r => T(r).base >= 60;
 
 export const CARDS = [
   // ---------------- OFFSEASON ----------------
-  {
-    id: 'training', type: 'off', title: 'TRAININGSCAMP', weight: () => 3,
-    text: () => 'Der Sommer ist lang. Worauf legst du den Fokus?',
-    options: [
-      { label: 'Wurftraining', hint: 'WURF+', apply: r => fx(r, { sho: 4, clu: 1 }) },
-      { label: 'Kraftraum', hint: 'ATH+ KOERPER+', apply: r => fx(r, { ath: 3, body: 4 }) },
-      { label: 'Film-Studium', hint: 'DEF+ PLAY+', apply: r => fx(r, { def: 3, pla: 2 }) },
-    ],
-  },
-  {
-    id: 'freeagency', type: 'off', title: 'FREE AGENCY',
-    weight: r => (r.seasonNo >= 3 && r.seasonNo % 3 === 0 ? 8 : r.seasonNo >= 3 ? 1 : 0),
-    text: () => 'Dein Vertrag laeuft aus. Drei Angebote liegen auf dem Tisch.',
-    options: [
-      {
-        label: 'Max-Deal', hint: 'FAME+ NEUES TEAM',
-        apply: r => {
-          const mids = byBase(others(r)).slice(8, 20);
-          const t = r.rng.pick(mids); moveTeam(r, t.id); r.p.ringChase = false;
-          return `-> ${t.abbr}! ` + fx(r, { fame: 6 });
-        },
-      },
-      {
-        label: 'Pay-Cut Superteam', hint: 'RING-CHANCE+ FAME-',
-        apply: r => {
-          const t = byBase(others(r))[r.rng.int(0, 1)]; moveTeam(r, t.id); r.p.ringChase = true;
-          return `-> ${t.abbr}! ` + fx(r, { fame: -5 });
-        },
-      },
-      { label: 'Bleiben', hint: 'CHEMIE+ TREUE', apply: r => fx(r, { chem: 8 }) },
-    ],
-  },
-  {
-    id: 'traderequest', type: 'off', title: 'TRADE-WUNSCH?',
-    weight: r => (r.seasonNo >= 2 && T(r).base < 55 ? 4 : 0),
-    text: r => `Die ${T(r).nick} verlieren. Fans und Presse werden ungeduldig.`,
-    options: [
-      {
-        label: 'Trade fordern', hint: 'NEUES TEAM ?',
-        apply: r => {
-          const t = r.rng.pick(byBase(others(r)).slice(0, 14)); moveTeam(r, t.id); r.p.ringChase = false;
-          return `Trade zu den ${t.nick}! ` + fx(r, { fame: -3 });
-        },
-      },
-      {
-        label: 'Loyal bleiben', hint: 'CHEMIE+',
-        apply: r => { T(r).base = clamp(T(r).base + 3, 30, 85); return 'Das Front Office investiert. ' + fx(r, { chem: 6 }); },
-      },
-    ],
-  },
-  {
-    id: 'mentor', type: 'off', title: 'MENTOR', weight: r => (r.p.age <= 24 ? 3 : 0),
-    text: () => 'Ein alter Veteran will dich unter seine Fittiche nehmen.',
-    options: [
-      {
-        label: 'Annehmen', hint: 'SKILL+ RIVALE?',
-        apply: r => {
-          let s = fx(r, { clu: 4, pla: 2, form: 2 });
-          if (r.rng.chance(0.4)) { r.cur.rivalBoost += 2; s += ` ${r.rival.last} ist neidisch!`; }
-          return s;
-        },
-      },
-      { label: 'Allein trainieren', hint: 'ATH+', apply: r => fx(r, { ath: 2 }) },
-    ],
-  },
-  {
-    id: 'loadmgmt', type: 'off', title: 'ALTERNDE KNIE', weight: r => (r.p.age >= 30 ? 5 : 0),
-    text: () => 'Der Doc raet zu Load Management in der Regular Season.',
-    options: [
-      { label: 'Load Management', hint: 'KOERPER+ FORM-', apply: r => fx(r, { body: 10, form: -2, chem: -3, injuryGames: 10 }) },
-      { label: 'Volle Pulle', hint: 'FORM+ RISIKO!', apply: r => fx(r, { form: 2, body: -8 }) },
-    ],
-  },
-  {
-    id: 'national', type: 'off', title: 'NATIONALTEAM', weight: r => (r.p.age <= 31 && r.seasonNo >= 2 ? 2 : 0),
-    text: () => 'Der Verband ruft dich fuer das Sommerturnier.',
-    options: [
-      { label: 'Zusagen', hint: 'FAME+ KOERPER-', apply: r => fx(r, { fame: 8, clu: 2, body: -6 }) },
-      { label: 'Absagen', hint: 'KOERPER+', apply: r => fx(r, { body: 4, fame: -2 }) },
-    ],
-  },
-  {
-    id: 'shoe', type: 'off', title: 'SCHUH-DEAL', weight: r => (r.p.fame >= 50 ? 3 : 0),
-    text: () => 'Eine Sneaker-Marke will deinen eigenen Signature-Schuh.',
-    options: [
-      { label: 'Unterschreiben', hint: 'FAME++ FORM-', apply: r => fx(r, { fame: 12, form: -2 }) },
-      { label: 'Nur Basketball', hint: 'FORM+', apply: r => fx(r, { form: 2 }) },
-    ],
-  },
-  {
-    id: 'diet', type: 'off', title: 'ERNAEHRUNG', weight: () => 1.5,
-    text: () => 'Der Trainer schlaegt einen radikalen Ernaehrungsplan vor.',
-    options: [
-      { label: 'Durchziehen', hint: 'KOERPER+', apply: r => fx(r, { body: 7, chem: -2 }) },
-      { label: 'Pizza bleibt', hint: 'CHEMIE+ KOERPER-', apply: r => fx(r, { chem: 5, body: -3 }) },
-    ],
-  },
+  { id: 'training', when: 'off', w: 1.5, opts: [{ fx: { sho: 4, clu: 1 } }, { fx: { ath: 3, body: 4 } }, { fx: { def: 3, pla: 2 } }] },
+  { id: 'freeagency', when: 'off', w: r => (r.seasonNo >= 3 && r.seasonNo % 3 === 0 ? 30 : 0),
+    opts: [{ special: 'maxdeal', fx: { fame: 6 }, hint: ['newTeam'] }, { special: 'superteam', fx: { fame: -5 }, hint: ['ring'] }, { fx: { chem: 8 }, hint: ['loyal'] }] },
+  { id: 'traderequest', when: 'off', cond: r => r.seasonNo >= 2 && T(r).base < 55, w: 3,
+    opts: [{ special: 'trade', fx: { fame: -3 }, hint: ['newTeam'] }, { fx: { chem: 6, base: 3 } }] },
+  { id: 'mentor', when: 'off', cond: r => age(r) <= 24, opts: [{ special: 'mentor', fx: { clu: 4, pla: 2, form: 2 }, hint: ['rivalQ'] }, { fx: { ath: 2 } }] },
+  { id: 'loadmgmt', when: 'off', cond: r => age(r) >= 30, w: 2, opts: [{ fx: { body: 10, form: -2, chem: -3, injuryGames: 10 } }, { fx: { form: 2, body: -8 } }] },
+  { id: 'national', when: 'off', cond: r => r.seasonNo >= 2 && age(r) <= 31, opts: [{ fx: { fame: 8, clu: 2, body: -6 } }, { fx: { body: 4, fame: -2 } }] },
+  { id: 'shoe', when: 'off', cond: r => r.p.fame >= 50, opts: [{ fx: { fame: 12, form: -2 } }, { fx: { form: 2 } }] },
+  { id: 'diet', when: 'off', opts: [{ fx: { body: 7, chem: -2 } }, { fx: { chem: 5, body: -3 } }] },
+  { id: 'summerleague', when: 'off', cond: r => r.seasonNo <= 2, opts: [{ fx: { form: 3, body: -3 } }, { fx: { body: 3 } }] },
+  { id: 'skillsguru', when: 'off', opts: [{ fx: { pla: 3, sho: 2, body: -2 } }, { fx: { chem: 3 } }] },
+  { id: 'yoga', when: 'off', cond: r => age(r) >= 26, opts: [{ fx: { body: 5, clu: 2 } }, { fx: { form: 1, chem: -2 } }] },
+  { id: 'hometown', when: 'off', opts: [{ fx: { fame: 5, form: -1 } }, { fx: { form: 1 } }] },
+  { id: 'agent', when: 'off', opts: [{ fx: { fame: 6, chem: -4 } }, { fx: { chem: 3 } }] },
+  { id: 'podcast', when: 'off', cond: r => r.p.fame >= 30, opts: [{ fx: { fame: 8, form: -2 } }, { fx: { form: 1 } }] },
+  { id: 'extension', when: 'off', cond: r => r.seasonNo >= 2 && r.seasonNo % 3 !== 0, opts: [{ fx: { chem: 8, fame: -2 }, hint: ['loyal'] }, { fx: { form: 2, chem: -3 } }] },
+  { id: 'altitude', when: 'off', opts: [{ fx: { ath: 3, body: 2, chem: -2 } }, { fx: { chem: 2 } }] },
+  { id: 'shootcoach', when: 'off', opts: [{ fx: { sho: 6, form: -3 }, risk: { p: 0.25, fx: { sho: -3 }, msg: 'cardx.backfire' } }, { fx: { sho: 2 } }] },
+  { id: 'bulkup', when: 'off', opts: [{ fx: { def: 3, ath: -2, body: 3 } }, { fx: { ath: 2 } }] },
+  { id: 'vacation', when: 'off', opts: [{ fx: { fame: 4, form: -2, chem: 2 } }, { fx: { form: 2, chem: -1 } }] },
+  { id: 'rookiementor', when: 'off', cond: r => age(r) >= 29, opts: [{ fx: { chem: 8, fame: 2 } }, { fx: { form: 1, chem: -5 } }] },
+  { id: 'surgery', when: 'off', cond: r => r.p.body < 65, w: 2, opts: [{ fx: { body: 15, form: -3, injuryGames: 8 } }, { fx: { body: 5 } }] },
+  { id: 'movie', when: 'off', cond: r => r.p.fame >= 55, opts: [{ fx: { fame: 12, form: -3, body: -2 } }, { fx: { form: 1 } }] },
+  { id: 'charity', when: 'off', opts: [{ fx: { fame: 5, chem: 3, body: -2 } }, { fx: { form: 1 } }] },
+  { id: 'newcoach', when: 'off', opts: [{ fx: { ath: 2, chem: 4 } }, { fx: { form: 1, chem: -3 } }] },
+  { id: 'traderumor', when: 'off', cond: r => r.seasonNo >= 2, opts: [{ fx: { chem: 5, fame: -2 } }, { fx: { fame: 6, chem: -6 } }, { special: 'traderandom', hint: ['newTeam'], mystery: true }] },
+  { id: 'brotherhood', when: 'off', opts: [{ fx: { chem: 6, body: -1 } }, { fx: { form: 2 } }] },
+  { id: 'esports', when: 'off', cond: r => age(r) <= 27, opts: [{ fx: { fame: 5, body: -2 } }, { fx: { body: 2 } }] },
 
-  // ---------------- EVENTS ----------------
-  {
-    id: 'injury', type: 'event', title: 'VERLETZUNG!', weight: r => injuryChance(r.p) * 20,
-    text: () => 'Dein Knoechel ist angeknackst. Die Playoffs ruecken naeher.',
-    options: [
-      {
-        label: 'Durchspielen', hint: 'RING-CHANCE+ RISIKO!',
-        apply: r => {
-          let s = fx(r, { body: -10, playoffPower: 4, chem: 3 });
-          if (r.rng.chance(0.3)) s += ' AUTSCH! ' + fx(r, { form: -4, body: -6 });
-          return s;
-        },
-      },
-      { label: 'Load Management', hint: 'KOERPER+ SIEG-', apply: r => fx(r, { body: 4, playoffPower: -3, injuryGames: 12 }) },
-    ],
-  },
-  {
-    id: 'media', type: 'event', title: 'MEDIEN-DRAMA', weight: r => 1 + r.p.fame / 40,
-    text: () => 'Ein Reporter zitiert dich falsch. Das Netz explodiert.',
-    options: [
-      { label: 'Zurueckschiessen', hint: 'FAME+ CHEMIE-', apply: r => fx(r, { fame: 10, chem: -8 }) },
-      { label: 'Ignorieren', hint: 'FAME-', apply: r => fx(r, { fame: -3 }) },
-      { label: 'Entschuldigen', hint: 'CHEMIE+ FAME-', apply: r => fx(r, { chem: 5, fame: -4 }) },
-    ],
-  },
-  {
-    id: 'shots', type: 'event', title: 'MEHR WUERFE?', weight: () => 2,
-    text: () => 'Du fuehlst dich heiss. Forderst du mehr Wuerfe vom Coach?',
-    options: [
-      { label: 'Ball her!', hint: 'STATS+ CHEMIE-', apply: r => 'PUNKTE+ ' + fx(r, { usage: 4, chem: -10, fame: 4 }) },
-      { label: 'Teamplay', hint: 'CHEMIE+', apply: r => fx(r, { chem: 6, pla: 1 }) },
-    ],
-  },
-  {
-    id: 'sponsor', type: 'event', title: 'SPONSOR-DEAL', weight: () => 1.5,
-    text: () => 'Ein Energy-Drink will dich fuer seine Werbekampagne.',
-    options: [
-      { label: 'Unterschreiben', hint: 'FAME+ FORM-', apply: r => fx(r, { fame: 10, form: -3 }) },
-      { label: 'Ablehnen', hint: 'FORM+', apply: r => fx(r, { form: 1, chem: 2 }) },
-    ],
-  },
-  {
-    id: 'chem', type: 'event', title: 'TEAMCHEMIE', weight: r => (r.p.chem < 50 ? 3 : 1),
-    text: () => 'In der Kabine kriselt es. Zwei Mitspieler streiten.',
-    options: [
-      { label: 'Team-Dinner', hint: 'CHEMIE+', apply: r => fx(r, { chem: 10, body: -1 }) },
-      { label: 'Raushalten', hint: 'CHEMIE-', apply: r => fx(r, { chem: -6, form: 1 }) },
-      { label: 'Coach regelt das', hint: '???', apply: r => fx(r, { chem: r.rng.chance(0.5) ? 6 : -6 }) },
-    ],
-  },
-  {
-    id: 'rival', type: 'event', title: 'RIVALE', weight: () => 1.5,
-    text: r => `${rivalN(r)} nennt dich im Interview ueberbewertet.`,
-    options: [
-      { label: 'Trash-Talk', hint: 'FAME+ CLUTCH+', apply: r => fx(r, { fame: 8, clu: 3, rivalBoost: 1 }) },
-      { label: 'Mit Leistung', hint: 'FORM+', apply: r => fx(r, { form: 2 }) },
-    ],
-  },
-  {
-    id: 'party', type: 'event', title: 'PARTY-NACHT', weight: r => (r.p.age <= 30 ? 1.5 : 0.5),
-    text: () => 'Ein Rapper laedt dich zu seiner Album-Release-Party ein.',
-    options: [
-      {
-        label: 'Hingehen', hint: 'FAME+ RISIKO?',
-        apply: r => {
-          let s = fx(r, { fame: 8, body: -4 });
-          if (r.rng.chance(0.25)) s += ' Die Fotos... ' + fx(r, { form: -3, chem: -5 });
-          return s;
-        },
-      },
-      { label: 'Frueh ins Bett', hint: 'KOERPER+', apply: r => fx(r, { body: 3 }) },
-    ],
-  },
-  {
-    id: 'rookiewall', type: 'event', title: 'ROOKIE-WALL', weight: r => (r.seasonNo === 1 ? 6 : 0),
-    text: () => 'Die lange Saison schlaucht. Deine Beine sind schwer.',
-    options: [
-      { label: 'Extra-Schichten', hint: 'FORM+ KOERPER-', apply: r => fx(r, { form: 3, body: -5 }) },
-      { label: 'Ausruhen', hint: 'KOERPER+', apply: r => fx(r, { body: 5 }) },
-    ],
-  },
-  {
-    id: 'viral', type: 'event', title: 'VIRAL!', weight: r => (r.p.skills.ath >= 62 ? 2 : 0.3),
-    text: () => 'Dein Poster-Dunk geht viral. Millionen Klicks ueber Nacht.',
-    options: [
-      { label: 'Geniessen', hint: 'FAME+', apply: r => fx(r, { fame: 10 }) },
-      { label: 'Bescheiden', hint: 'CHEMIE+', apply: r => fx(r, { chem: 5, fame: 3 }) },
-    ],
-  },
-  {
-    id: 'coachfired', type: 'event', title: 'COACH GEFEUERT', weight: r => (T(r).base < 52 ? 2.5 : 0),
-    text: () => 'Nach der Pleitenserie fliegt der Coach. Du darfst mitreden.',
-    options: [
-      { label: 'Star-Coach holen', hint: 'TEAM+ CHEMIE-', apply: r => { T(r).base = clamp(T(r).base + 4, 30, 85); return 'TEAM+4 ' + fx(r, { chem: -4 }); } },
-      { label: 'Assistent hoch', hint: 'CHEMIE+', apply: r => fx(r, { chem: 7 }) },
-    ],
-  },
-  {
-    id: 'deadline', type: 'event', title: 'TRADE DEADLINE', weight: r => (T(r).base >= 58 && r.seasonNo >= 2 ? 2 : 0),
-    text: () => 'Das Front Office kann einen Veteranen holen. Kostet aber junge Talente.',
-    options: [
-      { label: 'All-in!', hint: 'JETZT+ ZUKUNFT-', apply: r => { T(r).base = clamp(T(r).base - 3, 30, 85); return 'TEAM-3 (spaeter) ' + fx(r, { power: 4, playoffPower: 2, chem: -2 }); } },
-      { label: 'Geduld', hint: 'CHEMIE+', apply: r => fx(r, { chem: 4 }) },
-    ],
-  },
+  // ---------------- SAISON-EVENTS ----------------
+  { id: 'injury', when: 'late', w: r => injuryChance(r.p) * 12, opts: [{ fx: { body: -10, playoffPower: 4, chem: 3 }, risk: { p: 0.3, fx: { form: -4, body: -6 }, msg: 'cardx.ouch' } }, { fx: { body: 4, playoffPower: -3, injuryGames: 12 } }] },
+  { id: 'backspasm', when: 'any', w: r => injuryChance(r.p) * 8, opts: [{ fx: { body: -6, power: 1 } }, { fx: { body: 3, power: -1, injuryGames: 4 } }] },
+  { id: 'hamstring', when: 'any', w: r => injuryChance(r.p) * 8, opts: [{ fx: { body: -7, form: 1 }, risk: { p: 0.25, fx: { body: -6, injuryGames: 10 }, msg: 'cardx.ouch' } }, { fx: { body: 4, injuryGames: 6 } }] },
+  { id: 'flu', when: 'any', opts: [{ fx: { fame: 6, body: -4, clu: 2 } }, { fx: { body: 2, power: -1 } }] },
+  { id: 'media', when: 'any', w: r => 0.6 + r.p.fame / 60, opts: [{ fx: { fame: 10, chem: -8 } }, { fx: { fame: -3 } }, { fx: { chem: 5, fame: -4 } }] },
+  { id: 'shots', when: 'mid', opts: [{ fx: { usage: 4, chem: -10, fame: 4 } }, { fx: { chem: 6, pla: 1 } }] },
+  { id: 'sponsor', when: 'any', opts: [{ fx: { fame: 10, form: -3 } }, { fx: { form: 1, chem: 2 } }] },
+  { id: 'chem', when: 'any', w: r => (r.p.chem < 50 ? 2 : 0.8), opts: [{ fx: { chem: 10, body: -1 } }, { fx: { chem: -6, form: 1 } }, { special: 'coin', mystery: true }] },
+  { id: 'rival', when: 'any', opts: [{ fx: { fame: 8, clu: 3, rivalBoost: 1 } }, { fx: { form: 2 } }] },
+  { id: 'party', when: 'any', cond: r => age(r) <= 31, opts: [{ fx: { fame: 8, body: -4 }, risk: { p: 0.25, fx: { form: -3, chem: -5 }, msg: 'cardx.photos' } }, { fx: { body: 3 } }] },
+  { id: 'rookiewall', when: 'mid', cond: r => r.seasonNo === 1, w: 4, opts: [{ fx: { form: 3, body: -5 } }, { fx: { body: 5 } }] },
+  { id: 'viral', when: 'any', cond: r => r.p.skills.ath >= 58, opts: [{ fx: { fame: 10 } }, { fx: { chem: 5, fame: 3 } }] },
+  { id: 'coachfired', when: 'mid', cond: weak, w: 2, opts: [{ fx: { base: 4, chem: -4 } }, { fx: { chem: 7 } }] },
+  { id: 'deadline', when: 'late', cond: r => strong(r) && r.seasonNo >= 2, w: 2, opts: [{ fx: { power: 4, playoffPower: 2, chem: -2, base: -3 } }, { fx: { chem: 4 } }] },
+  { id: 'slump', when: 'mid', opts: [{ fx: { sho: 3, body: -3 } }, { fx: { clu: 3, form: 1 } }] },
+  { id: 'hotstreak', when: 'mid', opts: [{ fx: { power: 2, body: -3 } }, { fx: { chem: 5 } }] },
+  { id: 'allstarvote', when: 'mid', cond: r => r.p.fame >= 45, opts: [{ fx: { fame: 6, chem: -3 } }, { fx: { form: 1 } }] },
+  { id: 'dunkcontest', when: 'mid', cond: r => r.p.skills.ath >= 60 && age(r) <= 28, opts: [{ fx: { fame: 10, body: -3 }, risk: { p: 0.15, fx: { body: -8, injuryGames: 6 }, msg: 'cardx.ouch' } }, { fx: { body: 2 } }] },
+  { id: 'threecontest', when: 'mid', cond: r => r.p.skills.sho >= 62, opts: [{ fx: { fame: 6, sho: 2 } }, { fx: { body: 3 } }] },
+  { id: 'refrant', when: 'any', opts: [{ fx: { fame: 5, chem: 3, form: -1 } }, { fx: { chem: 2 } }] },
+  { id: 'costar', when: 'any', cond: r => r.p.chem < 70, opts: [{ fx: { chem: 8, usage: -2 } }, { fx: { usage: 3, chem: -8 } }] },
+  { id: 'backtoback', when: 'any', cond: r => age(r) >= 28, opts: [{ fx: { body: -5, power: 1, form: 1 } }, { fx: { body: 4, power: -1 } }] },
+  { id: 'fankid', when: 'any', opts: [{ fx: { fame: 5, chem: 2 } }, { fx: { form: 1 } }] },
+  { id: 'lastshot', when: 'mid', opts: [{ fx: { clu: 3, fame: 4, chem: -4 } }, { fx: { chem: 6, pla: 1 } }] },
+  { id: 'snowstorm', when: 'any', opts: [{ fx: { chem: 6 } }, { fx: { body: 3 } }] },
+  { id: 'contractyear', when: 'mid', cond: r => r.seasonNo % 3 === 2, opts: [{ fx: { usage: 3, chem: -5, fame: 3 } }, { fx: { chem: 4, power: 1 } }] },
+  { id: 'tanking', when: 'mid', cond: r => T(r).base < 50, opts: [{ fx: { fame: 3, base: 2, chem: -3 } }, { fx: { chem: 2 } }] },
+  { id: 'legend', when: 'any', opts: [{ fx: { clu: 2, pla: 2 } }, { fx: { fame: 3, ath: 1 } }] },
+  { id: 'hacked', when: 'any', opts: [{ fx: { fame: 3 } }, { fx: { chem: -1, form: 1 } }] },
+  { id: 'tvgame', when: 'any', opts: [{ fx: { usage: 3, fame: 5, chem: -3 } }, { fx: { chem: 4, power: 1 } }] },
+  { id: 'benched', when: 'any', opts: [{ fx: { fame: 4, chem: -8 } }, { fx: { chem: 4, form: -1 } }] },
+  { id: 'newshooter', when: 'mid', opts: [{ fx: { chem: 4, power: 2 } }, { fx: { usage: 2, chem: -4 } }] },
+  { id: 'sleep', when: 'any', opts: [{ fx: { body: 4, form: 1, chem: -1 } }, { fx: { chem: 1 } }] },
+  { id: 'missedft', when: 'late', opts: [{ fx: { clu: 3, body: -2 } }, { fx: { form: 1, fame: -2 } }] },
+  { id: 'baby', when: 'any', cond: r => age(r) >= 24, opts: [{ fx: { chem: 3, power: -1, fame: 2 } }, { fx: { power: 1, chem: -2 } }] },
+  { id: 'playoffpush', when: 'late', opts: [{ fx: { power: 2, body: -6 } }, { fx: { body: 3 } }] },
+  { id: 'cover', when: 'any', cond: r => r.p.fame >= 40, opts: [{ fx: { fame: 8 }, risk: { p: 0.25, fx: { body: -8 }, msg: 'cardx.curse' } }, { fx: { form: 1 } }] },
+  { id: 'mascot', when: 'any', opts: [{ fx: { fame: 4 }, risk: { p: 0.5, fx: { clu: 2, fame: 3 }, msg: 'cardx.halfcourt' } }, { fx: { chem: 1 } }] },
+  { id: 'rookiehazing', when: 'any', cond: r => r.seasonNo <= 2, opts: [{ fx: { chem: 6, fame: -1 } }, { fx: { chem: -5, fame: 2 } }] },
+  { id: 'veteranday', when: 'any', cond: r => age(r) >= 31, opts: [{ fx: { fame: 4, chem: 3 } }, { fx: { form: 1, body: 1 } }] },
+  { id: 'nightlife', when: 'any', cond: r => age(r) <= 26, opts: [{ fx: { fame: 5, form: -2 } }, { fx: { form: 2, fame: -1 } }] },
+  { id: 'teamdinner', when: 'any', opts: [{ fx: { chem: 5, fame: -1 } }, { fx: { form: 1 } }] },
+  { id: 'filmsession', when: 'any', opts: [{ fx: { def: 2, pla: 2, chem: -2 } }, { fx: { chem: 2 } }] },
+  { id: 'heatcheck', when: 'late', opts: [{ fx: { usage: 2, clu: 2 } }, { fx: { pla: 2, chem: 3 } }] },
+  { id: 'jerseyswap', when: 'any', opts: [{ fx: { fame: 3, rivalBoost: -1 } }, { fx: { clu: 2, rivalBoost: 1 } }] },
+  { id: 'charityfine', when: 'any', opts: [{ fx: { fame: 4, chem: 2 } }, { fx: { fame: -3 } }] },
 ];
 
-export function drawCard(run, type, exclude = []) {
-  const pool = CARDS.filter(c => c.type === type && !exclude.includes(c.id) && c.weight(run) > 0);
-  return run.rng.weighted(pool, c => c.weight(run));
+export const cardById = id => CARDS.find(c => c.id === id);
+
+function weightOf(c, run) {
+  if (c.cond && !c.cond(run)) return 0;
+  return typeof c.w === 'function' ? c.w(run) : (c.w ?? 1);
+}
+
+// phase: 'off' | 'mid' | 'late'. Bereits gezogene Karten werden im Run nicht wiederholt.
+export function drawCard(run, phase) {
+  run.usedCards = run.usedCards || [];
+  const fits = c => (phase === 'off' ? c.when === 'off' : c.when === phase || c.when === 'any');
+  let pool = CARDS.filter(c => fits(c) && !run.usedCards.includes(c.id) && weightOf(c, run) > 0);
+  if (!pool.length) pool = CARDS.filter(c => fits(c) && weightOf(c, run) > 0);
+  const card = run.rng.weighted(pool, c => weightOf(c, run));
+  run.usedCards.push(card.id);
+  return card;
+}
+
+export function cardText(run, card) {
+  const team = T(run);
+  return t(`cards.${card.id}.x`, { name: `${run.rival.first} ${run.rival.last}`, nick: team.nick, city: team.city });
+}
+
+// Option anwenden -> Ergebnis-Text
+export function applyOption(run, card, i) {
+  const opt = card.opts[i];
+  const parts = [];
+  if (opt.special) { const s = SPECIAL[opt.special](run); if (s) parts.push(s); }
+  if (opt.fx) { const s = fx(run, opt.fx); if (s) parts.push(s); }
+  if (opt.risk && run.rng.chance(opt.risk.p)) parts.push(t(opt.risk.msg) + ' ' + fx(run, opt.risk.fx));
+  return parts.join(' ') || t('cardx.nothing');
 }

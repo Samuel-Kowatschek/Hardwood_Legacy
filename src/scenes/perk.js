@@ -1,10 +1,11 @@
 // Perk-Wahl: 1 aus 3, Synergien werden angezeigt.
 import { Scene } from './scene.js';
 import { C, text, tiny, box, cursor } from '../gfx.js';
-import { header, TextBox, Typewriter } from '../ui.js';
+import { header, TextBox } from '../ui.js';
 import { input } from '../input.js';
 import { sfx } from '../systems/audio.js';
 import { save } from '../systems/save.js';
+import { t } from '../i18n/index.js';
 import { PERKS, perkById, activeSynergies, SYNERGIES } from '../data/perks.js';
 import { clamp } from '../systems/rng.js';
 
@@ -15,7 +16,6 @@ export class PerkScene extends Scene {
     const meta = save.meta();
     const have = run.p.perks;
     const avail = PERKS.filter(pk => !have.includes(pk.id) && (!pk.unlock || pk.unlock.test(meta) || meta.unlocked.includes(pk.id)));
-    // Synergie-Partner bevorzugen, damit Builds entstehen
     const partner = id => SYNERGIES.some(s => s.needs.includes(id) && s.needs.some(n => have.includes(n)));
     this.opts = [];
     const pool = avail.slice();
@@ -38,27 +38,26 @@ export class PerkScene extends Scene {
       if (pk.skills) for (const k in pk.skills) p.skills[k] = clamp(p.skills[k] + pk.skills[k], 0, 99);
       const syn = activeSynergies(p.perks).filter(s => !before.includes(s.id));
       sfx.fanfare();
-      this.box = new TextBox(`${pk.name} aktiviert!` + (syn.length ? ` SYNERGIE: ${syn.map(s => s.name).join(', ')}!` : ''));
+      this.box = new TextBox(t('perk.activated', { name: pk.name }) + (syn.length ? t('perk.synergy', { names: syn.map(s => s.name).join(', ') }) : ''));
     }
   }
   draw(ctx) {
-    header(ctx, 'PERK WAEHLEN', `${this.run.p.perks.length} AKTIV`);
+    const p = this.run.p;
+    header(ctx, t('perk.title'), t('perk.active', { n: p.perks.length }));
     this.opts.forEach((pk, k) => {
-      const y = 16 + k * 26;
+      const y = 15 + k * 26;
       box(ctx, 0, y, 160, 26);
       if (k === this.i) cursor(ctx, 5, y + 5);
       text(ctx, pk.name, 12, y + 5, k === this.i ? C.ORANGE : C.WHITE);
-      tiny(ctx, pk.desc.slice(0, 36), 12, y + 16);
+      tiny(ctx, t('perks.' + pk.id).slice(0, 36), 12, y + 16);
     });
-    const p = this.run.p;
     const syn = activeSynergies(p.perks);
-    tiny(ctx, 'AKTIV: ' + (p.perks.map(id => perkById(id).name.split(' ')[0].split('-')[0]).join(', ') || '-'), 2, 98, C.WHITE);
-    if (syn.length) tiny(ctx, 'SYNERGIE: ' + syn.map(s => s.name).join(', '), 2, 105, C.ORANGE);
-    // Hinweis auf moegliche Synergie
+    tiny(ctx, t('perk.activeList', { x: p.perks.map(id => perkById(id).name).join(', ') || '-' }).slice(0, 38), 2, 97);
+    if (syn.length) tiny(ctx, t('perk.synList', { x: syn.map(s => s.name).join(', ') }).slice(0, 38), 2, 104, C.ORANGE);
     const sel = this.opts[this.i];
     if (sel && !this.box) {
       const hit = SYNERGIES.find(s => s.needs.includes(sel.id) && s.needs.every(n => n === sel.id || p.perks.includes(n)));
-      if (hit) tiny(ctx, `-> SYNERGIE ${hit.name.toUpperCase()}!`, 2, 114, C.ORANGE);
+      if (hit) tiny(ctx, t('perk.synHint', { x: hit.name.toUpperCase() }), 2, 113, C.ORANGE);
     }
     if (this.box) this.box.draw(ctx, this.t);
   }
