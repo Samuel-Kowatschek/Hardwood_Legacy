@@ -21,7 +21,8 @@ export function applyRegularArcade(run, kind, q, weight = 1) {
   if (kind === 'pass') { a.all += d * 2; a.mvp += d * 2; }
 }
 
-export function computeAwards(run, season, po) {
+// Regular-Season-Awards (direkt nach der Regular Season verkuendet)
+export function computeRegularAwards(run, season) {
   const { p, rng } = run;
   const o = season.ovr;
   const list = []; // {id, label, won, winner}
@@ -49,7 +50,16 @@ export function computeAwards(run, season, po) {
 
   const scoring = played && season.ppg + ab.ppg > S.aiScoringBase + rb * 0.5 + rng.gauss(0, 1.5);
   if (scoring) { p.awards.scoring++; p.fame += 5; list.push({ id: 'scoring', won: true }); }
+  p.fame = Math.min(100, p.fame);
+  p.peakFame = Math.max(p.peakFame, p.fame);
+  return { list, allStar, mvp, dpoy, scoring };
+}
 
+// Playoff-Awards (Ring, Finals MVP) + Karriere-Stats und Meilensteine (nach den Playoffs)
+export function computePlayoffAwards(run, season, po) {
+  const { p, rng } = run;
+  const o = season.ovr;
+  const list = [];
   if (po.champion) {
     p.awards.rings++;
     p.fame += 18;
@@ -71,5 +81,11 @@ export function computeAwards(run, season, po) {
   for (const m of BALANCE.milestones) {
     if (!p.milestones.includes(m.id) && m.test(p)) { p.milestones.push(m.id); newMs.push(m.id); }
   }
-  return { list, allStar, mvp, dpoy, scoring, ring: !!po.champion, fmvp: list.some(a => a.id === 'fmvp' && a.won), newMs };
+  return { list, ring: !!po.champion, fmvp: list.some(a => a.id === 'fmvp' && a.won), newMs };
+}
+
+// Beides zusammen (Balancing/Tests)
+export function computeAwards(run, season, po) {
+  const reg = computeRegularAwards(run, season), post = computePlayoffAwards(run, season, po);
+  return { ...reg, ...post, list: reg.list.concat(post.list) };
 }

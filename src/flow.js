@@ -6,7 +6,7 @@ import { archetypeById } from './data/archetypes.js';
 import { drawCard } from './data/cards.js';
 import { arcadeMods } from './data/perks.js';
 import { ovr, freshSeason, startSeason, finishSeason, gameProb, simSeries, confSeeds, PAIRS, applyAging, driftTeams } from './systems/sim.js';
-import { computeAwards, applyRegularArcade } from './systems/awards.js';
+import { computeRegularAwards, computePlayoffAwards, applyRegularArcade } from './systems/awards.js';
 import { updateOverstay } from './systems/legacy.js';
 import { playMusic, sfx } from './systems/audio.js';
 import { t } from './i18n/index.js';
@@ -69,10 +69,17 @@ export async function playRun(game, run) {
     await game.show(new CardScene(run, drawCard(run, 'off'), 'off'));
     // 2. Regular Season, unterbrochen von Events
     const season = await regularSeason(game, run);
-    // 3. Playoffs
+    // 3. Regular-Season-Awards (MVP, All-Star, DPOY, Scoring, ROY)
+    const reg = computeRegularAwards(run, season);
+    await game.show(new AwardsScene(run, {
+      title: t('awards.titleReg'), first: t('awards.seedRow', { w: season.w, l: season.l, r: season.rank }),
+      list: reg.list, outro: season.rank <= 10 ? t('awards.nextPO') : t('awards.nextNone'),
+    }));
+    // 4. Playoffs
     const po = await playoffs(game, run, season);
-    // 4. Awards + Altersverlauf
-    const aw = computeAwards(run, season, po);
+    // 5. Playoff-Awards (Ring, Finals MVP), Meilensteine, Altersverlauf
+    const post = computePlayoffAwards(run, season, po);
+    const aw = { ...reg, ...post };
     const aging = applyAging(run);
     const weak = updateOverstay(run, aw, aging, season, po);
     run.log.push({
@@ -80,7 +87,11 @@ export async function playRun(game, run) {
       ppg: season.ppg, w: season.w, l: season.l, reached: po.reached,
       ring: aw.ring, mvp: aw.mvp, fmvp: aw.fmvp, allStar: aw.allStar, weak,
     });
-    await game.show(new AwardsScene(run, season, po, aw, aging));
+    const sgn = v => (v > 0 ? '+' : '') + v;
+    await game.show(new AwardsScene(run, {
+      title: t('awards.titlePo'), first: t('awards.reached.' + po.reached), list: post.list, newMs: post.newMs,
+      outro: t('awards.aging', { age: p.age, ovr: ovr(p), d: sgn(aging.dOvr), db: sgn(aging.db) }),
+    }));
     driftTeams(run);
     // 5. Retire-Gamble
     let forced = null;
