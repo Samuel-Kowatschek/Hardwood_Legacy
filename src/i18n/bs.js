@@ -131,6 +131,7 @@ export default {
       pass: 'PLEJMEJKER! Kad se saigrač oslobodi, pritisni njegovu strelicu. Pazi na finte!',
       ft: 'SLOBODNA BACANJA! Nišan pluta. Smiri ga strelicama, {ok} za šut.',
     },
+    bank: 'PREKO TABLE!',
     bonus: 'BONUS: {x}', shotN: 'ŠUT {i}/{n}', makes: 'POGOCI {n}', shoot: '{ok} = ŠUT',
     swish: 'ČISTO!', andOne: 'AND ONE!', make: 'KOŠ!', miss: 'PROMAŠAJ', shotClock: 'ŠUT SAT!',
     resShot: '{m}/{n} pogođeno!', resAndOne: ' {n}x AND ONE.',

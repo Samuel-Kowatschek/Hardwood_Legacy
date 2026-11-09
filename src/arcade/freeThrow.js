@@ -34,8 +34,11 @@ export class FreeThrow {
   update() {
     if (this.fly) {
       this.fly++;
-      if (this.fly === 24) { if (this.res.make) { sfx.swish(); sfx.crowd(0.6); } else sfx.miss(); }
-      if (this.fly > 50) {
+      if (this.res.bank) {
+        if (this.fly === 24) sfx.hit();
+        if (this.fly === 34) { sfx.swish(); sfx.crowd(0.6); }
+      } else if (this.fly === 24) { if (this.res.make) { sfx.swish(); sfx.crowd(0.6); } else sfx.miss(); }
+      if (this.fly > (this.res.bank ? 60 : 50)) {
         this.i++;
         if (this.i >= N) {
           this.done = true;
@@ -55,10 +58,13 @@ export class FreeThrow {
     this.pos();
     if (input.pressed('a') || this.clock <= 0) {
       const d = Math.hypot(this.x - RX, this.y - RY);
-      const make = d < 8, swish = d < 3.5;
+      const swish = d < 3.5;
+      // Kleines Rechteck am Brett getroffen = Bank Shot (zaehlt voll, nur ohne Swish-Bonus)
+      const bank = d >= 8 && this.x >= RX - 8 && this.x <= RX + 8 && this.y >= RY - 14 && this.y <= RY - 2;
+      const make = d < 8 || bank;
       if (make) this.makes++;
       if (swish) this.swishes++;
-      this.res = { make, swish };
+      this.res = { make, swish, bank };
       this.fly = 1;
     }
   }
@@ -80,8 +86,16 @@ export class FreeThrow {
     drawSprite(ctx, p.look, team.colors, 14, 46, { view: 'back', frame: this.fly && this.fly < 18 ? 'shoot' : idleFrame(tt), scale: 2, age: p.age });
     if (this.fly) {
       const k = Math.min(1, this.fly / 24);
-      const tx = this.res.make ? RX - 2 : this.x - 2, ty = this.res.make ? RY - 4 : this.y - 2;
-      ball(ctx, Math.round(28 + (tx - 28) * k), Math.round(48 + (ty - 48) * k - Math.sin(k * Math.PI) * 24) + (this.fly > 24 && this.res.make ? Math.min(10, this.fly - 24) : 0));
+      const r = this.res;
+      if (r.bank && this.fly > 24) {
+        // vom Brett zurueck in den Ring, dann durchs Netz
+        const k2 = Math.min(1, (this.fly - 24) / 10);
+        const bx = this.x - 2 + (RX - 2 - (this.x - 2)) * k2, by = this.y - 2 + (RY - 4 - (this.y - 2)) * k2;
+        ball(ctx, Math.round(bx), Math.round(by) + (this.fly > 34 ? Math.min(10, this.fly - 34) : 0));
+      } else {
+        const tx = r.make && !r.bank ? RX - 2 : this.x - 2, ty = r.make && !r.bank ? RY - 4 : this.y - 2;
+        ball(ctx, Math.round(28 + (tx - 28) * k), Math.round(48 + (ty - 48) * k - Math.sin(k * Math.PI) * 24) + (this.fly > 24 && r.make && !r.bank ? Math.min(10, this.fly - 24) : 0));
+      }
     } else {
       // Fadenkreuz (Maus: Klick/Halten in eine Richtung lenkt, Klick aufs Kreuz wirft)
       const x = Math.round(this.x), y = Math.round(this.y);
@@ -93,7 +107,7 @@ export class FreeThrow {
     box(ctx, 0, 96, 160, 48);
     text(ctx, t('arcade.ft', { i: Math.min(this.i + 1, N), n: N }), 8, 103);
     tiny(ctx, `${this.makes}/${N}`, 152, 104, C.ORANGE, 'right');
-    if (this.res && this.fly > 20) text(ctx, this.res.swish ? t('arcade.swish') : this.res.make ? t('arcade.make') : t('arcade.miss'), 80, 119, this.res.make ? C.ORANGE : C.WHITE, 'center');
+    if (this.res && this.fly > 20) text(ctx, this.res.swish ? t('arcade.swish') : this.res.bank ? t('arcade.bank') : this.res.make ? t('arcade.make') : t('arcade.miss'), 80, 119, this.res.make ? C.ORANGE : C.WHITE, 'center');
     else { ctx.fillStyle = C.WHITE; ctx.fillRect(12, 120, Math.round(136 * this.clock / 420), 2); }
     tiny(ctx, t('arcade.ftHint'), 80, 133, C.WHITE, 'center');
   }

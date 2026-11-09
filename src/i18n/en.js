@@ -131,6 +131,7 @@ export default {
       pass: 'PLAYMAKER! When a teammate gets open, press his arrow. Watch for fakes!',
       ft: 'FREE THROWS! Your aim drifts. Steady it with the arrows, {ok} to shoot.',
     },
+    bank: 'BANK SHOT!',
     bonus: 'BONUS: {x}', shotN: 'SHOT {i}/{n}', makes: 'MAKES {n}', shoot: '{ok} = SHOOT',
     swish: 'SWISH!', andOne: 'AND ONE!', make: 'BUCKET!', miss: 'MISSED', shotClock: 'SHOT CLOCK!',
     resShot: '{m}/{n} made!', resAndOne: ' {n}x AND ONE.',

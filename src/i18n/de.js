@@ -131,6 +131,7 @@ export default {
       pass: 'PLAYMAKER! Wenn ein Mitspieler frei wird, drück seinen Pfeil. Vorsicht, Fakes!',
       ft: 'FREIWÜRFE! Dein Ziel wackelt. Mit den Pfeilen ausgleichen, {ok} zum Werfen.',
     },
+    bank: 'ÜBERS BRETT!',
     bonus: 'BONUS: {x}', shotN: 'WURF {i}/{n}', makes: 'TREFFER {n}', shoot: '{ok} = WERFEN',
     swish: 'SWISH!', andOne: 'AND ONE!', make: 'TREFFER!', miss: 'DANEBEN', shotClock: 'SHOT CLOCK!',
     resShot: '{m}/{n} getroffen!', resAndOne: ' {n}x AND ONE.',
