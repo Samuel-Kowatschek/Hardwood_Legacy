@@ -3,6 +3,7 @@ import { Scene } from '../scenes/scene.js';
 import { TextBox } from '../ui.js';
 import { C, tiny } from '../gfx.js';
 import { playMusic } from '../systems/audio.js';
+import { input } from '../input.js';
 import { t } from '../i18n/index.js';
 import { drawBattle } from './common.js';
 import { ShotMeter } from './shotMeter.js';
@@ -51,6 +52,6 @@ export class ArcadeScene extends Scene {
       return;
     }
     this.game.draw(ctx, this.t);
-    if (this.phase === 'result') this.box.draw(ctx, this.t);
+    if (this.phase === 'result') { input.clearRegions(); this.box.draw(ctx, this.t); }
   }
 }

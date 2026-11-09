@@ -65,6 +65,7 @@ export class DefenseStop {
   draw(ctx, tt) {
     const dx = this.cur ? (this.cur.dir === 'left' ? -6 : this.cur.dir === 'right' ? 6 : 0) : 0;
     drawBattle(ctx, this.s, tt, { oppDx: dx, showHoop: false });
+    input.dirPad(80, 70, 10, 'dominant');
     box(ctx, 0, 96, 160, 48);
     text(ctx, t('arcade.move', { i: Math.min(this.i + 1, this.n), n: this.n }), 8, 104);
     tiny(ctx, t('arcade.stops', { n: this.hits }), 152, 105, C.ORANGE, 'right');

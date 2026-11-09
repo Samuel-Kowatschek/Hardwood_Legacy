@@ -22,6 +22,27 @@ function release(btn) { down.delete(btn); }
 
 // Klickbare Bereiche (logische 160x144-Koordinaten). Werden jeden Frame beim Zeichnen neu registriert.
 let regions = [];
+// Richtungs-Steuerung per Maus fuer Minigames: Klick relativ zur Mitte (x, y) ergibt die Richtung.
+// mode: 'dominant' (eine Richtung), 'both' (auch diagonal), 'horizontal' (nur links/rechts). Klick in der Mitte = OK.
+let dirPad = null;
+let mouseDirs = new Set();
+function dirsFor(x, y) {
+  const dx = x - dirPad.x, dy = y - dirPad.y, dead = dirPad.dead;
+  if (dirPad.mode === 'horizontal') return Math.abs(dx) <= dead ? null : [dx < 0 ? 'left' : 'right'];
+  if (Math.hypot(dx, dy) <= dead) return null;
+  if (dirPad.mode === 'both') {
+    const out = [];
+    if (Math.abs(dx) > dead * 0.6) out.push(dx < 0 ? 'left' : 'right');
+    if (Math.abs(dy) > dead * 0.6) out.push(dy < 0 ? 'up' : 'down');
+    return out;
+  }
+  return [Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down')];
+}
+function setMouseDirs(list) {
+  for (const d of mouseDirs) if (!list.includes(d)) release(d);
+  for (const d of list) if (!mouseDirs.has(d)) press(d);
+  mouseDirs = new Set(list);
+}
 function hitAt(x, y) {
   for (let i = regions.length - 1; i >= 0; i--) {
     const r = regions[i];
@@ -35,7 +56,8 @@ export const input = {
   blocked: false,
   // Widgets rufen das beim Zeichnen auf: hover() bei Mausbewegung darueber, click() bei Klick/Tap
   region(x, y, w, h, hover, click) { regions.push({ x, y, w, h, hover, click }); },
-  clearRegions() { regions = []; },
+  clearRegions() { regions = []; dirPad = null; },
+  dirPad(x, y, dead = 8, mode = 'dominant') { dirPad = { x, y, dead, mode }; },
   isDown: b => down.has(b),
   pressed: b => pressed.has(b),
   consume: b => pressed.delete(b),
@@ -79,12 +101,25 @@ export function initInput(canvas) {
     if (e.pointerType !== 'mouse') input.device = 'touch';
     anyListeners.forEach(f => f('click'));
     // Klick auf einen Eintrag waehlt ihn aus; ohne klickbare Eintraege wirkt der Klick wie OK (Text weiter, Wurf ...)
-    const hit = hitAt(...toLogical(e));
+    const pos = toLogical(e);
+    const hit = hitAt(...pos);
     if (hit) { hit.hover?.(); hit.click?.(); return; }
+    if (dirPad) {
+      canvas.setPointerCapture?.(e.pointerId);
+      const d = dirsFor(...pos);
+      if (!d) press('a'); else { setMouseDirs(d); dragging = true; }
+      return;
+    }
     if (!regions.length) press('a');
   });
-  canvas.addEventListener('pointerup', () => release('a'));
-  canvas.addEventListener('pointercancel', () => release('a'));
+  let dragging = false;
+  canvas.addEventListener('pointermove', e => {
+    if (!dragging || !dirPad) return;
+    setMouseDirs(dirsFor(...toLogical(e)) || []);
+  });
+  const endPointer = () => { release('a'); dragging = false; setMouseDirs([]); };
+  canvas.addEventListener('pointerup', endPointer);
+  canvas.addEventListener('pointercancel', endPointer);
 
   document.querySelectorAll('[data-btn]').forEach(el => {
     const b = el.dataset.btn;

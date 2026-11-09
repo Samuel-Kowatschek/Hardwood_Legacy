@@ -85,6 +85,7 @@ export class Rebound {
     if (!this.res) ball(ctx, Math.round(this.bx), Math.round(this.by));
     else if (this.res === 'got') ball(ctx, Math.round(this.px) + 6, 62);
     else ball(ctx, Math.round(this.ox) + 6, 62);
+    input.dirPad(Math.round(this.px) + 8, 78, 9, 'horizontal');
     box(ctx, 0, 96, 160, 48);
     text(ctx, t('arcade.reb', { i: Math.min(this.i + 1, N), n: N }), 8, 103);
     tiny(ctx, `${this.got}/${N}`, 152, 104, C.ORANGE, 'right');

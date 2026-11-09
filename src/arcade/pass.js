@@ -105,6 +105,7 @@ export class Pass {
       arrowIcon(ctx, ax, ay, d, this.open === d ? C.ORANGE : C.WHITE);
     }
     mini(ctx, ME[0], ME[1], team.colors[0]);
+    input.dirPad(ME[0], ME[1], 8, 'dominant');
     if (this.flight && this.flight.to) {
       const [x, y] = SPOTS[this.flight.to];
       const k = Math.min(1, this.flight.t / 12);

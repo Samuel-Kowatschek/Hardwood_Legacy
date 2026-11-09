@@ -83,8 +83,9 @@ export class FreeThrow {
       const tx = this.res.make ? RX - 2 : this.x - 2, ty = this.res.make ? RY - 4 : this.y - 2;
       ball(ctx, Math.round(28 + (tx - 28) * k), Math.round(48 + (ty - 48) * k - Math.sin(k * Math.PI) * 24) + (this.fly > 24 && this.res.make ? Math.min(10, this.fly - 24) : 0));
     } else {
-      // Fadenkreuz
+      // Fadenkreuz (Maus: Klick/Halten in eine Richtung lenkt, Klick aufs Kreuz wirft)
       const x = Math.round(this.x), y = Math.round(this.y);
+      input.dirPad(x, y, 5, 'both');
       ctx.fillStyle = C.ORANGE;
       ctx.fillRect(x - 4, y, 3, 1); ctx.fillRect(x + 2, y, 3, 1); ctx.fillRect(x, y - 4, 1, 3); ctx.fillRect(x, y + 2, 1, 3);
       ctx.fillStyle = C.WHITE; ctx.fillRect(x, y, 1, 1);

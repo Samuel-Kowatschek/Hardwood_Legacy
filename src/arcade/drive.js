@@ -79,6 +79,7 @@ export class Drive {
       drawSprite(ctx, p.look, team.colors, PX + ex, Math.round(this.y) - (this.end ? Math.min(12, this.end) : 0), { view: 'side', frame: Math.floor(tt / 6) % 2 ? 'run0' : 'run1', age: p.age });
       if (!this.stripped) ball(ctx, PX + ex + 13, Math.round(this.y) + 12 + (Math.floor(tt / 6) % 2) * 4);
     }
+    input.dirPad(PX + 8, Math.round(this.y) + 12, 6, 'dominant');
     box(ctx, 0, 96, 160, 48);
     text(ctx, t('arcade.drive'), 8, 103, C.ORANGE);
     tiny(ctx, t('arcade.contact', { n: this.hits }), 152, 104, this.hits ? C.ORANGE : C.WHITE, 'right');
