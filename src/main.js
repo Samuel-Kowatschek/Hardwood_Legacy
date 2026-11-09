@@ -9,6 +9,7 @@ import { initAudio, unlockAudio, setMuted, isMuted, sfx } from './systems/audio.
 import { save } from './systems/save.js';
 import { loadNameGen } from './names/nameGen.js';
 import { TitleScene } from './scenes/title.js';
+import { VERSION } from './version.js';
 import { openHelp, closeHelp } from './helpModal.js';
 
 const canvas = document.getElementById('game');
@@ -121,6 +122,7 @@ function loop(now) {
 
 async function boot() {
   resize();
+  document.getElementById('version').textContent = VERSION;
   ctx.fillStyle = C.BG; ctx.fillRect(0, 0, W, H);
   initInput(canvas);
   const settings = save.settings();

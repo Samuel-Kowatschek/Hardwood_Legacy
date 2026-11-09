@@ -33,6 +33,7 @@
   .ab [data-btn=b] { left: 0; top: 50px; }
   .meta { position: absolute; left: 50%; transform: translateX(-50%); bottom: 10px; display: flex; gap: 6px; }
   .meta .btn { position: static; padding: 6px 6px; font-size: 7px; white-space: nowrap; }
+  #version { position: fixed; left: 8px; bottom: 6px; font-size: 7px; color: var(--white); opacity: 0.6; z-index: 1; pointer-events: none; }
   /* Desktop-Leiste unter dem Spiel */
   #bar { flex: none; display: flex; justify-content: center; gap: 10px; padding: 0 12px 18px; }
   .bbtn { font: 8px 'Press Start 2P', monospace; color: var(--white); background: var(--bg); border: 2px solid var(--white);
@@ -83,6 +84,7 @@
 </style>
 </head>
 <body>
+  <div id="version"></div>
   <div id="screen"><canvas id="game" width="160" height="144"></canvas></div>
   <div id="bar">
     <button class="bbtn" data-btn="help" data-label="help">HELP</button>
