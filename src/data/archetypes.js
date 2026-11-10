@@ -28,7 +28,7 @@ export const ARCHETYPES = [
     weights: { pla: 0.4, sho: 0.2, clu: 0.2, ath: 0.1, def: 0.1 },
     core: { form: 0, body: 2, chem: 8, fame: 0 },
     games: { pass: 4, drive: 3, shot: 2, ft: 1, defense: 1, fast: 1, rebound: 1 }, ppg: -1, rpg: 0, apg: 5,
-    unlock: { key: 'runs1', test: m => m.runs >= 1 },
+    unlock: { key: 'allstar', test: m => !!m.ach?.allstar },
   },
   {
     id: 'lock', name: 'Lockdown', pos: 'SF',
@@ -36,7 +36,40 @@ export const ARCHETYPES = [
     weights: { def: 0.45, ath: 0.25, clu: 0.1, sho: 0.1, pla: 0.1 },
     core: { form: 0, body: 0, chem: 6, fame: -4 },
     games: { defense: 5, rebound: 2, fast: 2, shot: 1, ft: 1, drive: 1, pass: 1 }, ppg: -4, rpg: 1, apg: 0,
-    unlock: { key: 'ring', test: m => m.totalRings >= 1 },
+    unlock: { key: 'dpoy', test: m => !!m.ach?.dpoy },
+  },
+  // ---- Freischaltbare Archetypen (schwere Bedingungen) ----
+  {
+    id: 'stretch', name: 'Stretch Big', pos: 'PF',
+    skills: { sho: 64, pla: 45, def: 58, ath: 55, clu: 52 },
+    weights: { sho: 0.3, def: 0.25, ath: 0.2, clu: 0.15, pla: 0.1 },
+    core: { form: 0, body: -2, chem: 2, fame: 0 },
+    games: { shot: 3, rebound: 3, defense: 2, ft: 2, drive: 1, fast: 1, pass: 1 }, ppg: 0, rpg: 4, apg: 0,
+    unlock: { key: 'mvp', test: m => !!m.ach?.mvp },
+  },
+  {
+    id: 'twoway', name: 'Two-Way Wing', pos: 'SF',
+    skills: { sho: 60, pla: 48, def: 66, ath: 64, clu: 54 },
+    weights: { def: 0.3, sho: 0.25, ath: 0.25, pla: 0.1, clu: 0.1 },
+    core: { form: 1, body: 0, chem: 3, fame: 0 },
+    games: { defense: 3, shot: 3, fast: 2, drive: 2, ft: 1, rebound: 1, pass: 1 }, ppg: 1, rpg: 1, apg: 0,
+    unlock: { key: 'ring', test: m => !!m.ach?.ring },
+  },
+  {
+    id: 'scorer', name: 'Bucket Getter', pos: 'SG',
+    skills: { sho: 70, pla: 45, def: 36, ath: 58, clu: 70 },
+    weights: { sho: 0.35, clu: 0.3, ath: 0.15, pla: 0.1, def: 0.1 },
+    core: { form: 2, body: 0, chem: -4, fame: 4 },
+    games: { shot: 3, clutch: 3, drive: 3, ft: 2, fast: 1, pass: 1, defense: 1, rebound: 1 }, ppg: 4, rpg: 0, apg: -1,
+    unlock: { key: 'legacy1000', test: m => !!m.ach?.legacy1000 },
+  },
+  {
+    id: 'unicorn', name: 'Unicorn', pos: 'C',
+    skills: { sho: 62, pla: 58, def: 66, ath: 68, clu: 58 },
+    weights: { sho: 0.2, pla: 0.2, def: 0.2, ath: 0.2, clu: 0.2 },
+    core: { form: 3, body: -6, chem: 2, fame: 4 },
+    games: { rebound: 2, shot: 2, fast: 2, defense: 1, drive: 1, pass: 1, ft: 1, clutch: 1 }, ppg: 2, rpg: 5, apg: 2,
+    unlock: { key: 'hundred', test: m => !!m.ach?.hundred },
   },
 ];
 

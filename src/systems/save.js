@@ -1,6 +1,6 @@
 // localStorage-Persistenz (Meta-Progress, Hall of Fame, Settings). Immer in try/catch.
 
-const KEYS = { meta: 'hwl_meta_v1', hof: 'hwl_hof_v1', settings: 'hwl_settings_v1' };
+const KEYS = { meta: 'hwl_meta_v1', hof: 'hwl_hof_v1', settings: 'hwl_settings_v1', run: 'hwl_run_v1' };
 
 function read(key, fallback) {
   try {
@@ -16,7 +16,7 @@ function write(key, val) {
   try { localStorage.setItem(key, JSON.stringify(val)); } catch { /* Storage blockiert: Spiel laeuft trotzdem */ }
 }
 
-const META_DEFAULT = { runs: 0, best: 0, totalRings: 0, fmvps: 0, bestTier: 0, unlocked: [], scores: [] };
+const META_DEFAULT = { runs: 0, best: 0, totalRings: 0, fmvps: 0, bestTier: 0, unlocked: [], scores: [], ach: {} };
 
 export const save = {
   meta() { return read(KEYS.meta, META_DEFAULT); },
@@ -30,5 +30,9 @@ export const save = {
     return list.indexOf(entry);
   },
   settings() { return read(KEYS.settings, { mute: false }); },
+  // Genau ein gespeicherter Run (wird zu Beginn jeder Season automatisch ueberschrieben)
+  saveRun(data) { write(KEYS.run, data); },
+  loadRun() { try { const raw = localStorage.getItem(KEYS.run); return raw ? JSON.parse(raw) : null; } catch { return null; } },
+  clearRun() { try { localStorage.removeItem(KEYS.run); } catch { /* egal */ } },
   setSettings(s) { write(KEYS.settings, s); },
 };

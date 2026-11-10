@@ -23,9 +23,9 @@ export function createLeague(rng, names) {
   return teams;
 }
 
-export function newPlayer(rng, names, archId, look, name) {
+export function newPlayer(rng, names, archId, look, name, pick = null) {
   const arch = archetypeById(archId);
-  const draftPick = rng.weighted(Array.from({ length: 60 }, (_, i) => i + 1), p => (p <= 14 ? 3 : p <= 30 ? 2 : 1));
+  const draftPick = pick ?? rng.weighted(Array.from({ length: 60 }, (_, i) => i + 1), p => (p <= 14 ? 3 : p <= 30 ? 2 : 1));
   const talent = (60 - draftPick) / 60; // 0..1
   const skills = {};
   for (const k of Object.keys(arch.skills)) skills[k] = clamp(Math.round(arch.skills[k] + rng.gauss(0, 3) + talent * 4 - 2), 25, 90);
@@ -39,20 +39,26 @@ export function newPlayer(rng, names, archId, look, name) {
     chem: 50 + c.chem, fame: clamp(20 + Math.round(talent * 20) + c.fame, 5, 60), peakFame: 0,
     teamId: -1, teamsPlayed: [], draftPick, perks: [],
     career: { pts: 0, games: 0, seasons: 0 },
-    awards: { rings: 0, mvp: 0, fmvp: 0, dpoy: 0, scoring: 0, allStar: 0, roy: 0 },
+    awards: { rings: 0, mvp: 0, fmvp: 0, dpoy: 0, scoring: 0, allStar: 0, roy: 0, contests: 0 },
     milestones: [], flags: { fifty: false }, ringChase: false, ringsChased: 0,
   };
 }
 
-export function createRun(seedStr, names, { archId, look, name, hof = [] }) {
+// Draft-Pick, wenn man sich das Team selbst aussucht: schwaches Team = frueher Pick (mehr Talent)
+export function pickForTeam(teams, teamId) {
+  const byBase = teams.slice().sort((a, b) => a.base - b.base || a.id - b.id);
+  return byBase.findIndex(x => x.id === teamId) + 1;
+}
+
+export function createRun(seedStr, names, { archId, look, name, hof = [], teamId = null }) {
   const rng = new RNG(seedStr);
   const teams = createLeague(rng.fork('league'), names);
   const prng = rng.fork('player');
-  const p = newPlayer(prng, names, archId, look, name);
-  // Draft: hoher Pick -> schwaches Team
+  const p = newPlayer(prng, names, archId, look, name, teamId != null ? pickForTeam(teams, teamId) : null);
+  // Draft: hoher Pick -> schwaches Team (oder selbst gewaehltes Team)
   const byBase = teams.slice().sort((a, b) => a.base - b.base);
   const idx = clamp(((p.draftPick - 1) % 30) + rng.int(-2, 2), 0, 29);
-  p.teamId = byBase[idx].id;
+  p.teamId = teamId != null ? teamId : byBase[idx].id;
   p.teamsPlayed = [p.teamId];
   // Rivale: Star eines starken Teams; manchmal ein Spieler aus einem frueheren Run (persistenter Rivale)
   const rrng = rng.fork('rival');
@@ -76,3 +82,16 @@ export function createRun(seedStr, names, { archId, look, name, hof = [] }) {
 
 export const teamOf = (run, id = run.p.teamId) => run.teams[id];
 export const maxSeasons = () => BALANCE.maxSeasons;
+
+// ---- Spielstand: genau ein Run, gespeichert zu Beginn jeder Season ----
+export function serializeRun(run) {
+  const { rng, cur, ...rest } = run;
+  return { v: 1, ...JSON.parse(JSON.stringify(rest)), rngState: rng.state, savedAt: Date.now() };
+}
+export function restoreRun(data) {
+  const { rngState, savedAt, v, ...rest } = data;
+  const run = { ...rest, cur: null };
+  run.rng = new RNG(data.seed);
+  run.rng.state = rngState;
+  return run;
+}

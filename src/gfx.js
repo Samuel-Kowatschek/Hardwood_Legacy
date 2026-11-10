@@ -34,11 +34,35 @@ export async function initFont() {
     fontOk = document.fonts.check(`8px ${FONT}`);
   } catch { fontOk = false; }
   glyphCache.clear();
+  maskCache.clear();
 }
 
 function hexToRgb(hex) {
   const n = parseInt(hex.slice(1), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+// Glyph-Maske: Buchstabe 4x gross (32px) zeichnen und pro 8x8-Zelle die Pixelmitte abtasten.
+// So entstehen keine Antialiasing-Artefakte (vorher: M/W je nach Browser als Block).
+const maskCache = new Map();
+function glyphMask(ch) {
+  let m = maskCache.get(ch);
+  if (m) return m;
+  const S = 4, cv = document.createElement('canvas');
+  cv.width = 8 * S; cv.height = 8 * S;
+  const gx = cv.getContext('2d', { willReadFrequently: true });
+  gx.font = fontOk ? `${8 * S}px ${FONT}` : `bold ${8 * S}px monospace`;
+  gx.textBaseline = 'alphabetic';
+  gx.fillStyle = '#000';
+  gx.fillText(ch, 0, 8 * S);
+  const d = gx.getImageData(0, 0, 8 * S, 8 * S).data;
+  m = new Uint8Array(64);
+  for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) {
+    const px = x * S + S / 2, py = y * S + S / 2;
+    m[y * 8 + x] = d[(py * 8 * S + px) * 4 + 3] >= 128 ? 1 : 0;
+  }
+  maskCache.set(ch, m);
+  return m;
 }
 
 function glyph(ch, color) {
@@ -48,17 +72,9 @@ function glyph(ch, color) {
   g = document.createElement('canvas');
   g.width = 8; g.height = 8;
   const gx = g.getContext('2d');
-  gx.font = fontOk ? `8px ${FONT}` : 'bold 8px monospace';
-  gx.textBaseline = 'alphabetic';
+  const m = glyphMask(ch);
   gx.fillStyle = color;
-  gx.fillText(ch, 0, 8);
-  const img = gx.getImageData(0, 0, 8, 8);
-  const [r, gg, b] = hexToRgb(color);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const on = img.data[i + 3] >= 100;
-    img.data[i] = r; img.data[i + 1] = gg; img.data[i + 2] = b; img.data[i + 3] = on ? 255 : 0;
-  }
-  gx.putImageData(img, 0, 0);
+  for (let i = 0; i < 64; i++) if (m[i]) gx.fillRect(i % 8, (i / 8) | 0, 1, 1);
   glyphCache.set(key, g);
   return g;
 }

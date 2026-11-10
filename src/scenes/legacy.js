@@ -11,6 +11,7 @@ import { percentileOf } from '../data/scoreDist.js';
 import { archetypeById, ARCHETYPES } from '../data/archetypes.js';
 import { PERKS } from '../data/perks.js';
 import { drawSprite, idleFrame } from '../sprites/spriteGen.js';
+import { openShare } from '../helpModal.js';
 
 export class LegacyScene extends Scene {
   constructor(run) {
@@ -26,9 +27,10 @@ export class LegacyScene extends Scene {
     game.run = null;
     if (this.saved) return;
     this.saved = true;
+    save.clearRun(); // Run beendet: Spielstand loeschen
     const run = this.run, p = run.p, lg = this.lg;
     const meta = save.meta();
-    const metaBefore = { ...meta, unlocked: meta.unlocked.slice() };
+    const metaBefore = { ...meta, unlocked: meta.unlocked.slice(), ach: { ...(meta.ach || {}) } };
     this.prevBest = meta.runs ? meta.best : null;
     this.newBest = meta.runs > 0 && lg.score > meta.best;
     meta.runs++;
@@ -37,6 +39,20 @@ export class LegacyScene extends Scene {
     meta.fmvps += p.awards.fmvp;
     meta.bestTier = Math.max(meta.bestTier, lg.tier.idx);
     meta.scores = (meta.scores || []).concat(lg.score).slice(-500);
+    // Erfolge fuer Freischaltungen
+    const a = p.awards, ach = meta.ach = { ...(meta.ach || {}) };
+    const peakOvr = Math.max(0, ...run.log.map(l => l.ovr || 0));
+    if (a.allStar > 0) ach.allstar = true;
+    if (a.dpoy > 0) ach.dpoy = true;
+    if (a.mvp > 0) ach.mvp = true;
+    if (a.rings > 0) ach.ring = true;
+    if (a.rings >= 3) ach.rings3 = true;
+    if (a.fmvp > 0) ach.fmvp = true;
+    if ((a.contests || 0) > 0) ach.contest = true;
+    if (p.flags.hundred) ach.hundred = true;
+    if (lg.score >= 1000) ach.legacy1000 = true;
+    if (p.career.seasons >= 15) ach.seasons15 = true;
+    if (peakOvr >= 90) ach.ovr90 = true;
     this.localRank = meta.scores.filter(s => s > lg.score).length + 1;
     this.localN = meta.scores.length;
     this.pctl = percentileOf(lg.score);
@@ -81,48 +97,44 @@ export class LegacyScene extends Scene {
     const menu = t('legacy.menu');
     if (input.pressed('right')) { this.i = (this.i + 1) % menu.length; sfx.blip(); }
     if (input.pressed('left')) { this.i = (this.i + menu.length - 1) % menu.length; sfx.blip(); }
-    if (input.pressed('b')) { this.i = 3; }
+    if (input.pressed('b')) { this.i = 2; }
     const clicked = this.clickRow != null;
     if (clicked) { this.i = this.clickRow; this.clickRow = null; }
     if (input.pressed('a') || clicked) {
       sfx.select();
-      if (this.i === 0 || this.i === 3) {
+      if (this.i === 0 || this.i === 2) {
         Promise.all([import('./create.js'), import('../systems/rng.js'), import('./title.js')]).then(([c, r, tt]) => {
           game.set(this.i === 0 ? new c.CreateScene(r.randomSeedString()) : new tt.TitleScene());
         });
-      } else if (this.i === 1) this.exportPng();
-      else this.copySeed();
+      } else this.share();
     }
   }
-  copySeed() {
+  // Legacy-Karte als PNG (4x skaliert)
+  makePng() {
+    return new Promise(res => {
+      try {
+        const cv = document.createElement('canvas');
+        cv.width = W; cv.height = H;
+        const c = cv.getContext('2d');
+        c.fillStyle = C.BG; c.fillRect(0, 0, W, H);
+        this.drawCard(c, 0, false);
+        const big = document.createElement('canvas');
+        big.width = W * 4; big.height = H * 4;
+        const b = big.getContext('2d');
+        b.imageSmoothingEnabled = false;
+        b.drawImage(cv, 0, 0, big.width, big.height);
+        big.toBlob(blob => res(blob), 'image/png');
+      } catch { res(null); }
+    });
+  }
+  share() {
     const s = this.run.seed;
     const url = `${location.origin}${location.pathname}?seed=${s}`;
-    const done = ok => { this.note = ok ? t('legacy.copied') : t('legacy.seedIs', { s }); };
-    try { navigator.clipboard.writeText(t('legacy.share', { s, score: this.lg.score, url })).then(() => done(true), () => done(false)); }
-    catch { done(false); }
-  }
-  exportPng() {
-    try {
-      const cv = document.createElement('canvas');
-      cv.width = W; cv.height = H;
-      const c = cv.getContext('2d');
-      c.fillStyle = C.BG; c.fillRect(0, 0, W, H);
-      this.drawCard(c, 0, false);
-      const big = document.createElement('canvas');
-      big.width = W * 4; big.height = H * 4;
-      const b = big.getContext('2d');
-      b.imageSmoothingEnabled = false;
-      b.drawImage(cv, 0, 0, big.width, big.height);
-      big.toBlob(blob => {
-        if (!blob) { this.note = t('legacy.pngErr'); return; }
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `hardwood-legacy-${this.run.p.last.toLowerCase().replace(/[^a-z]/g, '')}-${this.lg.score}.png`;
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-        this.note = t('legacy.pngOk');
-      });
-    } catch { this.note = t('legacy.pngErr'); }
+    openShare({
+      text: t('share.text', { tier: this.tierName, score: this.lg.score, s }), url,
+      file: `hardwood-legacy-${this.run.p.last.toLowerCase().replace(/[^a-z]/g, '')}-${this.lg.score}.png`,
+      png: () => this.makePng(),
+    });
   }
   drawCard(ctx, tt, withMenu = true) {
     const run = this.run, p = run.p, lg = this.lg, a = p.awards;
@@ -175,7 +187,7 @@ export class LegacyScene extends Scene {
     }
     this.drawCard(ctx, this.t, true);
     t('legacy.menu').forEach((m, k) => {
-      const x = 4 + k * 39;
+      const x = 8 + k * 52;
       input.region(x - 2, 131, 38, 12, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
       if (k === this.i) cursor(ctx, x, 134);
       tiny(ctx, m, x + 7, 135, k === this.i ? C.ORANGE : C.WHITE);

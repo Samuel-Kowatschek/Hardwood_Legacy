@@ -25,6 +25,7 @@ export function legacy(run) {
   add('scoring', a.scoring, s.scoring);
   add('allStar', a.allStar, s.allStar);
   add('roy', a.roy, s.roy);
+  add('contests', a.contests || 0, s.contest);
   add('milestones', p.milestones.length, s.milestone);
   add('hundred', p.flags.hundred ? 1 : 0, s.hundred); // 100-Punkte-Spiel zaehlt extra
   if (p.ringsChased > 0) parts.push(['ringChase', p.ringsChased, -Math.round(p.ringsChased * s.ring * (1 - B.ringChaseFactor))]);

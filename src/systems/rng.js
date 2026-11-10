@@ -24,7 +24,16 @@ export function mulberry32(a) {
 export class RNG {
   constructor(seed) {
     this.seed = typeof seed === 'number' ? seed >>> 0 : hashString(String(seed));
-    this.next = mulberry32(this.seed);
+    this.state = this.seed; // speicherbar (Spielstand)
+  }
+  // mulberry32 mit sichtbarem Zustand
+  next() {
+    let a = this.state | 0;
+    a = (a + 0x6d2b79f5) | 0;
+    this.state = a;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   }
   float(min = 0, max = 1) { return min + this.next() * (max - min); }
   int(min, max) { return Math.floor(this.float(min, max + 1)); } // inklusive max

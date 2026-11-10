@@ -11,12 +11,15 @@ export default {
   ui: { help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYP', perk: 'PERK', locked: 'GESPERRT', count: '{n}/{m} FREIGESCHALTET' },
   practice: { title: 'TRAINING', reroll: 'NEUER SPIELER', situation: 'TRAINING', last: 'ZULETZT {p}%' },
+  share: { title: 'LEGACY TEILEN', copy: 'TEXT KOPIEREN', copied: 'KOPIERT!', instagram: 'INSTAGRAM', instaHint: 'Karte gespeichert. Poste sie auf Instagram!', more: 'MEHR...', png: 'KARTE LADEN', text: 'Ich habe meine Karriere als {tier} mit {score} Legacy-Punkten in Hardwood Legacy beendet! Schaffst du mehr? Seed {s}' },
+  teamsel: { title: 'TEAM WÄHLEN', cols: 'STÄRKE  PICK', random: 'ZUFALLS-DRAFT' },
+  seedin: { title: 'SEED EINGEBEN', text: 'Gib einen Seed ein, um dieselbe Liga wie deine Freunde zu spielen. Gleicher Seed, gleicher Start.', start: 'START', short: 'Mindestens 3 Buchstaben oder Zahlen.' },
   title: {
-    unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
+    continue: 'WEITER S{s}', enterSeed: 'SEED EINGEBEN', unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
     tagline: 'EIN RUN = EINE KARRIERE', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} ZURÜCK  M TON',
   },
   options: {
-    title: 'OPTIONEN', lang: 'SPRACHE', colors: 'FARBEN', sound: 'TON', on: 'AN', off: 'AUS', back: 'ZURÜCK',
+    saveQuit: 'SPEICHERN & ENDE', saveNote: 'WEITER AB BEGINN VON SEASON {s}', title: 'OPTIONEN', lang: 'SPRACHE', colors: 'FARBEN', sound: 'TON', on: 'AN', off: 'AUS', back: 'ZURÜCK',
     hint: '{ok}/PFEILE ÄNDERN  {back} ZURÜCK',
     schemes: { classic: 'KLASSIK', la: 'LA SPECIAL', mono: 'SCHWARZ/WEISS', spaceship: 'SPACESHIP', storm: 'STORM' },
   },
@@ -25,14 +28,17 @@ export default {
     line: 'RINGE {r}  {a}  {s}', scroll: 'HOCH/RUNTER  {back} ZURÜCK', back: '{ok}/{back} ZURÜCK',
   },
   create: {
+    rerollInf: 'REROLL',
     title: 'NEUER SPIELER', seed: 'SEED {s}', daily: 'DAILY {s}', pos: 'POSITION {p}', reroll: 'REROLL ({n})',
     back: 'ZURÜCK', locked: 'GESPERRT: {x}', start: '{ok} = DRAFT', archetype: 'ARCHETYP',
   },
   arch: {
+    stretch: 'Big Man mit Dreier.', twoway: 'Elite auf beiden Seiten.', scorer: 'Punktet am Fließband.', unicorn: 'Kann alles, mit 2,13 m.',
     sharp: 'Lebt von der Dreierlinie.', slasher: 'Attackiert den Korb.', big: 'Dominiert die Zone.',
     play: 'Macht alle besser.', lock: 'Schaltet Stars aus.',
   },
   unlock: {
+    allstar: 'Ins All-Star-Team kommen', dpoy: 'DPOY gewinnen', mvp: 'Einen MVP gewinnen', ring: 'Eine Meisterschaft gewinnen', hundred: '100 Punkte in einem Spiel', legacy1000: 'Karriere mit 1000+ Legacy', runs5: '5 Karrieren spielen', rings3: '3 Ringe in einer Karriere', seasons15: 'Alle 15 Seasons spielen', contest: 'Einen All-Star-Contest gewinnen', ovr90: 'OVR 90 erreichen',
     runs1: '1 Karriere beenden', ring: 'Einen Ring gewinnen', hof: 'Hall of Famer werden', fmvp: 'Einen FMVP holen', runs3: '3 Karrieren spielen',
   },
   stat: { form: 'FORM', body: 'KÖRPER', chem: 'CHEMIE', fame: 'FAME', sho: 'WURF', pla: 'PASS', def: 'DEF', ath: 'ATH', clu: 'CLUTCH', ovr: 'OVR' },
@@ -45,6 +51,10 @@ export default {
   },
 
   flow: {
+    contests: { '3pt': 'DREIER-CONTEST', dunk: 'DUNK CONTEST', skills: 'SKILLS CHALLENGE', def: 'DEFENSE SHOWDOWN' },
+    aswIntro: 'All-Star Weekend in {city}! Du bist beim {contest} dabei. Die ganze Liga schaut zu.',
+    aswL1: 'ALL-STAR WEEKEND', aswChamp: 'CHAMPION!', aswWin: 'Du gewinnst den {contest}! Ein Pokal fürs Regal.',
+    aswSecond: 'Zweiter Platz. So knapp am Pokal!', aswOut: 'Raus in der ersten Runde. Nächstes Jahr!',
     hundredIntro: 'Hier passiert Geschichte: 81 Punkte nach drei Vierteln. Schaffst du die 100?',
     hundredTitle: '100-PUNKTE-SPIEL', hundredSit: '81 PKT, Q4', hundredL1: 'HISTORISCHE NACHT', hundredL2: '81 PUNKTE',
     hundredOk: '100 PUNKTE!!! Die Halle bebt. Von dieser Nacht erzählt man noch in Generationen!',
@@ -86,6 +96,7 @@ export default {
     games: 'SPIEL {g}/82', confEast: 'OSTEN', confWest: 'WESTEN', ovr: 'OVR {o}',
   },
   awards: {
+    contest_3pt: 'DREIER-CHAMPION', contest_dunk: 'DUNK-CHAMPION', contest_skills: 'SKILLS-CHAMPION', contest_def: 'DEFENSE-CHAMPION',
     titleReg: 'SAISON-AWARDS', titlePo: 'POSTSEASON', seedRow: '{w}-{l}  PLATZ {r}', nextPO: 'Jetzt kommen die Playoffs!', nextNone: 'Keine Playoffs dieses Jahr.',
     title: 'SEASON-BILANZ', none: 'KEINE AWARDS', aging: 'Alter {age}. OVR {ovr} ({d}), Körper {db}.',
     reached: { LOTTERY: 'LOTTERY', 'PLAY-IN': 'PLAY-IN', R1: '1. RUNDE', R2: '2. RUNDE', CF: 'CONF FINALS', FIN: 'FINALS', CHAMP: 'CHAMPION' },
@@ -98,6 +109,7 @@ export default {
     activeList: 'AKTIV: {x}', synList: 'SYNERGIE: {x}', synHint: '-> SYNERGIE {x}!',
   },
   perks: {
+    clutchgene: 'Clutch +6. Mehr Zeit, größere Zone.', motor: 'Körper altert 25% langsamer. Rebounds +2.', showtime: 'Fame +8 pro Season. Leichtere Dunks.', gymrat: 'Alle Skills +2. Form wächst schneller.',
     deep: 'Wurf +5. Größere Wurfzone.', spacing: 'Shooter im Team. Team +3.', anchor: 'Defense +8. Bessere DPOY-Chance.',
     boards: 'Rebounds +3, Team +2. Leichtere Boards.', sneakers: 'Körper altert 40% langsamer.', coach: 'Chemie +6 pro Season.',
     trainer: 'Form wächst schneller, fällt langsamer.', hops: 'Athletik +5. Leichtere Dunks.', media: 'Fame +6 pro Season.',
@@ -118,9 +130,9 @@ export default {
     pctl: 'BESSER ALS {p}% DER KARRIEREN*', pctlNote: '*SCHÄTZUNG GG. SIMULIERTE KARRIEREN', localRank: 'DEIN RUN #{r} VON {n}',
     newBest: 'NEUER PERSÖNLICHER REKORD!', prevBest: 'PERSÖNLICHER REKORD: {b}',
     title: 'LEGACY', base: 'BASIS', mult: 'MULTIPLIKATOR', card: '{ok} = KARTE', hofRank: 'HALL OF FAME PLATZ {n}',
-    unlocked: 'FREIGESCHALTET: {x}!', menu: ['NEU', 'PNG', 'SEED', 'MENÜ'],
+    unlocked: 'FREIGESCHALTET: {x}!', menu: ['NEU', 'TEILEN', 'MENÜ'],
     copied: 'SEED KOPIERT!', seedIs: 'SEED: {s}', pngOk: 'PNG GESPEICHERT!', pngErr: 'PNG FEHLER', teams: 'TEAMS {x}', noBonus: 'KEIN BONUS',
-    parts: { hundred: '100-PUNKTE', rings: 'RINGE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
+    parts: { contests: 'ALL-STAR-CONTESTS', hundred: '100-PUNKTE', rings: 'RINGE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
       milestones: 'MEILENSTEINE', ringChase: 'RINGJAGD', oneTeam: 'ONE-TEAM', fame: 'FAME' },
     rows: { rings: 'RINGE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING', allStar: 'ALL-STAR', seasons: 'SEASONS', points: 'PUNKTE' },
     share: 'Hardwood Legacy Seed {s} - Score {score}: {url}',
@@ -130,7 +142,7 @@ export default {
   arcade: {
     names: { shot: 'SHOT-METER', clutch: 'BUZZER-BEATER', fast: 'FAST-BREAK', defense: 'DEFENSE-STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREIWÜRFE' },
     intro: {
-      shot: 'SHOT-METER! Drück {ok}, wenn der Marker in der orangen Zone ist. Weiße Mitte = AND ONE. 3 Würfe.',
+      shot: 'SHOT-METER! Drück {ok}, wenn der Marker in der orangen Zone ist. Weiße Mitte = AND ONE. {n} Würfe.',
       clutch: 'BUZZER-BEATER! Ein Wurf. Triff die Zone, bevor die Uhr abläuft. Achtung, Fakes!',
       fast: 'FAST-BREAK! Hämmere {ok} für Tempo, dann {ok} in der Mitte für den Dunk.',
       defense: 'DEFENSE-STOP! Drück den Pfeil, bevor der Kreis zu ist. Spät = Steal!',

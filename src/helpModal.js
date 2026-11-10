@@ -16,7 +16,7 @@ export function isHelpOpen() { return !!el; }
 
 // Allgemeines scrollbares Popup (Titel, HTML-Inhalt, Fusszeile)
 function openModal(title, bodyHtml) {
-  if (el) return;
+  if (el) return null;
   const k = keyNames();
   el = document.createElement('div');
   el.id = 'help';
@@ -32,6 +32,7 @@ function openModal(title, bodyHtml) {
   el.querySelector('.help-x').addEventListener('click', close);
   el.addEventListener('pointerdown', e => { if (e.target === el) close(); });
   el.querySelector('.help-body').focus({ preventScroll: true });
+  return el;
 }
 
 export function openHelp() {
@@ -71,4 +72,75 @@ export function closeHelp() {
   input.blocked = false;
   input.endFrame();
   sfx.back();
+}
+
+// Teilen am Ende eines Runs: Text kopieren, WhatsApp, Instagram (Bild), X, Facebook, Telegram, System-Teilen, PNG
+export function openShare({ text, url, file, png }) {
+  const full = `${text} ${url}`;
+  const enc = encodeURIComponent;
+  const links = [
+    ['whatsapp', 'WHATSAPP', `https://wa.me/?text=${enc(full)}`],
+    ['x', 'X / TWITTER', `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`],
+    ['facebook', 'FACEBOOK', `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`],
+    ['telegram', 'TELEGRAM', `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`],
+  ];
+  const btn = (id, label) => `<button class="share-btn" data-share="${id}">${esc(label)}</button>`;
+  const body = `
+    <div class="share-card"><img alt="" id="share-img"></div>
+    <p class="share-text">${esc(full)}</p>
+    <div class="share-grid">
+      ${btn('copy', t('share.copy'))}${links.map(([id, l]) => btn(id, l)).join('')}
+      ${btn('instagram', t('share.instagram'))}${navigator.share ? btn('more', t('share.more')) : ''}${btn('png', t('share.png'))}
+    </div>
+    <p class="share-note" id="share-note"></p>`;
+  const root = openModal(t('share.title'), body);
+  if (!root) return;
+  let blob = null;
+  png().then(b => { blob = b; if (b && el) root.querySelector('#share-img').src = URL.createObjectURL(b); });
+  const note = msg => { const n = root.querySelector('#share-note'); if (n) n.textContent = msg; };
+  const download = () => {
+    if (!blob) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = file;
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+  const shareFile = async () => {
+    const f = blob && new File([blob], file, { type: 'image/png' });
+    if (f && navigator.canShare?.({ files: [f] })) { await navigator.share({ files: [f], text: full }); return true; }
+    return false;
+  };
+  root.querySelectorAll('[data-share]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.share;
+    try {
+      if (id === 'copy') { await navigator.clipboard.writeText(full); note(t('share.copied')); }
+      else if (id === 'instagram') {
+        // Instagram hat keinen Web-Teilen-Link: am Handy Bild ueber das System-Menue teilen, sonst Karte speichern
+        if (!(await shareFile())) { download(); note(t('share.instaHint')); }
+      } else if (id === 'more') { if (!(await shareFile())) await navigator.share({ text, url }); }
+      else if (id === 'png') download();
+      else window.open(links.find(l => l[0] === id)[2], '_blank', 'noopener');
+    } catch { /* abgebrochen */ }
+  }));
+}
+
+// Seed eingeben (z.B. um mit Freunden denselben Seed zu spielen)
+export function openSeedInput(onStart) {
+  const body = `
+    <p>${esc(t('seedin.text'))}</p>
+    <input id="seed-in" class="seed-in" maxlength="12" autocomplete="off" spellcheck="false" placeholder="ABC123">
+    <button class="share-btn seed-go" id="seed-go">${esc(t('seedin.start'))}</button>
+    <p class="share-note" id="seed-note"></p>`;
+  const root = openModal(t('seedin.title'), body);
+  if (!root) return;
+  const inp = root.querySelector('#seed-in');
+  const go = () => {
+    const seed = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+    if (seed.length < 3) { root.querySelector('#seed-note').textContent = t('seedin.short'); return; }
+    closeHelp();
+    onStart(seed);
+  };
+  inp.addEventListener('input', () => { inp.value = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
+  inp.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') go(); if (e.key === 'Escape') closeHelp(); });
+  root.querySelector('#seed-go').addEventListener('click', go);
+  setTimeout(() => inp.focus(), 0);
 }

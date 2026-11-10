@@ -15,8 +15,12 @@ export const PERKS = [
   { id: 'vision', name: 'Court Vision', skills: { pla: 5 }, apg: 2, arcade: { pass: 0.35 } },
   { id: 'handles', name: 'Handles', skills: { pla: 2, ath: 2 }, arcade: { drive: 0.35 } },
   { id: 'signature', name: 'Signature Move', skills: { clu: 5 }, arcade: { zone: 0.15 }, unlock: { key: 'hof', test: m => m.bestTier >= 3 } },
-  { id: 'iceveins', name: 'Ice Veins', skills: { clu: 8 }, arcade: { time: 1.5, ft: 0.2 }, unlock: { key: 'fmvp', test: m => m.fmvps >= 1 } },
-  { id: 'leader', name: 'Leader', power: 2, chemFloor: 45, unlock: { key: 'runs3', test: m => m.runs >= 3 } },
+  { id: 'iceveins', name: 'Ice Veins', skills: { clu: 8 }, arcade: { time: 1.5, ft: 0.2 }, unlock: { key: 'fmvp', test: m => m.fmvps >= 1 || !!m.ach?.fmvp } },
+  { id: 'leader', name: 'Leader', power: 2, chemFloor: 45, unlock: { key: 'runs5', test: m => m.runs >= 5 } },
+  { id: 'clutchgene', name: 'Clutch Gene', skills: { clu: 6 }, arcade: { time: 1, zone: 0.1 }, unlock: { key: 'rings3', test: m => !!m.ach?.rings3 } },
+  { id: 'motor', name: 'Endless Motor', bodyDecay: 0.75, rpg: 2, unlock: { key: 'seasons15', test: m => !!m.ach?.seasons15 } },
+  { id: 'showtime', name: 'Showtime', fameSeason: 8, arcade: { fast: 0.15, zone: 0.05 }, unlock: { key: 'contest', test: m => !!m.ach?.contest } },
+  { id: 'gymrat', name: 'Gym Rat', formSeason: 1, skills: { sho: 2, pla: 2, def: 2, ath: 2, clu: 2 }, unlock: { key: 'ovr90', test: m => !!m.ach?.ovr90 } },
 ];
 
 export const SYNERGIES = [

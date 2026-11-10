@@ -11,12 +11,15 @@ export default {
   ui: { help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
   unlocks: { title: 'OTKLJUČANO', archetype: 'ARHETIP', perk: 'PERK', locked: 'ZAKLJUČANO', count: '{n}/{m} OTKLJUČANO' },
   practice: { title: 'TRENING', reroll: 'NOVI IGRAČ', situation: 'TRENING', last: 'ZADNJE {p}%' },
+  share: { title: 'PODIJELI LEGACY', copy: 'KOPIRAJ TEKST', copied: 'KOPIRANO!', instagram: 'INSTAGRAM', instaHint: 'Kartica sačuvana. Objavi je na Instagramu!', more: 'VIŠE...', png: 'PREUZMI KARTICU', text: 'Završio sam karijeru kao {tier} sa {score} legacy poena u Hardwood Legacy! Možeš li bolje? Seed {s}' },
+  teamsel: { title: 'IZABERI TIM', cols: 'JAČINA  PICK', random: 'NASUMIČAN DRAFT' },
+  seedin: { title: 'UNESI SEED', text: 'Unesi seed da igraš istu ligu kao tvoji prijatelji. Isti seed, isti početak.', start: 'START', short: 'Najmanje 3 slova ili broja.' },
   title: {
-    unlocks: 'OTKLJUČANO', practice: 'TRENING', newRun: 'NOVA KARIJERA', daily: 'DNEVNI SEED', seed: 'SEED {s}', hof: 'KUĆA SLAVNIH', help: 'KAKO SE IGRA', options: 'POSTAVKE',
+    continue: 'NASTAVI S{s}', enterSeed: 'UNESI SEED', unlocks: 'OTKLJUČANO', practice: 'TRENING', newRun: 'NOVA KARIJERA', daily: 'DNEVNI SEED', seed: 'SEED {s}', hof: 'KUĆA SLAVNIH', help: 'KAKO SE IGRA', options: 'POSTAVKE',
     tagline: 'JEDNA IGRA = JEDNA KARIJERA', record: 'IGRE {n}  REKORD {b}', hint: '{ok} OK  {back} NAZAD  M ZVUK',
   },
   options: {
-    title: 'POSTAVKE', lang: 'JEZIK', colors: 'BOJE', sound: 'ZVUK', on: 'UKLJ.', off: 'ISKLJ.', back: 'NAZAD',
+    saveQuit: 'SAČUVAJ I IZAĐI', saveNote: 'NASTAVLJA OD POČETKA SEZONE {s}', title: 'POSTAVKE', lang: 'JEZIK', colors: 'BOJE', sound: 'ZVUK', on: 'UKLJ.', off: 'ISKLJ.', back: 'NAZAD',
     hint: '{ok}/STRELICE MIJENJAJ  {back} NAZAD',
     schemes: { classic: 'KLASIK', la: 'LA SPECIAL', mono: 'CRNO/BIJELO', spaceship: 'SPACESHIP', storm: 'STORM' },
   },
@@ -25,14 +28,17 @@ export default {
     line: 'PRSTENJE {r}  {a}  {s}', scroll: 'GORE/DOLJE  {back} NAZAD', back: '{ok}/{back} NAZAD',
   },
   create: {
+    rerollInf: 'NOVO',
     title: 'NOVI IGRAČ', seed: 'SEED {s}', daily: 'DNEVNI {s}', pos: 'POZICIJA {p}', reroll: 'NOVO ({n})',
     back: 'NAZAD', locked: 'ZAKLJUČANO: {x}', start: '{ok} = DRAFT', archetype: 'ARHETIP',
   },
   arch: {
+    stretch: 'Centar koji šutira tricu.', twoway: 'Elita na oba kraja.', scorer: 'Daje koševe na traci.', unicorn: 'Zna sve, sa 2,13 m.',
     sharp: 'Živi iza linije za tricu.', slasher: 'Napada koš.', big: 'Vlada reketom.',
     play: 'Čini sve boljima.', lock: 'Gasi zvijezde.',
   },
   unlock: {
+    allstar: 'Uđi u All-Star tim', dpoy: 'Osvoji DPOY', mvp: 'Osvoji MVP', ring: 'Osvoji titulu', hundred: '100 poena na utakmici', legacy1000: 'Karijera sa 1000+ legacy', runs5: 'Odigraj 5 karijera', rings3: '3 prstena u jednoj karijeri', seasons15: 'Odigraj svih 15 sezona', contest: 'Osvoji All-Star takmičenje', ovr90: 'Dostigni OVR 90',
     runs1: 'Završi 1 karijeru', ring: 'Osvoji prsten', hof: 'Postani Hall of Famer', fmvp: 'Osvoji Finals MVP', runs3: 'Odigraj 3 karijere',
   },
   stat: { form: 'FORMA', body: 'TIJELO', chem: 'HEMIJA', fame: 'SLAVA', sho: 'ŠUT', pla: 'PAS', def: 'ODBR', ath: 'ATL', clu: 'CLUTCH', ovr: 'OVR' },
@@ -45,6 +51,10 @@ export default {
   },
 
   flow: {
+    contests: { '3pt': 'TAKMIČENJE TRICA', dunk: 'ZAKUCAVANJE', skills: 'VJEŠTINE', def: 'ODBRANA' },
+    aswIntro: 'All-Star vikend u {city}! Pozvan si na takmičenje: {contest}. Cijela liga gleda.',
+    aswL1: 'ALL-STAR VIKEND', aswChamp: 'PRVAK!', aswWin: 'Pobijedio si: {contest}! Pehar za vitrinu.',
+    aswSecond: 'Drugo mjesto. Tako blizu pehara!', aswOut: 'Ispao u prvoj rundi. Dogodine!',
     hundredIntro: 'Dešava se historija: 81 poen nakon tri četvrtine. Možeš li do 100?',
     hundredTitle: 'UTAKMICA SA 100', hundredSit: '81 PTS, Q4', hundredL1: 'HISTORIJSKA NOĆ', hundredL2: '81 POEN',
     hundredOk: '100 POENA!!! Dvorana se trese. O ovoj noći pričaće generacije!',
@@ -86,6 +96,7 @@ export default {
     games: 'UTAKMICA {g}/82', confEast: 'ISTOK', confWest: 'ZAPAD', ovr: 'OVR {o}',
   },
   awards: {
+    contest_3pt: 'PRVAK TRICA', contest_dunk: 'PRVAK ZAKUCAVANJA', contest_skills: 'PRVAK VJEŠTINA', contest_def: 'PRVAK ODBRANE',
     titleReg: 'NAGRADE SEZONE', titlePo: 'POSTSEZONA', seedRow: '{w}-{l}  MJESTO {r}', nextPO: 'Sad slijedi playoff!', nextNone: 'Ove godine bez playoffa.',
     title: 'BILANS SEZONE', none: 'BEZ NAGRADA', aging: 'Dob {age}. OVR {ovr} ({d}), tijelo {db}.',
     reached: { LOTTERY: 'LUTRIJA', 'PLAY-IN': 'PLAY-IN', R1: '1. RUNDA', R2: '2. RUNDA', CF: 'FINALE KONF.', FIN: 'FINALE', CHAMP: 'PRVAK' },
@@ -98,6 +109,7 @@ export default {
     activeList: 'AKTIVNO: {x}', synList: 'SINERGIJA: {x}', synHint: '-> SINERGIJA {x}!',
   },
   perks: {
+    clutchgene: 'Clutch +6. Više vremena, veća zona.', motor: 'Tijelo stari 25% sporije. Skokovi +2.', showtime: 'Slava +8 po sezoni. Lakša zakucavanja.', gymrat: 'Sve vještine +2. Forma brže raste.',
     deep: 'Šut +5. Veća zona šuta.', spacing: 'Šuteri oko tebe. Tim +3.', anchor: 'Odbrana +8. Bolje šanse za DPOY.',
     boards: 'Skokovi +3, tim +2. Lakši skokovi.', sneakers: 'Tijelo stari 40% sporije.', coach: 'Hemija +6 po sezoni.',
     trainer: 'Forma brže raste, sporije pada.', hops: 'Atletika +5. Lakša zakucavanja.', media: 'Slava +6 po sezoni.',
@@ -118,9 +130,9 @@ export default {
     pctl: 'BOLJI OD {p}% KARIJERA*', pctlNote: '*PROCJENA PREMA SIMULIRANIM KARIJERAMA', localRank: 'TVOJA IGRA #{r} OD {n}',
     newBest: 'NOVI LIČNI REKORD!', prevBest: 'LIČNI REKORD: {b}',
     title: 'LEGACY', base: 'OSNOVA', mult: 'MNOŽITELJ', card: '{ok} = KARTICA', hofRank: 'KUĆA SLAVNIH #{n}',
-    unlocked: 'OTKLJUČANO: {x}!', menu: ['NOVA', 'PNG', 'SEED', 'MENI'],
+    unlocked: 'OTKLJUČANO: {x}!', menu: ['NOVA', 'PODIJELI', 'MENI'],
     copied: 'SEED KOPIRAN!', seedIs: 'SEED: {s}', pngOk: 'PNG SAČUVAN!', pngErr: 'PNG GREŠKA', teams: 'TIMOVI {x}', noBonus: 'BEZ BONUSA',
-    parts: { hundred: 'UTAKMICA 100', rings: 'PRSTENJE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'STRIJELAC', allStar: 'ALL-STAR', roy: 'ROOKIE GOD.',
+    parts: { contests: 'ALL-STAR TAKMIČENJA', hundred: 'UTAKMICA 100', rings: 'PRSTENJE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'STRIJELAC', allStar: 'ALL-STAR', roy: 'ROOKIE GOD.',
       milestones: 'PREKRETNICE', ringChase: 'LOV NA PRSTEN', oneTeam: 'JEDAN TIM', fame: 'SLAVA' },
     rows: { rings: 'PRSTENJE', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'STRIJELAC', allStar: 'ALL-STAR', seasons: 'SEZONE', points: 'POENI' },
     share: 'Hardwood Legacy seed {s} - skor {score}: {url}',
@@ -130,7 +142,7 @@ export default {
   arcade: {
     names: { shot: 'ŠUT-METAR', clutch: 'NA SIRENU', fast: 'KONTRANAPAD', defense: 'ODBRANA', drive: 'PRODOR', rebound: 'SKOK', pass: 'PLEJMEJKER', ft: 'BACANJA' },
     intro: {
-      shot: 'ŠUT-METAR! Pritisni {ok} kad je marker u narandžastoj zoni. Bijela sredina = AND ONE. 3 šuta.',
+      shot: 'ŠUT-METAR! Pritisni {ok} kad je marker u narandžastoj zoni. Bijela sredina = AND ONE. {n} šuta.',
       clutch: 'ŠUT NA SIRENU! Jedan šut. Pogodi zonu prije isteka vremena. Pazi na fintu!',
       fast: 'KONTRANAPAD! Udaraj {ok} za brzinu, pa {ok} u sredini za zakucavanje.',
       defense: 'ODBRANA! Pritisni prikazanu strelicu prije nego se krug zatvori. Kasno = ukradena!',

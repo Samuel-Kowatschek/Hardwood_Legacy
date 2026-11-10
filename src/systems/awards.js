@@ -50,6 +50,7 @@ export function computeRegularAwards(run, season) {
 
   const scoring = played && season.ppg + ab.ppg > S.aiScoringBase + rb * 0.5 + rng.gauss(0, 1.5);
   if (scoring) { p.awards.scoring++; p.fame += 5; list.push({ id: 'scoring', won: true }); }
+  if (run.cur.contest?.won) { p.awards.contests = (p.awards.contests || 0) + 1; list.push({ id: 'contest_' + run.cur.contest.id, won: true }); }
   p.fame = Math.min(100, p.fame);
   p.peakFame = Math.max(p.peakFame, p.fame);
   return { list, allStar, mvp, dpoy, scoring };

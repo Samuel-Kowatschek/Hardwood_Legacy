@@ -1,6 +1,6 @@
 // Alle Tuning-Werte an einer Stelle.
 export const BALANCE = {
-  score: { ring: 100, mvp: 60, fmvp: 40, dpoy: 25, scoring: 20, allStar: 8, milestone: 15, roy: 10, hundred: 60 },
+  score: { ring: 100, mvp: 60, fmvp: 40, dpoy: 25, scoring: 20, allStar: 8, milestone: 15, roy: 10, hundred: 60, contest: 10 },
   loyaltyMinSeasons: 5,
   loyaltyPerSeason: 10,
   fameBonusFactor: 0.6, // * Peak-Fame

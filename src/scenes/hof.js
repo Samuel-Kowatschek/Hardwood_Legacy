@@ -12,13 +12,13 @@ export class HofScene extends Scene {
   update(game) {
     if (input.pressed('down') && this.scroll < Math.max(0, this.list.length - 3)) { this.scroll++; sfx.blip(); }
     if (input.pressed('up') && this.scroll > 0) { this.scroll--; sfx.blip(); }
-    if (input.pressed('b') || input.pressed('a')) {
+    if (input.pressed('b') || input.pressed('a') || this.backClick) {
       sfx.back();
       import('./title.js').then(m => game.set(new m.TitleScene()));
     }
   }
   draw(ctx) {
-    header(ctx, t('hof.title'), `${this.list.length}/10`);
+    header(ctx, t('hof.title'), `${this.list.length}/10`, () => { this.backClick = true; });
     if (!this.list.length) {
       box(ctx, 8, 40, 144, 50);
       text(ctx, t('hof.empty'), 80, 52, C.WHITE, 'center');

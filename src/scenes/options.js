@@ -17,6 +17,7 @@ export class OptionsScene extends Scene {
       { id: 'lang', label: t('options.lang'), value: t('langName.' + lang()) },
       { id: 'scheme', label: t('options.colors'), value: t('options.schemes.' + (SCHEMES[s.scheme] ? s.scheme : 'classic')) },
       { id: 'sound', label: t('options.sound'), value: isMuted() ? t('options.off') : t('options.on') },
+      ...(this.overlay && this.game?.run ? [{ id: 'savequit', label: t('options.saveQuit') }] : []),
       { id: 'back', label: t('options.back') },
     ];
   }
@@ -33,6 +34,13 @@ export class OptionsScene extends Scene {
     } else if (id === 'sound') this.game.toggleMute();
     sfx.select();
   }
+  // Spielstand liegt bereits (Autosave zu Beginn der Season) -> zurueck ins Hauptmenue
+  saveQuit() {
+    sfx.select();
+    this.game.overlay = null;
+    this.game.run = null;
+    import('./title.js').then(m => this.game.set(new m.TitleScene()));
+  }
   back() {
     sfx.back();
     if (this.overlay) { this.game.overlay = null; return; }
@@ -40,9 +48,11 @@ export class OptionsScene extends Scene {
   }
   update() {
     const rows = this.rows();
+    if (this.backClick) { this.backClick = false; return this.back(); }
     if (this.clickRow != null) {
       const k = this.clickRow; this.clickRow = null; this.i = k;
       if (rows[k].id === 'back') return this.back();
+      if (rows[k].id === 'savequit') return this.saveQuit();
       this.change(rows[k].id, 1);
       return;
     }
@@ -51,20 +61,23 @@ export class OptionsScene extends Scene {
     const id = rows[this.i].id;
     if (input.pressed('b')) return this.back();
     if (id === 'back') { if (input.pressed('a')) this.back(); return; }
+    if (id === 'savequit') { if (input.pressed('a')) this.saveQuit(); return; }
     if (input.pressed('a') || input.pressed('right')) this.change(id, 1);
     else if (input.pressed('left')) this.change(id, -1);
   }
   draw(ctx) {
     if (this.overlay) { ctx.fillStyle = C.BG; ctx.fillRect(0, 0, 160, 144); }
-    header(ctx, t('options.title'));
-    box(ctx, 4, 20, 152, 92);
-    this.rows().forEach((r, k) => {
-      const y = 30 + k * 20;
-      input.region(8, y - 3, 144, 20, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
+    header(ctx, t('options.title'), '', () => { this.backClick = true; });
+    const rows = this.rows(), rh = rows.length > 4 ? 19 : 20;
+    box(ctx, 4, 18, 152, rows.length * rh + 12);
+    rows.forEach((r, k) => {
+      const y = 27 + k * rh;
+      input.region(8, y - 3, 144, rh, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
       if (k === this.i) cursor(ctx, 10, y);
       text(ctx, r.label, 18, y, k === this.i ? C.ORANGE : C.WHITE);
       if (r.value) tiny(ctx, `< ${r.value} >`, 18, y + 10, C.WHITE);
     });
-    tiny(ctx, t('options.hint'), 80, 130, C.WHITE, 'center');
+    if (rows.some(r => r.id === 'savequit')) tiny(ctx, t('options.saveNote', { s: this.game.run.seasonNo }), 80, 128, C.ORANGE, 'center');
+    tiny(ctx, t('options.hint'), 80, 136, C.WHITE, 'center');
   }
 }

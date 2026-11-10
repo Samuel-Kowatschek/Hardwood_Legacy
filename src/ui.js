@@ -48,7 +48,8 @@ export class Typewriter {
 
 // Standard-Textbox unten (Gen-1-Layout): 160x48, 2 Zeilen
 export class TextBox {
-  constructor(str, { rows = 2, lineH = 16, y = 96, h = 48 } = {}) {
+  // 4 Zeilen pro Seite (vorher 2) -> deutlich weniger Weiterklicken
+  constructor(str, { rows = 4, lineH = 10, y = 96, h = 48 } = {}) {
     this.tw = new Typewriter(str, 17, rows);
     this.y = y; this.h = h; this.lineH = lineH;
   }
@@ -56,8 +57,8 @@ export class TextBox {
   get done() { return this.tw.done; }
   draw(ctx, t) {
     box(ctx, 0, this.y, 160, this.h);
-    const arrow = this.tw.draw(ctx, 10, this.y + 12, this.lineH);
-    if (arrow) downArrow(ctx, 146, this.y + this.h - 10, t);
+    const arrow = this.tw.draw(ctx, 9, this.y + (this.lineH >= 16 ? 12 : 6), this.lineH);
+    if (arrow) downArrow(ctx, 150, this.y + this.h - 8, t);
   }
 }
 
@@ -118,10 +119,21 @@ export function drawStatus(ctx, run, t, kind = '') {
   });
 }
 
-export function header(ctx, title, right = '') {
+// onBack: zeigt oben links einen Zurueck-Button (Klick/Tap)
+export function header(ctx, title, right = '', onBack = null) {
   ctx.fillStyle = C.DARK; ctx.fillRect(0, 0, 160, 12);
   ctx.fillStyle = C.WHITE; ctx.fillRect(0, 12, 160, 1);
-  text(ctx, title, 3, 2, C.WHITE);
+  let tx = 3;
+  if (onBack) {
+    ctx.fillStyle = C.WHITE;
+    ctx.fillRect(2, 2, 11, 1); ctx.fillRect(2, 10, 11, 1); ctx.fillRect(2, 2, 1, 9); ctx.fillRect(12, 2, 1, 9);
+    ctx.fillStyle = C.ORANGE;
+    for (let i = 0; i < 3; i++) ctx.fillRect(5 + i, 6 - i, 1, 1 + i * 2);
+    ctx.fillRect(8, 6, 3, 1);
+    input.region(0, 0, 15, 13, null, onBack);
+    tx = 16;
+  }
+  text(ctx, title, tx, 2, C.WHITE);
   if (right) tiny(ctx, right, 157, 4, C.ORANGE, 'right');
 }
 
