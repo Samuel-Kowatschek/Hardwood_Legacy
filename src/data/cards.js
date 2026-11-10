@@ -46,6 +46,7 @@ const HINT_KEY = { base: 'team', power: 'wins', playoffPower: 'playoffs', usage:
 export function hintFor(opt) {
   if (opt.mystery) return '???';
   const parts = [];
+  if (opt.arcade) parts.push(t('hintLbl.play'));
   for (const k of opt.hint || []) parts.push(t('hintLbl.' + k));
   for (const [k, v] of Object.entries(opt.fx || {})) {
     if (!v || k === 'injuryGames' || k === 'rivalBoost') continue;
@@ -132,19 +133,19 @@ export const CARDS = [
   { id: 'slump', when: 'mid', opts: [{ fx: { sho: 3, body: -3 } }, { fx: { clu: 3, form: 1 } }] },
   { id: 'hotstreak', when: 'mid', opts: [{ fx: { power: 2, body: -3 } }, { fx: { chem: 5 } }] },
   { id: 'allstarvote', when: 'mid', cond: r => r.p.fame >= 45, opts: [{ fx: { fame: 6, chem: -3 } }, { fx: { form: 1 } }] },
-  { id: 'dunkcontest', when: 'mid', cond: r => r.p.skills.ath >= 60 && age(r) <= 28, opts: [{ fx: { fame: 10, body: -3 }, risk: { p: 0.15, fx: { body: -8, injuryGames: 6 }, msg: 'cardx.ouch' } }, { fx: { body: 2 } }] },
-  { id: 'threecontest', when: 'mid', cond: r => r.p.skills.sho >= 62, opts: [{ fx: { fame: 6, sho: 2 } }, { fx: { body: 3 } }] },
+  { id: 'dunkcontest', when: 'mid', cond: r => r.p.skills.ath >= 60 && age(r) <= 28, opts: [{ fx: { body: -2 }, arcade: { kind: 'dunkc', good: { fame: 10, ath: 1 }, bad: { fame: 2 }, contest: true, need: 0.5 } }, { fx: { body: 2 } }] },
+  { id: 'threecontest', when: 'mid', cond: r => r.p.skills.sho >= 62, opts: [{ arcade: { kind: 'shot', good: { fame: 6, sho: 2 }, bad: { fame: 1 }, contest: true, shots: 5 } }, { fx: { body: 3 } }] },
   { id: 'refrant', when: 'any', opts: [{ fx: { fame: 5, chem: 3, form: -1 } }, { fx: { chem: 2 } }] },
   { id: 'costar', when: 'any', cond: r => r.p.chem < 70, opts: [{ fx: { chem: 8, usage: -2 } }, { fx: { usage: 3, chem: -8 } }] },
   { id: 'backtoback', when: 'any', cond: r => age(r) >= 28, opts: [{ fx: { body: -5, power: 1, form: 1 } }, { fx: { body: 4, power: -1 } }] },
   { id: 'fankid', when: 'any', opts: [{ fx: { fame: 5, chem: 2 } }, { fx: { form: 1 } }] },
-  { id: 'lastshot', when: 'mid', opts: [{ fx: { clu: 3, fame: 4, chem: -4 } }, { fx: { chem: 6, pla: 1 } }] },
+  { id: 'lastshot', when: 'mid', opts: [{ fx: { chem: -3 }, arcade: { kind: 'clutch', good: { clu: 3, fame: 6, chem: 3 }, bad: { fame: -3, chem: -4 } } }, { fx: { chem: 6, pla: 1 } }] },
   { id: 'snowstorm', when: 'any', opts: [{ fx: { chem: 6 } }, { fx: { body: 3 } }] },
   { id: 'contractyear', when: 'mid', cond: r => r.seasonNo % 3 === 2, opts: [{ fx: { usage: 3, chem: -5, fame: 3 } }, { fx: { chem: 4, power: 1 } }] },
   { id: 'tanking', when: 'mid', cond: r => T(r).base < 50, opts: [{ fx: { fame: 3, base: 2, chem: -3 } }, { fx: { chem: 2 } }] },
   { id: 'legend', when: 'any', opts: [{ fx: { clu: 2, pla: 2 } }, { fx: { fame: 3, ath: 1 } }] },
   { id: 'hacked', when: 'any', opts: [{ fx: { fame: 3 } }, { fx: { chem: -1, form: 1 } }] },
-  { id: 'tvgame', when: 'any', opts: [{ fx: { usage: 3, fame: 5, chem: -3 } }, { fx: { chem: 4, power: 1 } }] },
+  { id: 'tvgame', when: 'any', opts: [{ fx: { usage: 2, chem: -2 }, arcade: { kind: 'shot', good: { fame: 6, clu: 1 }, bad: { fame: -1 }, shots: 4 } }, { fx: { chem: 4, power: 1 } }] },
   { id: 'benched', when: 'any', opts: [{ fx: { fame: 4, chem: -8 } }, { fx: { chem: 4, form: -1 } }] },
   { id: 'newshooter', when: 'mid', opts: [{ fx: { chem: 4, power: 2 } }, { fx: { usage: 2, chem: -4 } }] },
   { id: 'sleep', when: 'any', opts: [{ fx: { body: 4, form: 1, chem: -1 } }, { fx: { chem: 1 } }] },
@@ -152,13 +153,13 @@ export const CARDS = [
   { id: 'baby', when: 'any', cond: r => age(r) >= 24, opts: [{ fx: { chem: 3, power: -1, fame: 2 } }, { fx: { power: 1, chem: -2 } }] },
   { id: 'playoffpush', when: 'late', opts: [{ fx: { power: 2, body: -6 } }, { fx: { body: 3 } }] },
   { id: 'cover', when: 'any', cond: r => r.p.fame >= 40, opts: [{ fx: { fame: 8 }, risk: { p: 0.25, fx: { body: -8 }, msg: 'cardx.curse' } }, { fx: { form: 1 } }] },
-  { id: 'mascot', when: 'any', opts: [{ fx: { fame: 4 }, risk: { p: 0.5, fx: { clu: 2, fame: 3 }, msg: 'cardx.halfcourt' } }, { fx: { chem: 1 } }] },
+  { id: 'mascot', when: 'any', opts: [{ arcade: { kind: 'clutch', good: { fame: 8, clu: 2 }, bad: { fame: 3 }, need: 0.5 } }, { fx: { chem: 1 } }] },
   { id: 'rookiehazing', when: 'any', cond: r => r.seasonNo <= 2, opts: [{ fx: { chem: 6, fame: -1 } }, { fx: { chem: -5, fame: 2 } }] },
   { id: 'veteranday', when: 'any', cond: r => age(r) >= 31, opts: [{ fx: { fame: 4, chem: 3 } }, { fx: { form: 1, body: 1 } }] },
   { id: 'nightlife', when: 'any', cond: r => age(r) <= 26, opts: [{ fx: { fame: 5, form: -2 } }, { fx: { form: 2, fame: -1 } }] },
   { id: 'teamdinner', when: 'any', opts: [{ fx: { chem: 5, fame: -1 } }, { fx: { form: 1 } }] },
   { id: 'filmsession', when: 'any', opts: [{ fx: { def: 2, pla: 2, chem: -2 } }, { fx: { chem: 2 } }] },
-  { id: 'heatcheck', when: 'late', opts: [{ fx: { usage: 2, clu: 2 } }, { fx: { pla: 2, chem: 3 } }] },
+  { id: 'heatcheck', when: 'late', opts: [{ fx: { usage: 2 }, arcade: { kind: 'shot', good: { fame: 4, clu: 2 }, bad: { chem: -2, clu: -1 }, shots: 4 } }, { fx: { pla: 2, chem: 3 } }] },
   { id: 'jerseyswap', when: 'any', opts: [{ fx: { fame: 3, rivalBoost: -1 } }, { fx: { clu: 2, rivalBoost: 1 } }] },
   { id: 'charityfine', when: 'any', opts: [{ fx: { fame: 4, chem: 2 } }, { fx: { fame: -3 } }] },
 
@@ -199,7 +200,7 @@ export const CARDS = [
   { id: 'protege', when: 'any', cond: r => r.p.age >= 30, opts: [{ fx: { chem: 6, usage: -2 } }, { fx: { usage: 2, chem: -4, form: 1 } }] },
   { id: 'rivalhurt', when: 'any', opts: [{ fx: { fame: 4, chem: 2 } }, { fx: { fame: 6, rivalBoost: 2 } }] },
   { id: 'refscandal', when: 'any', opts: [{ fx: { fame: 3, chem: 2 } }, { fx: { form: 1 } }] },
-  { id: 'nbajam', when: 'any', cond: r => r.p.skills.ath >= 60, opts: [{ fx: { fame: 5, ath: 1 } }, { fx: { body: 2 } }] },
+  { id: 'nbajam', when: 'any', cond: r => r.p.skills.ath >= 60, opts: [{ arcade: { kind: 'fast', good: { fame: 8, ath: 1 }, bad: { fame: -2 } } }, { fx: { body: 2 } }] },
   { id: 'clubhouse', when: 'mid', opts: [{ fx: { chem: 5, fame: -1 } }, { fx: { form: 1, chem: -2 } }] },
   { id: 'gametape', when: 'any', opts: [{ fx: { def: 3, body: -1 } }, { fx: { sho: 2 } }] },
 
@@ -212,7 +213,7 @@ export const CARDS = [
   { id: 'chef', when: 'off', cond: 'fame30', opts: [{ fx: { body: 4, fame: 1 } }, { fx: { chem: 1 } }] },
   { id: 'eurotour', when: 'off', opts: [{ fx: { fame: 7, body: -3 } }, { fx: { body: 3 } }] },
   { id: 'asiatour', when: 'off', cond: 'fame45', opts: [{ fx: { fame: 8, body: -4 } }, { fx: { form: 1 } }] },
-  { id: 'playground', when: 'off', cond: 'young', opts: [{ fx: { fame: 4, clu: 2 } }, { fx: { body: 1 } }] },
+  { id: 'playground', when: 'off', cond: 'young', opts: [{ arcade: { kind: 'drive', good: { fame: 5, clu: 2 }, bad: { fame: -1 } } }, { fx: { body: 1 } }] },
   { id: 'psych', when: 'off', opts: [{ fx: { clu: 4, fame: -1 } }, { fx: { form: 1 } }] },
   { id: 'incentives', when: 'off', cond: 's2', opts: [{ fx: { form: 2, chem: -2 } }, { fx: { chem: 3 } }] },
   { id: 'number', when: 'off', opts: [{ fx: { fame: 3 } }, { fx: { chem: 2 } }] },
@@ -237,7 +238,7 @@ export const CARDS = [
   { id: 'topplay', when: 'any', opts: [{ fx: { fame: 5 } }, { fx: { chem: 3 } }] },
   { id: 'mateslump', when: 'any', opts: [{ fx: { chem: 5, form: -1 } }, { fx: { form: 1 } }] },
   { id: 'salaryenvy', when: 'any', opts: [{ fx: { chem: 4 } }, { fx: { form: 1, chem: -4 } }] },
-  { id: 'tripledouble', when: 'late', opts: [{ fx: { fame: 4, chem: -3 } }, { fx: { chem: 3 } }] },
+  { id: 'tripledouble', when: 'late', opts: [{ fx: { chem: -2 }, arcade: { kind: 'rebound', good: { fame: 6 }, bad: { fame: 0, chem: -2 } } }, { fx: { chem: 3 } }] },
   { id: 'brace', when: 'any', cond: 'hurt', opts: [{ fx: { body: 4, ath: -1 } }, { fx: { ath: 1 }, risk: { p: 0.35, fx: { body: -6 }, msg: 'cardx.ouch' } }] },
   { id: 'sushi', when: 'any', opts: [{ fx: { fame: 4, body: -5 } }, { fx: { power: -1, body: 2 } }] },
   { id: 'proposal', when: 'any', opts: [{ fx: { fame: 3, chem: 2 } }, { fx: { form: 1 } }] },
@@ -254,8 +255,8 @@ export const CARDS = [
   { id: 'tunnel', when: 'any', opts: [{ fx: { fame: 3 }, risk: { p: 0.3, fx: { injuryGames: 3 }, msg: 'cardx.suspended' } }, { fx: { chem: 2 } }] },
   { id: 'oldcoach', when: 'any', opts: [{ fx: { fame: 3, clu: 1 } }, { fx: { chem: 1 } }] },
   { id: 'collision', when: 'any', opts: [{ fx: { chem: 4 } }, { fx: { form: 1 } }] },
-  { id: 'scoringstreak', when: 'any', opts: [{ fx: { usage: 2, fame: 3, chem: -2 } }, { fx: { chem: 4 } }] },
-  { id: 'ftyips', when: 'any', opts: [{ fx: { clu: 3, form: -1 } }, { risk: { p: 0.4, fx: { clu: -2 }, msg: 'cardx.yips' } }] },
+  { id: 'scoringstreak', when: 'any', opts: [{ fx: { usage: 2, chem: -2 }, arcade: { kind: 'shot', good: { fame: 5 }, bad: { fame: 0 } } }, { fx: { chem: 4 } }] },
+  { id: 'ftyips', when: 'any', opts: [{ fx: { form: -1 }, arcade: { kind: 'ft', good: { clu: 4 }, bad: { clu: -1 } } }, { risk: { p: 0.4, fx: { clu: -2 }, msg: 'cardx.yips' } }] },
   { id: 'dunkoty', when: 'any', cond: 'ath', opts: [{ fx: { fame: 5 } }, { fx: { chem: 1 } }] },
   { id: 'naming', when: 'any', opts: [{ fx: { fame: 3, chem: -1 } }, { fx: { form: 1 } }] },
   { id: 'fight', when: 'any', opts: [{ fx: { chem: 8 }, risk: { p: 0.35, fx: { injuryGames: 5 }, msg: 'cardx.suspended' } }, { fx: { fame: 1, chem: 2 } }] },
@@ -273,7 +274,7 @@ export const CARDS = [
   { id: 'posterized', when: 'any', opts: [{ fx: { chem: 2 } }, { fx: { def: 2, fame: 1 } }] },
   { id: 'defchallenge', when: 'any', opts: [{ fx: { def: 3, body: -2 } }, { fx: { chem: -3, fame: 2 } }] },
   { id: 'leak', when: 'any', opts: [{ fx: { chem: -2, power: 1 } }, { fx: { chem: 2 } }] },
-  { id: 'cover', when: 'any', opts: [{ fx: { chem: 5 }, risk: { p: 0.35, fx: { fame: -4 }, msg: 'cardx.exposed' } }, { fx: { chem: -5, power: 1 } }] },
+  { id: 'coverhim', when: 'any', opts: [{ fx: { chem: 5 }, risk: { p: 0.35, fx: { fame: -4 }, msg: 'cardx.exposed' } }, { fx: { chem: -5, power: 1 } }] },
   { id: 'fanletter', when: 'any', opts: [{ fx: { fame: 3, chem: 1 } }, { fx: { chem: 1 } }] },
   { id: 'recordcrowd', when: 'any', opts: [{ fx: { fame: 3, power: 1 } }, { fx: { chem: 1 } }] },
   { id: 'ironstreak', when: 'any', cond: 'vet', opts: [{ fx: { fame: 3, body: -4 } }, { fx: { body: 4 } }] },
@@ -295,7 +296,7 @@ export const CARDS = [
   { id: 'anthem', when: 'any', opts: [{ fx: { fame: 5 }, risk: { p: 0.4, fx: { fame: -6 }, msg: 'cardx.offkey' } }, { fx: { chem: 1 } }] },
   { id: 'allaccess', when: 'any', opts: [{ fx: { fame: 4, chem: -2 } }, { fx: { chem: 1 } }] },
   { id: 'turnover', when: 'any', opts: [{ fx: { chem: 5 } }, { fx: { fame: 2, chem: -3 } }] },
-  { id: 'missedwinner', when: 'any', opts: [{ fx: { clu: 3, body: -2 } }, { fx: { body: 2 } }] },
+  { id: 'missedwinner', when: 'any', opts: [{ fx: { body: -2 }, arcade: { kind: 'shot', good: { clu: 4 }, bad: { clu: 1 }, shots: 5 } }, { fx: { body: 2 } }] },
   { id: 'prankwar', when: 'any', opts: [{ fx: { chem: 5, fame: 1 } }, { fx: { form: 1 } }] },
   { id: 'tvgig', when: 'any', cond: 'fame40', opts: [{ fx: { fame: 4, body: -1 } }, { fx: { form: 1 } }] },
   { id: 'buyout', when: 'late', cond: 'vet', opts: [{ special: 'superteam', fx: { fame: -2 }, hint: ['newTeam', 'ring'] }, { fx: { chem: 3 } }] },
@@ -308,6 +309,109 @@ export const CARDS = [
   { id: 'jerseyfan', when: 'any', opts: [{ fx: { fame: 2, chem: 2 } }, { fx: { form: 1 } }] },
   { id: 'injuredmate2', when: 'any', opts: [{ fx: { usage: 3, body: -3, fame: 2 } }, { fx: { chem: 3 } }] },
   { id: 'coachtimeout', when: 'late', opts: [{ fx: { chem: -4, clu: 3 } }, { fx: { chem: 3 } }] },
+
+  // ---------------- Erweiterung 3: 100+ weitere Karten (inkl. Minispiel-Karten) ----------------
+  { id: 'optout', when: 'off', cond: 's2', opts: [{ special: 'maxdeal', fx: { fame: 4 }, hint: ['newTeam'] }, { fx: { chem: 4, form: 1 }, hint: ['loyal'] }] },
+  { id: 'contenderoffer', when: 'off', cond: 's2', opts: [{ special: 'superteam', fx: { fame: -4 }, hint: ['newTeam', 'ring'] }, { fx: { chem: 5 } }] },
+  { id: 'signtrade', when: 'off', cond: 's2', opts: [{ special: 'traderandom', mystery: true }, { fx: { chem: 4 } }] },
+  { id: 'friendtrade', when: 'off', cond: 's2', opts: [{ special: 'trade', fx: { fame: 2 }, hint: ['newTeam'] }, { fx: { chem: 3, form: 1 } }] },
+  { id: 'capspace', when: 'off', cond: 's2', opts: [{ fx: { base: 4, chem: -2 } }, { fx: { chem: 4 } }] },
+  { id: 'supermax', when: 'off', cond: 'fame40', opts: [{ fx: { fame: 6, chem: -3 } }, { fx: { chem: 5, form: 1 } }] },
+  { id: 'sneakerwar', when: 'off', cond: 'fame40', opts: [{ fx: { fame: 10, form: -2 } }, { fx: { form: 1, chem: 2 } }] },
+  { id: 'ownerdinner', when: 'off', opts: [{ fx: { chem: 3, fame: 3 } }, { fx: { form: 1 } }] },
+  { id: 'sixthman', when: 'off', cond: 'vet', opts: [{ fx: { chem: 6, usage: -2 } }, { fx: { form: 1, chem: -5 } }] },
+  { id: 'positionchange', when: 'off', opts: [{ fx: { pla: 3, sho: 1, form: -2 } }, { fx: { ath: 1 } }] },
+  { id: 'language', when: 'off', opts: [{ fx: { fame: 4, form: -1 } }, { fx: { form: 1 } }] },
+  { id: 'marathon', when: 'off', opts: [{ fx: { fame: 5, body: -3, ath: 1 } }, { fx: { body: 2 } }] },
+  { id: 'surfing', when: 'off', cond: 'young', opts: [{ fx: { fame: 4, ath: 1 }, risk: { p: 0.2, fx: { body: -6 }, msg: 'cardx.ouch' } }, { fx: { body: 2 } }] },
+  { id: 'hiking', when: 'off', opts: [{ fx: { body: 4, chem: -1 } }, { fx: { fame: 3, body: -1 } }] },
+  { id: 'bookdeal', when: 'off', cond: 'fame45', opts: [{ fx: { fame: 8, form: -2 } }, { fx: { form: 1 } }] },
+  { id: 'standup', when: 'off', opts: [{ fx: { fame: 4 }, risk: { p: 0.4, fx: { fame: -4 }, msg: 'cardx.bombed' } }, { fx: { chem: 2 } }] },
+  { id: 'fashionweek', when: 'off', cond: 'fame40', opts: [{ fx: { fame: 7, body: -1 } }, { fx: { form: 1 } }] },
+  { id: 'musicvideo', when: 'off', cond: 'fame35', opts: [{ fx: { fame: 6, form: -1 } }, { fx: { chem: 1 } }] },
+  { id: 'alumni', when: 'off', opts: [{ fx: { chem: 3, fame: 2 }, risk: { p: 0.15, fx: { body: -5 }, msg: 'cardx.ouch' } }, { fx: { body: 2 } }] },
+  { id: 'jerseyretire', when: 'off', cond: 'vet', opts: [{ fx: { fame: 6, chem: 3 } }, { fx: { form: 1 } }] },
+  { id: 'shootinglab', when: 'off', opts: [{ fx: { sho: 3, body: -1 } }, { fx: { pla: 1 } }] },
+  { id: 'analytics', when: 'off', opts: [{ fx: { def: 2, pla: 2, chem: -2 } }, { fx: { chem: 2 } }] },
+  { id: 'wearable', when: 'off', opts: [{ fx: { body: 4, form: -1 } }, { fx: { form: 1 } }] },
+  { id: 'cryo', when: 'off', opts: [{ fx: { body: 5 }, risk: { p: 0.2, fx: { body: -4 }, msg: 'cardx.backfire' } }, { fx: { body: 2 } }] },
+  { id: 'rebrand', when: 'off', opts: [{ fx: { fame: 3, chem: -1 } }, { fx: { chem: 2 } }] },
+  { id: 'youthmentor', when: 'off', opts: [{ fx: { chem: 3, fame: 4 } }, { fx: { form: 1 } }] },
+  { id: 'fantasycamp', when: 'off', cond: 'vet', opts: [{ fx: { fame: 5, body: -2 } }, { fx: { body: 2 } }] },
+  { id: 'cookingshow', when: 'off', cond: 'fame40', opts: [{ fx: { fame: 5, chem: 1, body: -1 } }, { fx: { form: 1 } }] },
+  { id: 'mmagym', when: 'off', opts: [{ fx: { def: 2, ath: 2 }, risk: { p: 0.2, fx: { body: -5 }, msg: 'cardx.ouch' } }, { fx: { body: 1 } }] },
+  { id: 'nutritionist', when: 'off', opts: [{ fx: { body: 5, form: 1, chem: -1 } }, { fx: { chem: 2, body: -1 } }] },
+  { id: 'contracttalks', when: 'off', cond: 's2', opts: [{ fx: { fame: 5, chem: -5 } }, { fx: { chem: 3 } }] },
+  { id: 'summerhouse', when: 'off', cond: 'fame50', opts: [{ fx: { chem: 6, fame: 2, form: -1 } }, { fx: { form: 1 } }] },
+  { id: 'draftwatch', when: 'off', cond: 'young', opts: [{ fx: { fame: 4 } }, { fx: { form: 1 } }] },
+  { id: 'oldfoe', when: 'off', cond: 's2', opts: [{ fx: { chem: 4, base: 2 } }, { fx: { form: 1, chem: -2 } }] },
+  { id: 'physio', when: 'off', cond: 'hurt', opts: [{ fx: { body: 9, form: -2 } }, { fx: { body: 2 } }] },
+  { id: 'kisscam', when: 'any', opts: [{ fx: { fame: 4, chem: 2 } }, { fx: { fame: -1, chem: 1 } }] },
+  { id: 'halftime', when: 'any', opts: [{ fx: { fame: 5 }, risk: { p: 0.3, fx: { fame: -4 }, msg: 'cardx.offkey' } }, { fx: { form: 1 } }] },
+  { id: 'trashcan', when: 'any', opts: [{ fx: { chem: 3, fame: -2 } }, { fx: { fame: 3 }, risk: { p: 0.3, fx: { chem: -3 }, msg: 'cardx.fined' } }] },
+  { id: 'selfie', when: 'any', opts: [{ fx: { fame: 3 } }, { fx: { chem: 1 } }] },
+  { id: 'doubleot', when: 'late', opts: [{ fx: { clu: 3, body: -4 } }, { fx: { body: 3, power: -1 } }] },
+  { id: 'fouledout', when: 'any', opts: [{ fx: { chem: 4, fame: -1 } }, { fx: { fame: 2, chem: -4 } }] },
+  { id: 'trashtalk', when: 'any', opts: [{ fx: { clu: 2 }, risk: { p: 0.3, fx: { injuryGames: 3 }, msg: 'cardx.suspended' } }, { fx: { def: 1, chem: 1 } }] },
+  { id: 'miccedup', when: 'any', cond: 'fame40', opts: [{ fx: { fame: 6 }, risk: { p: 0.3, fx: { chem: -3 }, msg: 'cardx.fined' } }, { fx: { fame: 2 } }] },
+  { id: 'ballhog', when: 'any', opts: [{ fx: { usage: 3, fame: 2, chem: -3 } }, { fx: { chem: 4, pla: 1 } }] },
+  { id: 'passfirst', when: 'any', cond: 'playm', opts: [{ fx: { chem: -1 }, arcade: { kind: 'pass', good: { pla: 2, fame: 4 }, bad: { chem: -2 } } }, { fx: { chem: 3 } }] },
+  { id: 'lockdownnight', when: 'any', cond: 'def60', opts: [{ fx: { fame: 3, chem: 1 } }, { fx: { def: 2, fame: 2 } }] },
+  { id: 'careerhigh', when: 'any', opts: [{ fx: { usage: 2, fame: 3, chem: -2 } }, { fx: { chem: 3 } }] },
+  { id: 'comebackrally', when: 'late', opts: [{ fx: { chem: -1 }, arcade: { kind: 'shot', good: { clu: 3, fame: 4, power: 1 }, bad: { fame: -1, chem: -2 }, shots: 4 } }, { fx: { chem: 3 } }] },
+  { id: 'blowout', when: 'any', opts: [{ fx: { form: 2, body: -2 } }, { fx: { chem: -4, fame: 1 } }] },
+  { id: 'courtsidestar', when: 'any', cond: 'fame40', opts: [{ fx: { fame: 4 } }, { fx: { form: 1 } }] },
+  { id: 'autograph', when: 'any', opts: [{ fx: { fame: 5, body: -1 } }, { fx: { fame: 1 } }] },
+  { id: 'streamer', when: 'any', opts: [{ fx: { fame: 4 } }, { fx: { form: 1 } }] },
+  { id: 'cryptoad', when: 'any', cond: 'fame45', opts: [{ fx: { fame: 3 }, risk: { p: 0.5, fx: { fame: -8 }, msg: 'cardx.scandal' } }, { fx: { chem: 1 } }] },
+  { id: 'tattoo', when: 'any', opts: [{ fx: { fame: 3, body: -1 } }, { fx: { form: 1 } }] },
+  { id: 'groupchat', when: 'any', opts: [{ fx: { chem: 4 } }, { fx: { form: 1 } }] },
+  { id: 'secretsanta', when: 'any', opts: [{ fx: { chem: 4 }, risk: { p: 0.3, fx: { chem: -4 }, msg: 'cardx.flat' } }, { fx: { chem: 2 } }] },
+  { id: 'rookiebday', when: 'any', opts: [{ fx: { chem: 5, body: -1 } }, { fx: { chem: 1 } }] },
+  { id: 'huddlefury', when: 'any', opts: [{ fx: { fame: 3, chem: -5 } }, { fx: { chem: 3, form: 1 } }] },
+  { id: 'tightrace', when: 'late', opts: [{ fx: { power: 2, chem: 3, body: -2 } }, { fx: { form: 1 } }] },
+  { id: 'lastsecond', when: 'late', cond: 'playm', opts: [{ arcade: { kind: 'clutch', good: { clu: 3, fame: 5 }, bad: { clu: -1, fame: -2 } } }, { fx: { pla: 2, chem: 3 } }] },
+  { id: 'injuryscare', when: 'any', opts: [{ fx: { power: 1 }, risk: { p: 0.35, fx: { body: -8 }, msg: 'cardx.ouch' } }, { fx: { body: 2, injuryGames: 2 } }] },
+  { id: 'enemyfan', when: 'any', opts: [{ fx: { fame: 2, chem: 1 } }, { fx: { form: 1 } }] },
+  { id: 'schoolvisit', when: 'any', opts: [{ fx: { fame: 4, chem: 2, body: -1 } }, { fx: { fame: 1 } }] },
+  { id: 'monthaward', when: 'any', cond: 'fame40', opts: [{ fx: { fame: 5, form: -1 } }, { fx: { form: 1 } }] },
+  { id: 'dunkfail', when: 'any', cond: 'ath', opts: [{ fx: { fame: 3 }, risk: { p: 0.2, fx: { body: -4 }, msg: 'cardx.ouch' } }, { fx: { chem: 1 } }] },
+  { id: 'teamjet', when: 'any', opts: [{ fx: { chem: 3, body: 1 } }, { fx: { form: 2, body: -2 } }] },
+  { id: 'hotelparty', when: 'any', opts: [{ fx: { fame: 2, chem: 2, body: -3 } }, { fx: { body: 2 } }] },
+  { id: 'rookiedunk', when: 'any', opts: [{ fx: { ath: 1, chem: 1 }, arcade: { kind: 'post', good: { fame: 3, chem: 3 }, bad: { fame: -2 } } }, { fx: { chem: 3 } }] },
+  { id: 'mediaday2', when: 'any', opts: [{ fx: { fame: 4, chem: 1 } }, { fx: { form: 1 } }] },
+  { id: 'unsung', when: 'any', opts: [{ fx: { chem: 4 } }, { fx: { fame: 2, chem: -3 } }] },
+  { id: 'shoemelt', when: 'any', opts: [{ fx: { fame: 4 }, risk: { p: 0.3, fx: { body: -5 }, msg: 'cardx.ouch' } }, { fx: { power: -1 } }] },
+  { id: 'crowdsing', when: 'any', opts: [{ fx: { fame: 3, clu: -1 } }, { fx: { clu: 2 } }] },
+  { id: 'gambler', when: 'any', opts: [{ fx: { chem: 2, fame: 1 } }, { risk: { p: 0.4, fx: { fame: -8 }, msg: 'cardx.scandal' } }] },
+  { id: 'scoutleak', when: 'any', opts: [{ fx: { clu: 2, fame: -1 } }, { fx: { chem: 2, fame: 2 } }] },
+  { id: 'coldstreak', when: 'late', opts: [{ fx: { clu: 2, body: -2 }, arcade: { kind: 'shot', good: { clu: 4 }, bad: { clu: 0 }, shots: 5 } }, { fx: { form: 1 } }] },
+  { id: 'agingcrit', when: 'any', cond: 'vet', opts: [{ fx: { ath: 1, fame: 2, body: -3 } }, { fx: { chem: 3 } }] },
+  { id: 'fantasyrant', when: 'any', opts: [{ fx: { fame: 3 } }, { fx: { chem: 1 } }] },
+  { id: 'shoesoldout', when: 'any', cond: 'fame50', opts: [{ fx: { fame: 6, form: -1 } }, { fx: { chem: 2 } }] },
+  { id: 'dayoff2', when: 'any', opts: [{ fx: { fame: 2, chem: 2 } }, { fx: { form: 2, body: -1 } }, { fx: { body: 4 } }] },
+  { id: 'gmcall', when: 'mid', opts: [{ special: 'traderandom', fx: { chem: -2, fame: 2 }, mystery: true }, { fx: { chem: 3 } }] },
+  { id: 'owneranger', when: 'late', cond: 'weak', opts: [{ fx: { chem: 5, fame: -1 } }, { fx: { fame: 3, chem: -4 } }] },
+  { id: 'pregamedance', when: 'any', opts: [{ fx: { chem: 4, fame: 2 } }, { fx: { clu: 1 } }] },
+  { id: 'droneoverhome', when: 'any', opts: [{ fx: { fame: 2, form: -1 } }, { fx: { form: 1 } }] },
+  { id: 'newbench2', when: 'any', opts: [{ fx: { chem: 4 } }, { fx: { usage: 2, chem: -5 } }] },
+  { id: 'slipclip', when: 'any', opts: [{ fx: { fame: 4 } }, { fx: { form: 1 } }] },
+  { id: 'blockparty', when: 'any', cond: 'def60', opts: [{ fx: { fame: 3, def: 1 }, arcade: { kind: 'defense', good: { def: 2, fame: 4 }, bad: { fame: -1 } } }, { fx: { clu: 1 } }] },
+  { id: 'tiredlegs', when: 'late', opts: [{ fx: { clu: 2, body: -4 } }, { fx: { body: 4, power: -1 } }] },
+  { id: 'oldjerseyfan', when: 'any', cond: 'vet', opts: [{ fx: { fame: 3 } }, { fx: { chem: 1, fame: 2 } }] },
+  { id: 'handshake', when: 'any', opts: [{ fx: { clu: 2 } }, { fx: { fame: 4, rivalBoost: 1, chem: -2 } }] },
+  { id: 'charitygala', when: 'any', cond: 'fame40', opts: [{ fx: { fame: 5, chem: 1 } }, { fx: { form: 1 } }] },
+  { id: 'newstaff', when: 'mid', opts: [{ fx: { form: 1 }, risk: { p: 0.3, fx: { form: -2 }, msg: 'cardx.backfire' } }, { fx: { clu: 1 } }] },
+  { id: 'stealstreak', when: 'any', cond: 'def60', opts: [{ fx: { def: 2, fame: 3 } }, { fx: { chem: 2 } }] },
+  { id: 'reboundbattle', when: 'any', opts: [{ fx: { chem: -1 }, arcade: { kind: 'rebound', good: { fame: 4, chem: 2 }, bad: { fame: -2 } } }, { fx: { chem: 2 } }] },
+  { id: 'fastbreakdare', when: 'any', cond: 'ath', opts: [{ arcade: { kind: 'fast', good: { fame: 5, ath: 1 }, bad: { fame: -2, body: -2 } } }, { fx: { chem: 2 } }] },
+  { id: 'driveduel', when: 'any', opts: [{ arcade: { kind: 'drive', good: { fame: 4, ath: 1 }, bad: { fame: -2 } } }, { fx: { chem: 2 } }] },
+  { id: 'freethrowbet', when: 'any', opts: [{ arcade: { kind: 'ft', good: { fame: 3, chem: 3 }, bad: { chem: -1 } } }, { fx: { form: 1 } }] },
+  { id: 'standingdunkshow', when: 'any', cond: 'ath', opts: [{ arcade: { kind: 'post', good: { fame: 5, ath: 1 }, bad: { fame: -1 } } }, { fx: { chem: 1 } }] },
+  { id: 'defensedrill', when: 'any', opts: [{ arcade: { kind: 'defense', good: { def: 3 }, bad: { def: 0, form: -1 } } }, { fx: { body: 2 } }] },
+  { id: 'passingdrill', when: 'any', cond: 'playm', opts: [{ arcade: { kind: 'pass', good: { pla: 3 }, bad: { pla: 0 } } }, { fx: { body: 2 } }] },
+  { id: 'fanchallenge', when: 'any', opts: [{ arcade: { kind: 'shot', good: { fame: 4 }, bad: { fame: 1 }, shots: 3 } }, { fx: { form: 1 } }] },
+  { id: 'timeoutfinal', when: 'late', opts: [{ arcade: { kind: 'clutch', good: { clu: 3, fame: 4, power: 1 }, bad: { clu: -1, chem: -3 } } }, { fx: { chem: 3 } }] },
 ];
 
 export const cardById = id => CARDS.find(c => c.id === id);
@@ -318,6 +422,7 @@ const COND = {
   strong: r => T(r).base >= 60, weak: r => T(r).base < 52, ath: r => r.p.skills.ath >= 60,
   fame30: r => r.p.fame >= 30, fame35: r => r.p.fame >= 35, fame40: r => r.p.fame >= 40,
   fame45: r => r.p.fame >= 45, fame50: r => r.p.fame >= 50, fame55: r => r.p.fame >= 55,
+  def60: r => r.p.skills.def >= 60, playm: r => r.p.skills.pla >= 60,
 };
 
 function weightOf(c, run) {
@@ -337,12 +442,20 @@ export function drawCard(run, phase) {
   return card;
 }
 
+// Ergebnis-Text nach einem Karten-Minigame (good = Erfolg)
+export function arcadeResultText(card, good) {
+  return tx(`cards.${card.id}.${good ? 'g' : 'b'}`, good ? 'cardx.playGood' : 'cardx.playBad');
+}
+
 export function cardText(run, card) {
   const team = T(run);
   return t(`cards.${card.id}.x`, { name: `${run.rival.first} ${run.rival.last}`, nick: team.nick, city: team.city });
 }
 
 // Option anwenden -> Ergebnis-Text
+// Text mit Fallback, falls ein Karten-Key fehlt
+const tx = (key, fallback, params) => { const v = t(key, params); return v === key ? t(fallback, params) : v; };
+
 export function applyOption(run, card, i) {
   const opt = card.opts[i];
   const parts = [];
@@ -352,5 +465,6 @@ export function applyOption(run, card, i) {
     const extra = opt.risk.special ? SPECIAL[opt.risk.special](run) : '';
     parts.push([t(opt.risk.msg), extra, opt.risk.fx ? fx(run, opt.risk.fx) : ''].filter(Boolean).join(' '));
   }
+  if (opt.arcade && !parts.length) return tx(`cards.${card.id}.p`, 'cardx.playIntro');
   return parts.join(' ') || t('cardx.nothing');
 }

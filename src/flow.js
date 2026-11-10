@@ -3,7 +3,7 @@ import { C, text, tiny, box } from './gfx.js';
 import { clamp } from './systems/rng.js';
 import { BALANCE } from './data/balance.js';
 import { archetypeById } from './data/archetypes.js';
-import { drawCard } from './data/cards.js';
+import { drawCard, fx as applyFx, arcadeResultText } from './data/cards.js';
 import { arcadeMods } from './data/perks.js';
 import { ovr, freshSeason, startSeason, finishSeason, gameProb, simSeries, confSeeds, PAIRS, applyAging, driftTeams } from './systems/sim.js';
 import { computeRegularAwards, computePlayoffAwards, applyRegularArcade } from './systems/awards.js';
@@ -80,7 +80,7 @@ async function seasons(game, run) {
     run.cur = freshSeason();
     playMusic('season');
     // 1. Offseason-Entscheidung
-    await game.show(new CardScene(run, drawCard(run, 'off'), 'off'));
+    await showCard(game, run, drawCard(run, 'off'), 'off', 'wipe');
     // 2. Regular Season, unterbrochen von Events
     const season = await regularSeason(game, run);
     // 3. Regular-Season-Awards (MVP, All-Star, DPOY, Scoring, ROY)
@@ -120,6 +120,24 @@ async function seasons(game, run) {
   await game.show(new LegacyScene(run));
 }
 
+// Karte zeigen; hat die gewaehlte Option ein Minigame, folgt es direkt danach (Ergebnis bestimmt die Folgen)
+export async function showCard(game, run, card, phase, transition) {
+  const out = await game.show(new CardScene(run, card, phase), transition);
+  if (!out || !out.arcade) return;
+  const a = out.arcade, rng = run.rng;
+  const opp = rng.pick(run.teams.filter(x => x.id !== run.p.teamId));
+  const base = rng.int(88, 104);
+  const q = await keyGame(game, run, null, {
+    kind: a.kind, title: t(`cards.${card.id}.t`).slice(0, 17), opp, pressure: a.pressure ?? 0.12, situation: t('flow.cardPlay'),
+    scoreLine: [base, base + rng.int(-2, 2)], shots: a.shots, contest: !!a.contest,
+  });
+  const good = q >= (a.need ?? 0.5);
+  const sum = applyFx(run, good ? a.good : a.bad);
+  if (good) run.p.peakFame = Math.max(run.p.peakFame, run.p.fame);
+  await game.show(new MessageScene((arcadeResultText(card, good) + ' ' + sum).trim(),
+    teamBanner(run, t('flow.cardPlay'), good ? t('flow.cardGood') : t('flow.cardBad'))), 'wipe');
+}
+
 // Regular Season in Abschnitten: Unterbrechung ca. bei 35 % (Saisonmitte) und 70 % (Saisonende)
 async function regularSeason(game, run) {
   const st = startSeason(run);
@@ -148,7 +166,7 @@ async function regularSeason(game, run) {
       else if (!run.p.flags.fifty && o >= 72 && run.rng.chance(0.35)) await fiftyGame(game, run);
       else await spotlightGame(game, run);
     } else {
-      await game.show(new CardScene(run, drawCard(run, stop.phase), stop.phase), 'wipe');
+      await showCard(game, run, drawCard(run, stop.phase), stop.phase, 'wipe');
     }
     game.set(sim, 'wipe');
   }
@@ -170,7 +188,7 @@ function pickArcadeKind(run, clutchMoment) {
   if (clutchMoment && run.rng.chance(0.6)) return 'clutch';
   const prefs = archetypeById(run.p.arch).games;
   const last = run.lastKinds || [];
-  const kind = run.rng.weighted(ARCADE_KINDS.filter(k => k !== 'clutch'), k => (prefs[k] ?? (k === 'post' ? 0.3 : 1)) * (last.includes(k) ? 0.15 : 1));
+  const kind = run.rng.weighted(ARCADE_KINDS.filter(k => k !== 'clutch' && k !== 'dunkc'), k => (prefs[k] ?? (k === 'post' ? 0.3 : 1)) * (last.includes(k) ? 0.15 : 1));
   run.lastKinds = [kind, ...last].slice(0, 2);
   return kind;
 }
@@ -202,9 +220,9 @@ async function spotlightGame(game, run) {
 // All-Star Weekend: Sharpshooter -> Dreier-Contest, Slasher/Big Man -> Dunk Contest,
 // Playmaker -> Skills Challenge, Lockdown -> Defense Showdown
 const CONTESTS = {
-  sharp: { id: '3pt', kind: 'shot', shots: 5 }, slasher: { id: 'dunk', kind: 'fast' }, big: { id: 'dunk', kind: 'fast' },
+  sharp: { id: '3pt', kind: 'shot', shots: 5 }, slasher: { id: 'dunk', kind: 'dunkc' }, big: { id: 'dunk', kind: 'dunkc' },
   play: { id: 'skills', kind: 'pass' }, lock: { id: 'def', kind: 'defense' },
-  stretch: { id: '3pt', kind: 'shot', shots: 5 }, scorer: { id: '3pt', kind: 'shot', shots: 5 }, twoway: { id: 'dunk', kind: 'fast' }, unicorn: { id: 'dunk', kind: 'fast' },
+  stretch: { id: '3pt', kind: 'shot', shots: 5 }, scorer: { id: '3pt', kind: 'shot', shots: 5 }, twoway: { id: 'dunk', kind: 'dunkc' }, unicorn: { id: 'dunk', kind: 'dunkc' },
 };
 export async function allStarContest(game, run) {
   const c = CONTESTS[run.p.arch];
@@ -332,7 +350,7 @@ async function playoffs(game, run, season) {
   return res;
 }
 
-async function playSeries(game, run, log, oppId, round, myHome) {
+export async function playSeries(game, run, log, oppId, round, myHome) {
   const me = run.p.teamId, rng = run.rng, opp = run.teams[oppId];
   const rk = ROUND_KEYS[round];
   let w = 0, l = 0, g = 0, arc = 0, q = null;
@@ -353,12 +371,18 @@ async function playSeries(game, run, log, oppId, round, myHome) {
       await log.msg(g7 ? t('flow.g7') : w === 3 ? t('flow.closeOut', { g: g + 1, w, l }) : t('flow.elim', { g: g + 1, w, l }));
       const clutch = round === 3 && (g7 || w === 3);
       const behind = rng.int(1, 3), base = rng.int(92, 108);
+      const kind = pickArcadeKind(run, clutch);
       q = await keyGame(game, run, log, {
-        kind: pickArcadeKind(run, clutch), title: round === 3 ? t('flow.keyFin', { g: g + 1 }) : t('flow.keyCf', { g: g + 1 }), opp,
+        kind, title: round === 3 ? t('flow.keyFin', { g: g + 1 }) : t('flow.keyCf', { g: g + 1 }), opp,
         pressure: round === 3 ? (g7 ? 0.5 : 0.35) : 0.2,
         situation: g7 ? t('flow.sitG7') : w === 3 ? t('flow.sitClose') : t('flow.sitElim'), scoreLine: [base, base + behind],
       });
       prob = clamp(prob + arcadeAdj(q), 0.05, 0.95);
+      // Buzzer-Beater entscheidet: Treffer = Spiel gewonnen, Fehlwurf = Serie verloren
+      if (kind === 'clutch') {
+        if (q >= 0.5) { await log.msg(t('flow.buzzerMade')); prob = 1; }
+        else { await log.msg(t('flow.buzzerMiss')); w = Math.min(w, 3); l = 4; g++; break; }
+      }
     }
     if (rng.next() < prob) w++; else l++;
     g++;

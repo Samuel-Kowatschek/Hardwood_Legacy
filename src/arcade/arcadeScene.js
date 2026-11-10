@@ -15,11 +15,12 @@ import { Rebound } from './rebound.js';
 import { Pass } from './pass.js';
 import { FreeThrow } from './freeThrow.js';
 import { Post } from './post.js';
+import { DunkContest, drawDunkStage } from './dunkContest.js';
 
-const GAMES = { shot: ShotMeter, clutch: Clutch, fast: FastBreak, defense: DefenseStop, drive: Drive, rebound: Rebound, pass: Pass, ft: FreeThrow, post: Post };
+const GAMES = { shot: ShotMeter, clutch: Clutch, fast: FastBreak, defense: DefenseStop, drive: Drive, rebound: Rebound, pass: Pass, ft: FreeThrow, post: Post, dunkc: DunkContest };
 export const ARCADE_KINDS = Object.keys(GAMES);
 // Welche Perk-Modifikatoren fuer welches Minigame zaehlen
-const MOD_KEYS = { shot: ['zone'], clutch: ['zone', 'time'], fast: ['fast'], defense: ['def'], drive: ['drive'], rebound: ['reb'], pass: ['pass'], ft: ['ft'], post: ['reb'] };
+const MOD_KEYS = { shot: ['zone'], clutch: ['zone', 'time'], fast: ['fast'], defense: ['def'], drive: ['drive'], rebound: ['reb'], pass: ['pass'], ft: ['ft'], post: ['reb'], dunkc: ['fast'] };
 
 export class ArcadeScene extends Scene {
   constructor(run, opts) {
@@ -47,9 +48,10 @@ export class ArcadeScene extends Scene {
   }
   draw(ctx) {
     if (this.phase === 'intro') {
-      if (this.opts.contest && this.opts.kind === 'shot') drawContest(ctx, this, this.t);
+      if (this.opts.kind === 'dunkc') drawDunkStage(ctx, this, this.t);
+      else if (this.opts.contest && this.opts.kind === 'shot') drawContest(ctx, this, this.t);
       else drawBattle(ctx, this, this.t, { showHoop: !['defense', 'pass'].includes(this.opts.kind) });
-      if (!this.opts.contest) tiny(ctx, this.opts.title, 6, 32, C.ORANGE);
+      if (!this.opts.contest && this.opts.kind !== 'dunkc') tiny(ctx, this.opts.title, 6, 32, C.ORANGE);
       if (this.bonus.length) tiny(ctx, t('arcade.bonus', { x: this.bonus.join(', ').toUpperCase() }).slice(0, 18), 6, 39, C.WHITE);
       this.box.draw(ctx, this.t);
       return;
