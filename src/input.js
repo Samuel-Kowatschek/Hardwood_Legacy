@@ -6,7 +6,7 @@ const KEYMAP = {
   ' ': 'a', Enter: 'a', z: 'a', Z: 'a',
   Escape: 'b', x: 'b', X: 'b', Backspace: 'b',
   s: 'stats', S: 'stats', Tab: 'stats',
-  h: 'help', H: 'help', o: 'options', O: 'options',
+  h: 'help', H: 'help', o: 'options', O: 'options', q: 'menu', Q: 'menu',
 };
 
 const down = new Set();

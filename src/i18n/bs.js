@@ -8,12 +8,13 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
+  ui: { menu: 'GLAVNI MENI (Q)', menuT: 'MENI', help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
   unlocks: { title: 'OTKLJUČANO', archetype: 'ARHETIP', perk: 'PERK', locked: 'ZAKLJUČANO', count: '{n}/{m} OTKLJUČANO' },
   practice: { title: 'TRENING', reroll: 'NOVI IGRAČ', situation: 'TRENING', last: 'ZADNJE {p}%' },
   share: { title: 'PODIJELI LEGACY', copy: 'KOPIRAJ TEKST', copied: 'KOPIRANO!', instagram: 'INSTAGRAM', instaHint: 'Kartica sačuvana. Objavi je na Instagramu!', more: 'VIŠE...', png: 'PREUZMI KARTICU', text: 'Završio sam karijeru kao {tier} sa {score} legacy poena u Hardwood Legacy! Možeš li bolje? Seed {s}' },
   teamsel: { title: 'IZABERI TIM', cols: 'JAČINA  PICK', random: 'NASUMIČAN DRAFT' },
   seedin: { title: 'UNESI SEED', text: 'Unesi seed da igraš istu ligu kao tvoji prijatelji. Isti seed, isti početak.', start: 'START', short: 'Najmanje 3 slova ili broja.' },
+  quit: { title: 'GLAVNI MENI?', saved1: 'TVOJA IGRA JE SAČUVANA.', saved2: 'NASTAVI KASNIJE OD SEZONE {s}.', yes: 'DA', no: 'NE' },
   title: {
     continue: 'NASTAVI S{s}', enterSeed: 'UNESI SEED', unlocks: 'OTKLJUČANO', practice: 'TRENING', newRun: 'NOVA KARIJERA', daily: 'DNEVNI SEED', seed: 'SEED {s}', hof: 'KUĆA SLAVNIH', help: 'KAKO SE IGRA', options: 'POSTAVKE',
     tagline: 'JEDNA IGRA = JEDNA KARIJERA', record: 'IGRE {n}  REKORD {b}', hint: '{ok} OK  {back} NAZAD  M ZVUK',
@@ -194,7 +195,7 @@ export default {
       { t: 'PERKOVI', b: 'NAKON SEZONA 1, 3, 6, 9 I 12 BIRAŠ 1 OD 3 PERKA. PERKOVI MIJENJAJU SIMULACIJU I MINIIGRE (NPR. DEEP THREAT = VEĆA ZONA ŠUTA).\n\nSINERGIJE:\nDEEP THREAT + SPACING\nDEFENSIVE ANCHOR + REBOUNDS\nSIGNATURE MOVE + ICE VEINS\nSPRING LEGS + PRO SNEAKERS\nCOURT VISION + HANDLES' },
       { t: 'KOCKA PENZIJE', b: 'TVOJ SKOR JE SKRIVEN DO PENZIJE. MNOŽITELJ SE VIDI:\n\nOTIŠAO NA VRHU +25%: PENZIJA ODMAH NAKON PRSTENA, MVP ILI FINALS MVP.\nPOSLJEDNJI PLES +15%: PRSTEN U ZADNJOJ SEZONI.\nPREDUGO OSTAO: SLABE SEZONE ZAREDOM KOŠTAJU 10%, 20%, 30%...\n\nNAJVIŠE 15 SEZONA.' },
       { t: 'LEGACY SKOR', b: 'PRSTEN 100  MVP 60  FINALS MVP 40\nDPOY 25  STRIJELAC 20\nALL-STAR 8  PREKRETNICA 15  ROY 10\n+ BONUS ZA JEDAN TIM (5+ SEZONA)\n+ BONUS SLAVE\n- PRSTENJE NAKON SUPERTIMA VRIJEDI MANJE\n\nX MNOŽITELJ = LEGACY SKOR.\n\nPROCENAT NA KRAJU JE PROCJENA PREMA SIMULIRANIM KARIJERAMA.' },
-      { t: 'KONTROLE', b: 'STRELICE: KRETANJE / BIRANJE\nSPACE / ENTER / Z: OK\nESC / X: NAZAD\nS: STATISTIKE   M: ZVUK\nH: POMOĆ   O: POSTAVKE\nILI MIŠEM: KLIK BIRA.\nIGRE SA STRELICAMA: KLIK/DRŽI OKO SREDINE (IGRAČ, LOPTA, NIŠAN). SREDINA = OK.\n\nNA MOBITELU KORISTI DUGMAD NA EKRANU.\n\nOTKLJUČAVANJA: NOVI ARHETIPI I PERKOVI. TVOJE NAJBOLJE KARIJERE VISE U KUĆI SLAVNIH I MOGU SE VRATITI KAO RIVALI.' },
+      { t: 'KONTROLE', b: 'STRELICE: KRETANJE / BIRANJE\nSPACE / ENTER / Z: OK\nESC / X: NAZAD\nS: STATISTIKE   M: ZVUK\nH: POMOĆ   O: POSTAVKE\nQ: GLAVNI MENI (IGRA OSTAJE SAČUVANA)\nILI MIŠEM: KLIK BIRA.\nIGRE SA STRELICAMA: KLIK/DRŽI OKO SREDINE (IGRAČ, LOPTA, NIŠAN). SREDINA = OK.\n\nNA MOBITELU KORISTI DUGMAD NA EKRANU.\n\nOTKLJUČAVANJA: NOVI ARHETIPI I PERKOVI. TVOJE NAJBOLJE KARIJERE VISE U KUĆI SLAVNIH I MOGU SE VRATITI KAO RIVALI.' },
     ],
   },
 };

@@ -3,6 +3,7 @@ import { W, H, C, initFont, text, setScheme } from './gfx.js';
 import { setLang } from './i18n/index.js';
 import { StatsScene } from './scenes/stats.js';
 import { OptionsScene } from './scenes/options.js';
+import { QuitScene } from './scenes/quit.js';
 import { t } from './i18n/index.js';
 import { input, initInput } from './input.js';
 import { initAudio, unlockAudio, setMuted, isMuted, sfx } from './systems/audio.js';
@@ -97,7 +98,11 @@ function frame() {
   } else if (game.scene) {
     // Stats-Overlay jederzeit waehrend eines Runs
     if (input.pressed('help')) openHelp();
-    else if (input.pressed('options')) { game.overlay = new OptionsScene({ overlay: true, game }); input.endFrame(); }
+    else if (input.pressed('menu')) {
+      // Hauptmenue: im Run mit Rueckfrage (Autosave vom Season-Beginn), sonst direkt
+      if (game.run) { game.overlay = new QuitScene(game); input.endFrame(); }
+      else if (!(game.scene instanceof TitleScene)) game.set(new TitleScene());
+    } else if (input.pressed('options')) { game.overlay = new OptionsScene({ overlay: true, game }); input.endFrame(); }
     else if (game.run && input.pressed('stats') && !game.scene.noStats) { game.overlay = new StatsScene(game.run); input.endFrame(); }
     else { game.scene.t++; game.scene.update?.(game); }
   }

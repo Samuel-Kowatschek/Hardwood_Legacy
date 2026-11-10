@@ -34,6 +34,7 @@
   .meta { position: absolute; left: 50%; transform: translateX(-50%); bottom: 10px; display: flex; gap: 6px; }
   .meta .btn { position: static; padding: 6px 6px; font-size: 7px; white-space: nowrap; }
   #version { position: fixed; left: 8px; bottom: 6px; font-size: 7px; color: var(--white); opacity: 0.6; z-index: 1; pointer-events: none; }
+  @media (pointer: coarse) { #version { top: calc(6px + env(safe-area-inset-top)); bottom: auto; } }
   /* Desktop-Leiste unter dem Spiel */
   #bar { flex: none; display: flex; justify-content: center; gap: 10px; padding: 0 12px 18px; }
   .bbtn { font: 8px 'Press Start 2P', monospace; color: var(--white); background: var(--bg); border: 2px solid var(--white);
@@ -98,6 +99,7 @@
   <div id="version"></div>
   <div id="screen"><canvas id="game" width="160" height="144"></canvas></div>
   <div id="bar">
+    <button class="bbtn" data-btn="menu" data-label="menu">MENU</button>
     <button class="bbtn" data-btn="help" data-label="help">HELP</button>
     <button class="bbtn" data-btn="options" data-label="options">OPTIONS</button>
     <button class="bbtn" data-btn="stats" data-label="stats">STATS</button>
@@ -109,7 +111,7 @@
       <div class="btn" data-btn="right">&#9654;</div><div class="btn" data-btn="down">&#9660;</div>
     </div>
     <div class="ab"><div class="btn round" data-btn="b">BACK</div><div class="btn round" data-btn="a">OK</div></div>
-    <div class="meta"><div class="btn" data-btn="help" data-label="helpT">HELP</div><div class="btn" data-btn="options" data-label="optionsT">OPTIONS</div><div class="btn" data-btn="stats" data-label="statsT">STATS</div><div class="btn" data-btn="mute" data-label="soundT">SOUND</div></div>
+    <div class="meta"><div class="btn" data-btn="menu" data-label="menuT">MENU</div><div class="btn" data-btn="help" data-label="helpT">HELP</div><div class="btn" data-btn="options" data-label="optionsT">OPTIONS</div><div class="btn" data-btn="stats" data-label="statsT">STATS</div><div class="btn" data-btn="mute" data-label="soundT">SOUND</div></div>
   </div>
   <script type="module" src="src/main.js"></script>
 </body>
