@@ -159,12 +159,12 @@ export class DunkContest {
     // Judges-Tisch (oben rechts im Bild, nach der Wertung sichtbar)
     if (this.phase === 'judges') {
       for (let j = 0; j < 5; j++) {
-        const x = 12 + j * 22;
+        const x = 8 + j * 21;
         ctx.fillStyle = C.WHITE; ctx.fillRect(x, 26, 18, 18);
         ctx.fillStyle = C.DARK; ctx.fillRect(x + 1, 27, 16, 16);
-        if (j < this.shown) text(ctx, String(this.judges[j]), x + 5, 31, C.ORANGE);
+        if (j < this.shown) text(ctx, String(this.judges[j]), x + 9, 31, C.ORANGE, 'center'); // mittig auch bei 10
       }
-      if (this.shown >= 5) text(ctx, t('arcade.dkScore', { s: this.score }), 80, 56, this.res.made ? C.ORANGE : C.WHITE, 'center');
+      if (this.shown >= 5) text(ctx, t('arcade.dkScore', { s: this.score }), 59, 56, this.res.made ? C.ORANGE : C.WHITE, 'center');
     }
     // Spieler (Seitenansicht) + Ball
     if (this.phase !== 'pick') {
