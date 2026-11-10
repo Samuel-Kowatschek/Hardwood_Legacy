@@ -42,7 +42,7 @@ export class PracticeScene extends Scene {
     const a = rng.int(90, 104);
     const q = await this.game.show(new ArcadeScene(run, {
       kind, title: t('arcade.names.' + kind), opp, pressure: 0.2, situation: t('practice.situation'),
-      scoreLine: [a, a + rng.int(-2, 2)], mods: arcadeMods(run.p.perks),
+      scoreLine: [a, a + rng.int(-2, 2)], mods: arcadeMods(run.p.perks), contest: kind === 'dunkc',
     }), 'flash');
     this.last = { kind, q };
     this.game.set(this, 'wipe');

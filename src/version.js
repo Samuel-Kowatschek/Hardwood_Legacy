@@ -1,2 +1,2 @@
 // Versionsnummer (wird unten links auf der Seite angezeigt). Bei jedem Release hochzaehlen.
-export const VERSION = 'v0.8.3';
+export const VERSION = 'v0.9';

@@ -21,12 +21,13 @@ export class CardScene extends Scene {
     } else if (this.phase === 'choose') {
       const i = this.menu.update();
       if (i !== null) {
+        this.chosen = this.card.opts[i];
         this.res = new Typewriter(applyOption(this.run, this.card, i), 17, 4);
         this.run.cur.events.push(this.card.id);
         this.phase = 'result';
         sfx.hit();
       }
-    } else if (this.res.update()) this.finish();
+    } else if (this.res.update()) this.finish(this.chosen && this.chosen.arcade ? { arcade: this.chosen.arcade } : undefined);
   }
   draw(ctx) {
     drawStatus(ctx, this.run, this.t, t('status.' + this.phase0));

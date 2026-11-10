@@ -68,7 +68,7 @@ src/
 `playRun(game, run, { resume })` -> Intro (Draft + Rivale) -> `seasons()`:
 1. **Autosave** (Spielstand zu Beginn jeder Season)
 2. Offseason-Karte
-3. Regular Season (`SimScene`), unterbrochen bei ca. 28–38 % (Event-Karte), 42–50 % (Spotlight-Spiel / 50-Punkte / sehr selten 100-Punkte), 56 % (All-Star Weekend), 66–80 % (Event-Karte, 60 %)
+3. Regular Season (`SimScene`), unterbrochen bei ca. 28–38 % (Event-Karte, ggf. mit Minigame danach), 42–50 % (Spotlight-Spiel / 50-Punkte / sehr selten 100-Punkte), 56 % (All-Star Weekend), 66–80 % (Event-Karte, 60 %)
 4. **Season Awards** (ROY, All-Star, MVP, DPOY, Scoring Title, All-Star-Contest)
 5. Playoffs (Play-In ab Platz 7–10, echtes Bracket; Key Games in Conf Finals/Finals)
 6. **Postseason** (Ring, Finals MVP, Meilensteine, Alterung)
@@ -96,12 +96,13 @@ src/
 
 ## 5. Inhalte
 
-### Karten (`data/cards.js` + `i18n/cards.<lang>.js`) – aktuell 212
+### Karten (`data/cards.js` + `i18n/cards.<lang>.js`) – aktuell 313
 - Definition: `{ id, when: 'off'|'mid'|'late'|'any', cond, w, opts: [...] }`
   - `cond`: Funktion oder Kurzname aus `COND` (`young`, `vet`, `hurt`, `s2`, `strong`, `weak`, `ath`, `fame30`…`fame55`)
   - Option: `fx` (Änderungen), `risk: { p, fx, msg, special }` (versteckt, Hinweis "RISK?"), `special` (z. B. `trade`, `superteam`, `maxdeal`, `joinrival`, `hometown`, `bigmarket`, `traderandom`, `mentor`, `coin`), `hint`, `mystery`
   - `fx`-Schlüssel: Kernwerte `form body chem fame`, Skills `sho pla def ath clu`, Team `base`, Season `power playoffPower usage injuryGames rivalBoost`
-- Hinweise (`SHOT+`, `FAME++`, `RISK?`) werden automatisch aus `fx` erzeugt (`hintFor`).
+- Hinweise (`SHOT+`, `FAME++`, `RISK?`, `MINIGAME`) werden automatisch aus `fx` erzeugt (`hintFor`).
+- **Karten mit Minigame:** Option mit `arcade: { kind, good: {fx}, bad: {fx}, shots?, contest?, need? }`. Nach der Entscheidung startet `showCard` (in `flow.js`) das Minigame; Ergebnis (`q >= need`, Standard 0,5) bestimmt `good`/`bad`. Wer die andere Option wählt, bekommt kein Minigame. Optionale Texte je Karte: `cards.<id>.p` (Einleitung), `.g` (Erfolg), `.b` (Misserfolg), sonst generische `cardx.play*`.
 - Jede Karte kommt pro Run höchstens einmal (`run.usedCards`).
 - **Textlimits** (sonst Überlauf/zu viele Seiten): Titel ≤ 17 Zeichen, Text ≤ 4 Zeilen à 17 Zeichen (mit langem `{name}` testen!), Optionen ≤ 17 Zeichen. Neue Karte = Eintrag in `cards.js` **und** in allen drei `cards.<lang>.js`.
 
@@ -117,7 +118,10 @@ src/
 | `pass` | Playmaker | Pfeil zum freien Mitspieler |
 | `ft` | Freiwürfe | Pfeile gegen Drift (mit Trägheit), Brett-Rechteck = Bank Shot |
 | `post` | Standing Dunk | SPACE halten/loslassen, Block vermeiden |
+| `dunkc` | Dunk Contest (nur All-Star Weekend / Karte / Training) | Dunk wählen (5 Stufen, schwerer = mehr Punkte), Marker stoppen; kein Verteidiger, nur Treffer oder Fehlversuch |
 
+- `dunkc` ist nicht im normalen Pool (`pickArcadeKind` schließt `clutch` und `dunkc` aus).
+- **Buzzer-Beater in der Serie:** Treffer = Spiel gewonnen, Fehlwurf = Serie verloren (`playSeries` in `flow.js`).
 - Jede Klasse: `constructor(s)`, `update()`, `draw(ctx, tt)`, setzt `done`, `q` (0..1), `resultText`.
 - Registrieren in `arcade/arcadeScene.js` (`GAMES`, `MOD_KEYS`), Texte in `arcade.intro.<kind>`, `arcade.names.<kind>`.
 - Häufigkeit je Archetyp: `games`-Gewichte in `data/archetypes.js` (`pickArcadeKind` in `flow.js`).
