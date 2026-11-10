@@ -140,6 +140,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Franchise Legend', 'Hall of Famer', 'GOAT Debate'],
 
   arcade: {
+    dunkNow: 'DUNK IT NOW!', getReady: 'STOP MASHING - TIMING NEXT',
     names: { shot: 'SHOT METER', clutch: 'BUZZER-BEATER', fast: 'FAST BREAK', defense: 'DEFENSE STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREE THROWS' },
     intro: {
       shot: 'SHOT METER! Press {ok} while the marker is in the orange zone. White center = AND ONE. {n} shots.',

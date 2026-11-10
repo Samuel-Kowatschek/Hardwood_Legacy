@@ -140,6 +140,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Legenda kluba', 'Hall of Famer', 'GOAT debata'],
 
   arcade: {
+    dunkNow: 'ZAKUCAJ SAD!', getReady: 'PRESTANI UDARATI - SLIJEDI TAJMING',
     names: { shot: 'ŠUT-METAR', clutch: 'NA SIRENU', fast: 'KONTRANAPAD', defense: 'ODBRANA', drive: 'PRODOR', rebound: 'SKOK', pass: 'PLEJMEJKER', ft: 'BACANJA' },
     intro: {
       shot: 'ŠUT-METAR! Pritisni {ok} kad je marker u narandžastoj zoni. Bijela sredina = AND ONE. {n} šuta.',

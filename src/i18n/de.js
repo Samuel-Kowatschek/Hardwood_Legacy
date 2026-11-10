@@ -140,6 +140,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Franchise Legend', 'Hall of Famer', 'GOAT-Debatte'],
 
   arcade: {
+    dunkNow: 'JETZT DUNKEN!', getReady: 'NICHT MEHR HÄMMERN - GLEICH TIMING',
     names: { shot: 'SHOT-METER', clutch: 'BUZZER-BEATER', fast: 'FAST-BREAK', defense: 'DEFENSE-STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREIWÜRFE' },
     intro: {
       shot: 'SHOT-METER! Drück {ok}, wenn der Marker in der orangen Zone ist. Weiße Mitte = AND ONE. {n} Würfe.',
