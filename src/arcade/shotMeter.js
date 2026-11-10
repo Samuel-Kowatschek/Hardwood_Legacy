@@ -9,7 +9,7 @@ export class ShotMeter {
   constructor(s) {
     this.s = s;
     const p = s.run.p, m = s.opts.mods, pr = s.opts.pressure;
-    this.shots = 3; this.i = 0; this.makes = 0; this.ands = 0;
+    this.shots = s.opts.shots || 3; this.i = 0; this.makes = 0; this.ands = 0;
     this.zw = clamp(0.16 * (0.7 + p.skills.sho / 150) * (1 + m.zone) * (1 - pr * 0.35), 0.07, 0.42);
     this.inner = this.zw * 0.25;
     this.next();

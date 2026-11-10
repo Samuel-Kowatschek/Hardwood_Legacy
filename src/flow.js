@@ -114,13 +114,18 @@ async function regularSeason(game, run) {
   // Unterbrechungen: Event (Saisonmitte), Spotlight-Spiel (Minigame, zaehlt fuer Awards), Event (Saisonende)
   const stops = [
     { at: rngStop(run, 0.28, 0.38), kind: 'card', phase: 'mid', chance: 1 },
-    { at: rngStop(run, 0.45, 0.58), kind: 'spot', chance: 0.8 },
+    { at: rngStop(run, 0.42, 0.5), kind: 'spot', chance: 0.8 },
+    { at: 0.56, kind: 'asw', chance: 1 },
     { at: rngStop(run, 0.66, 0.8), kind: 'card', phase: 'late', chance: 0.6 },
   ];
   for (const stop of stops) {
     await sim.playTo(stop.at);
     if (!run.rng.chance(stop.chance)) continue;
-    if (stop.kind === 'spot') {
+    if (stop.kind === 'asw') {
+      // All-Star Weekend: Einladung zum Contest je nach Archetyp (nur gute/bekannte Spieler, nicht verletzt)
+      if (st.out > 0 || !(ovr(run.p) >= 66 || run.p.fame >= 50) || !run.rng.chance(0.7)) continue;
+      await allStarContest(game, run);
+    } else if (stop.kind === 'spot') {
       if (st.out > 0) continue; // verletzt: kein Spotlight-Spiel
       // Milestone-Game (50 Punkte) ersetzt manchmal das Spotlight-Spiel
       // Extrem selten: Chance auf ein 100-Punkte-Spiel
@@ -178,6 +183,28 @@ async function spotlightGame(game, run) {
   if (good) run.p.fame = clamp(run.p.fame + 2, 0, 100);
   await game.show(new MessageScene(good ? t('flow.spotGood') : t('flow.spotBad'),
     teamBanner(run, t('flow.spotL1'), good ? t('flow.spotL2Good') : t('flow.spotL2Bad'))), 'wipe');
+}
+
+// All-Star Weekend: Sharpshooter -> Dreier-Contest, Slasher/Big Man -> Dunk Contest,
+// Playmaker -> Skills Challenge, Lockdown -> Defense Showdown
+const CONTESTS = {
+  sharp: { id: '3pt', kind: 'shot', shots: 5 }, slasher: { id: 'dunk', kind: 'fast' }, big: { id: 'dunk', kind: 'fast' },
+  play: { id: 'skills', kind: 'pass' }, lock: { id: 'def', kind: 'defense' },
+};
+export async function allStarContest(game, run) {
+  const c = CONTESTS[run.p.arch];
+  const name = t('flow.contests.' + c.id);
+  const host = run.rng.pick(run.teams);
+  await game.show(new MessageScene(t('flow.aswIntro', { contest: name, city: host.city }), teamBanner(run, t('flow.aswL1'), name)));
+  const q = await keyGame(game, run, null, {
+    kind: c.kind, title: name, opp: host, pressure: 0.1, situation: t('flow.aswL1'), scoreLine: [0, 0], shots: c.shots,
+  });
+  const res = q >= 0.75 ? 'win' : q >= 0.5 ? 'second' : 'out';
+  if (res === 'win') { run.cur.contest = { id: c.id, won: true }; run.p.fame = clamp(run.p.fame + 10, 0, 100); sfx.fanfare(); sfx.crowd(2); }
+  else if (res === 'second') run.p.fame = clamp(run.p.fame + 4, 0, 100);
+  run.p.peakFame = Math.max(run.p.peakFame, run.p.fame);
+  const msg = res === 'win' ? t('flow.aswWin', { contest: name }) : res === 'second' ? t('flow.aswSecond') : t('flow.aswOut');
+  await game.show(new MessageScene(msg, teamBanner(run, t('flow.aswL1'), res === 'win' ? t('flow.aswChamp') : name)), 'wipe');
 }
 
 async function hundredGame(game, run) {

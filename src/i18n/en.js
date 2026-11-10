@@ -11,6 +11,7 @@ export default {
   ui: { help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYPE', perk: 'PERK', locked: 'LOCKED', count: '{n}/{m} UNLOCKED' },
   practice: { title: 'PRACTICE', reroll: 'NEW PLAYER', situation: 'PRACTICE', last: 'LAST {p}%' },
+  share: { title: 'SHARE YOUR LEGACY', copy: 'COPY TEXT', copied: 'COPIED!', instagram: 'INSTAGRAM', instaHint: 'Card saved. Post it on Instagram!', more: 'MORE...', png: 'DOWNLOAD CARD', text: 'I retired as {tier} with a legacy score of {score} in Hardwood Legacy! Can you beat it? Seed {s}' },
   title: {
     unlocks: 'UNLOCKS', practice: 'PRACTICE', newRun: 'NEW RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
     tagline: 'ONE RUN = ONE CAREER', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} BACK  M SOUND',
@@ -45,6 +46,10 @@ export default {
   },
 
   flow: {
+    contests: { '3pt': '3-POINT CONTEST', dunk: 'DUNK CONTEST', skills: 'SKILLS CHALLENGE', def: 'DEFENSE SHOWDOWN' },
+    aswIntro: 'All-Star Weekend in {city}! You are invited to the {contest}. The whole league is watching.',
+    aswL1: 'ALL-STAR WEEKEND', aswChamp: 'CHAMPION!', aswWin: 'You win the {contest}! A trophy for the shelf.',
+    aswSecond: 'Second place. So close to the trophy!', aswOut: 'Out in the first round. Next year!',
     hundredIntro: 'Something historic is happening: 81 points after three quarters. Can you reach 100?',
     hundredTitle: '100-POINT GAME', hundredSit: '81 PTS, Q4', hundredL1: 'HISTORY NIGHT', hundredL2: '81 POINTS',
     hundredOk: '100 POINTS!!! The arena shakes. This night will be told for generations!',
@@ -86,6 +91,7 @@ export default {
     games: 'GAME {g}/82', confEast: 'EAST', confWest: 'WEST', ovr: 'OVR {o}',
   },
   awards: {
+    contest_3pt: '3PT CHAMPION', contest_dunk: 'DUNK CHAMPION', contest_skills: 'SKILLS CHAMPION', contest_def: 'DEFENSE CHAMPION',
     titleReg: 'SEASON AWARDS', titlePo: 'POSTSEASON', seedRow: '{w}-{l}  SEED {r}', nextPO: 'Next up: the playoffs!', nextNone: 'No playoffs this year.',
     title: 'SEASON RECAP', none: 'NO AWARDS', aging: 'Age {age}. OVR {ovr} ({d}), body {db}.',
     reached: { LOTTERY: 'LOTTERY', 'PLAY-IN': 'PLAY-IN', R1: '1ST ROUND', R2: '2ND ROUND', CF: 'CONF FINALS', FIN: 'FINALS', CHAMP: 'CHAMPION' },
@@ -118,9 +124,9 @@ export default {
     pctl: 'BETTER THAN {p}% OF CAREERS*', pctlNote: '*ESTIMATE VS SIMULATED CAREERS', localRank: 'YOUR RUN #{r} OF {n}',
     newBest: 'NEW PERSONAL BEST!', prevBest: 'PERSONAL BEST: {b}',
     title: 'LEGACY', base: 'BASE', mult: 'MULTIPLIER', card: '{ok} = CARD', hofRank: 'HALL OF FAME #{n}',
-    unlocked: 'UNLOCKED: {x}!', menu: ['NEW', 'PNG', 'SEED', 'MENU'],
+    unlocked: 'UNLOCKED: {x}!', menu: ['NEW', 'SHARE', 'MENU'],
     copied: 'SEED COPIED!', seedIs: 'SEED: {s}', pngOk: 'PNG SAVED!', pngErr: 'PNG ERROR', teams: 'TEAMS {x}', noBonus: 'NO BONUS',
-    parts: { hundred: '100-PT GAME', rings: 'RINGS', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
+    parts: { contests: 'ALL-STAR CONTESTS', hundred: '100-PT GAME', rings: 'RINGS', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE', allStar: 'ALL-STAR', roy: 'ROOKIE OTY',
       milestones: 'MILESTONES', ringChase: 'RING CHASING', oneTeam: 'ONE-TEAM', fame: 'FAME' },
     rows: { rings: 'RINGS', mvp: 'MVP', fmvp: 'FINALS MVP', dpoy: 'DPOY', scoring: 'SCORING', allStar: 'ALL-STAR', seasons: 'SEASONS', points: 'POINTS' },
     share: 'Hardwood Legacy seed {s} - score {score}: {url}',
@@ -130,7 +136,7 @@ export default {
   arcade: {
     names: { shot: 'SHOT METER', clutch: 'BUZZER-BEATER', fast: 'FAST BREAK', defense: 'DEFENSE STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREE THROWS' },
     intro: {
-      shot: 'SHOT METER! Press {ok} while the marker is in the orange zone. White center = AND ONE. 3 shots.',
+      shot: 'SHOT METER! Press {ok} while the marker is in the orange zone. White center = AND ONE. {n} shots.',
       clutch: 'BUZZER-BEATER! One shot. Hit the zone before time runs out. Watch the fakes!',
       fast: 'FAST BREAK! Mash {ok} for speed, then press {ok} in the center to dunk.',
       defense: 'DEFENSE STOP! Press the shown arrow before the circle closes. Late = steal!',

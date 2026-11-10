@@ -33,7 +33,7 @@ export class ArcadeScene extends Scene {
   }
   enter() {
     playMusic('arcade');
-    this.box = new TextBox(`${this.opts.title}! ${t('arcade.intro.' + this.opts.kind)}`);
+    this.box = new TextBox(`${this.opts.title}! ${t('arcade.intro.' + this.opts.kind, { n: this.opts.shots || 3 })}`);
   }
   update() {
     if (this.phase === 'intro') {

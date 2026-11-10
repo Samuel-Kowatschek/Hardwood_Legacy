@@ -36,7 +36,9 @@ Sprache (Englisch/Deutsch/Bosnisch) und Farbschema (Classic, LA Special, Black/W
 - **Training:** Im Hauptmenü alle 8 Minigames frei üben, mit einem zufällig generierten Spieler.
 - **Unlocks:** Popup mit allen Freischaltungen (gesperrte nur mit Namen).
 - **100-Punkte-Spiel:** extrem seltenes Event in der Regular Season.
-- **Karten:** 106 Entscheidungs- und Event-Karten (Offseason, Saisonmitte, Saisonende), jede höchstens einmal pro Run.
+- **All-Star Weekend:** Einladung zum Contest je nach Archetyp (Dreier, Dunk, Skills, Defense); Siege bringen Fame und Legacy-Punkte.
+- **Teilen:** Am Ende Legacy-Karte teilen (Text kopieren, WhatsApp, Instagram, X, Facebook, Telegram, PNG).
+- **Karten:** 212 Entscheidungs- und Event-Karten (Offseason, Saisonmitte, Saisonende), jede höchstens einmal pro Run.
 
 - **Retire-Gamble:** Der Legacy-Score bleibt bis zum Retire verdeckt. Der Screen zeigt Multiplikator, Trend, Verletzungsrisiko und Resume. *Went Out On Top* (+25 %), *Last Dance* (+15 %), *Overstayed* (-10 % pro schwacher Season in Folge, kumulativ). Harter Cap: 15 Seasons oder Körper = 0.
 - **Arcade-Momente** (Play-In, Conf Finals, Finals, 50-Punkte-Chance): Shot-Meter (mit And-One-Mitte), Buzzer-Beater, Fast-Break, Defense-Stop, Drive, Rebound, Playmaker, Freiwürfe. Jeder Archetyp bekommt alle, nur unterschiedlich gewichtet. Skills und Perks verändern Zonen und Zeitfenster.

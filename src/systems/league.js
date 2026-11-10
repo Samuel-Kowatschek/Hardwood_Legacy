@@ -39,7 +39,7 @@ export function newPlayer(rng, names, archId, look, name) {
     chem: 50 + c.chem, fame: clamp(20 + Math.round(talent * 20) + c.fame, 5, 60), peakFame: 0,
     teamId: -1, teamsPlayed: [], draftPick, perks: [],
     career: { pts: 0, games: 0, seasons: 0 },
-    awards: { rings: 0, mvp: 0, fmvp: 0, dpoy: 0, scoring: 0, allStar: 0, roy: 0 },
+    awards: { rings: 0, mvp: 0, fmvp: 0, dpoy: 0, scoring: 0, allStar: 0, roy: 0, contests: 0 },
     milestones: [], flags: { fifty: false }, ringChase: false, ringsChased: 0,
   };
 }
