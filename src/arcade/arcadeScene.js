@@ -6,7 +6,7 @@ import { playMusic } from '../systems/audio.js';
 import { input } from '../input.js';
 import { t } from '../i18n/index.js';
 import { drawBattle } from './common.js';
-import { ShotMeter } from './shotMeter.js';
+import { ShotMeter, drawContest } from './shotMeter.js';
 import { Clutch } from './clutch.js';
 import { FastBreak } from './fastBreak.js';
 import { DefenseStop } from './defenseStop.js';
@@ -14,11 +14,12 @@ import { Drive } from './drive.js';
 import { Rebound } from './rebound.js';
 import { Pass } from './pass.js';
 import { FreeThrow } from './freeThrow.js';
+import { Post } from './post.js';
 
-const GAMES = { shot: ShotMeter, clutch: Clutch, fast: FastBreak, defense: DefenseStop, drive: Drive, rebound: Rebound, pass: Pass, ft: FreeThrow };
+const GAMES = { shot: ShotMeter, clutch: Clutch, fast: FastBreak, defense: DefenseStop, drive: Drive, rebound: Rebound, pass: Pass, ft: FreeThrow, post: Post };
 export const ARCADE_KINDS = Object.keys(GAMES);
 // Welche Perk-Modifikatoren fuer welches Minigame zaehlen
-const MOD_KEYS = { shot: ['zone'], clutch: ['zone', 'time'], fast: ['fast'], defense: ['def'], drive: ['drive'], rebound: ['reb'], pass: ['pass'], ft: ['ft'] };
+const MOD_KEYS = { shot: ['zone'], clutch: ['zone', 'time'], fast: ['fast'], defense: ['def'], drive: ['drive'], rebound: ['reb'], pass: ['pass'], ft: ['ft'], post: ['reb'] };
 
 export class ArcadeScene extends Scene {
   constructor(run, opts) {
@@ -33,7 +34,8 @@ export class ArcadeScene extends Scene {
   }
   enter() {
     playMusic('arcade');
-    this.box = new TextBox(`${this.opts.title}! ${t('arcade.intro.' + this.opts.kind, { n: this.opts.shots || 3 })}`);
+    const introKey = this.opts.kind === 'shot' && this.opts.contest ? 'shot3' : this.opts.kind;
+    this.box = new TextBox(`${this.opts.title}! ${t('arcade.intro.' + introKey, { n: this.opts.shots || 3 })}`);
   }
   update() {
     if (this.phase === 'intro') {
@@ -45,8 +47,9 @@ export class ArcadeScene extends Scene {
   }
   draw(ctx) {
     if (this.phase === 'intro') {
-      drawBattle(ctx, this, this.t, { showHoop: !['defense', 'pass'].includes(this.opts.kind) });
-      tiny(ctx, this.opts.title, 6, 32, C.ORANGE);
+      if (this.opts.contest && this.opts.kind === 'shot') drawContest(ctx, this, this.t);
+      else drawBattle(ctx, this, this.t, { showHoop: !['defense', 'pass'].includes(this.opts.kind) });
+      if (!this.opts.contest) tiny(ctx, this.opts.title, 6, 32, C.ORANGE);
       if (this.bonus.length) tiny(ctx, t('arcade.bonus', { x: this.bonus.join(', ').toUpperCase() }).slice(0, 18), 6, 39, C.WHITE);
       this.box.draw(ctx, this.t);
       return;

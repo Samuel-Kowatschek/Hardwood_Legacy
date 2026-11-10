@@ -20,7 +20,7 @@ export const ARCHETYPES = [
     skills: { sho: 35, pla: 40, def: 66, ath: 68, clu: 45 },
     weights: { ath: 0.35, def: 0.35, sho: 0.1, pla: 0.1, clu: 0.1 },
     core: { form: 2, body: -6, chem: 4, fame: 0 },
-    games: { rebound: 4, defense: 3, fast: 3, ft: 1, shot: 1, drive: 1, pass: 1 }, ppg: -2, rpg: 6, apg: -1,
+    games: { post: 4, rebound: 4, defense: 3, fast: 2, ft: 1, shot: 1, drive: 1, pass: 1 }, ppg: -2, rpg: 6, apg: -1,
   },
   {
     id: 'play', name: 'Playmaker', pos: 'PG',
@@ -44,7 +44,7 @@ export const ARCHETYPES = [
     skills: { sho: 64, pla: 45, def: 58, ath: 55, clu: 52 },
     weights: { sho: 0.3, def: 0.25, ath: 0.2, clu: 0.15, pla: 0.1 },
     core: { form: 0, body: -2, chem: 2, fame: 0 },
-    games: { shot: 3, rebound: 3, defense: 2, ft: 2, drive: 1, fast: 1, pass: 1 }, ppg: 0, rpg: 4, apg: 0,
+    games: { shot: 3, rebound: 3, defense: 2, ft: 2, post: 1, drive: 1, fast: 1, pass: 1 }, ppg: 0, rpg: 4, apg: 0,
     unlock: { key: 'mvp', test: m => !!m.ach?.mvp },
   },
   {
@@ -68,7 +68,7 @@ export const ARCHETYPES = [
     skills: { sho: 62, pla: 58, def: 66, ath: 68, clu: 58 },
     weights: { sho: 0.2, pla: 0.2, def: 0.2, ath: 0.2, clu: 0.2 },
     core: { form: 3, body: -6, chem: 2, fame: 4 },
-    games: { rebound: 2, shot: 2, fast: 2, defense: 1, drive: 1, pass: 1, ft: 1, clutch: 1 }, ppg: 2, rpg: 5, apg: 2,
+    games: { post: 2, rebound: 2, shot: 2, fast: 2, defense: 1, drive: 1, pass: 1, ft: 1, clutch: 1 }, ppg: 2, rpg: 5, apg: 2,
     unlock: { key: 'hundred', test: m => !!m.ach?.hundred },
   },
 ];

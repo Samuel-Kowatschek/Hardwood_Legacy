@@ -28,13 +28,19 @@ export class FastBreak {
       if (this.x >= GOAL || this.f >= 200) {
         this.mash = this.x >= GOAL ? clamp(1 - (this.f - 70) / 260, 0.5, 1) : clamp(this.x / GOAL, 0, 1) * 0.6;
         this.caught = this.chaseX >= this.x - 6;
-        this.phase = 'jump'; this.f = 0;
+        // Kurze Pause "DUNK IT NOW!", damit das Haemmern nicht in den Timing-Check rutscht
+        this.phase = 'ready'; this.f = 0; this.armed = false;
         sfx.blip();
       }
+    } else if (this.phase === 'ready') {
+      // Eingaben ignorieren; weiter erst, wenn man ~0,4 Sek. nicht mehr gedrueckt hat (Haemmern beendet)
+      this.quiet = input.pressed('a') || input.isDown('a') ? 0 : (this.quiet || 0) + 1;
+      if (this.f > 40 && this.quiet >= 25) { this.phase = 'jump'; this.f = 0; sfx.select(); }
     } else if (this.phase === 'jump') {
       this.tm += 0.03 * this.tdir;
       if (this.tm > 1) { this.tm = 1; this.tdir = -1; } else if (this.tm < 0) { this.tm = 0; this.tdir = 1; }
-      if (input.pressed('a') || this.f > 150) {
+      if (!input.isDown('a')) this.armed = true;
+      if ((this.armed && this.f > 10 && input.pressed('a')) || this.f > 150) {
         const d = Math.abs(this.tm - 0.5);
         this.timing = this.f > 150 ? 0.1 : d <= this.win / 8 ? 1 : d <= this.win / 2 ? 0.85 : d <= this.win ? 0.5 : 0.15;
         this.phase = 'dunk'; this.f = 0;
@@ -64,10 +70,10 @@ export class FastBreak {
       drawSprite(ctx, p.look, team.colors, Math.round(this.x), 50, { view: 'side', frame: Math.floor(tt / (this.speed > 1 ? 4 : 8)) % 2 ? 'run0' : 'run1', age: p.age });
       ball(ctx, Math.round(this.x) + 12, 62 + (Math.floor(tt / 6) % 2) * 6);
     } else {
-      const k = this.phase === 'jump' ? Math.min(1, this.f / 20) : 1;
+      const k = this.phase === 'ready' ? 0 : this.phase === 'jump' ? Math.min(1, this.f / 20) : 1;
       const jx = GOAL + 6 * k, jy = 50 - 22 * k + (this.phase === 'dunk' ? Math.min(22, this.f) : 0);
       drawSprite(ctx, p.look, team.colors, Math.round(jx), Math.round(jy), { view: 'side', frame: 'run0', age: p.age });
-      if (this.phase === 'jump' || this.f < 10) ball(ctx, Math.round(jx) + 13, Math.round(jy) + 6);
+      if (this.phase === 'jump' || this.phase === 'ready' || this.f < 10) ball(ctx, Math.round(jx) + 13, Math.round(jy) + 6);
       else if (this.timing >= 0.5) ball(ctx, 138, Math.min(70, 34 + this.f));
       else ball(ctx, Math.max(60, 130 - this.f * 2), 40 + this.f);
     }
@@ -79,6 +85,9 @@ export class FastBreak {
       ctx.fillStyle = C.ORANGE; ctx.fillRect(12, 118, Math.round(136 * clamp(this.x / GOAL, 0, 1)), 6);
       tiny(ctx, t('arcade.speed'), 12, 129);
       ctx.fillStyle = C.WHITE; ctx.fillRect(36, 129, Math.round(this.speed / 2.6 * 112), 4);
+    } else if (this.phase === 'ready') {
+      if (Math.floor(this.f / 6) % 2 === 0) text(ctx, t('arcade.dunkNow'), 80, 112, C.ORANGE, 'center');
+      tiny(ctx, t('arcade.getReady'), 80, 130, C.WHITE, 'center');
     } else if (this.phase === 'jump') {
       text(ctx, t('arcade.now'), 8, 104, C.ORANGE);
       drawMeter(ctx, this.tm, 0.5, this.win, this.win / 4);

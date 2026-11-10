@@ -170,7 +170,7 @@ function pickArcadeKind(run, clutchMoment) {
   if (clutchMoment && run.rng.chance(0.6)) return 'clutch';
   const prefs = archetypeById(run.p.arch).games;
   const last = run.lastKinds || [];
-  const kind = run.rng.weighted(ARCADE_KINDS.filter(k => k !== 'clutch'), k => (prefs[k] || 1) * (last.includes(k) ? 0.15 : 1));
+  const kind = run.rng.weighted(ARCADE_KINDS.filter(k => k !== 'clutch'), k => (prefs[k] ?? (k === 'post' ? 0.3 : 1)) * (last.includes(k) ? 0.15 : 1));
   run.lastKinds = [kind, ...last].slice(0, 2);
   return kind;
 }
@@ -212,7 +212,7 @@ export async function allStarContest(game, run) {
   const host = run.rng.pick(run.teams);
   await game.show(new MessageScene(t('flow.aswIntro', { contest: name, city: host.city }), teamBanner(run, t('flow.aswL1'), name)));
   const q = await keyGame(game, run, null, {
-    kind: c.kind, title: name, opp: host, pressure: 0.1, situation: t('flow.aswL1'), scoreLine: [0, 0], shots: c.shots,
+    kind: c.kind, title: name, opp: host, pressure: 0.1, situation: t('flow.aswL1'), scoreLine: [0, 0], shots: c.shots, contest: true,
   });
   const res = q >= 0.75 ? 'win' : q >= 0.5 ? 'second' : 'out';
   if (res === 'win') { run.cur.contest = { id: c.id, won: true }; run.p.fame = clamp(run.p.fame + 10, 0, 100); sfx.fanfare(); sfx.crowd(2); }
