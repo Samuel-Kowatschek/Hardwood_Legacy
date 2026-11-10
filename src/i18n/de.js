@@ -12,12 +12,14 @@ export default {
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYP', perk: 'PERK', locked: 'GESPERRT', count: '{n}/{m} FREIGESCHALTET' },
   practice: { title: 'TRAINING', reroll: 'NEUER SPIELER', situation: 'TRAINING', last: 'ZULETZT {p}%' },
   share: { title: 'LEGACY TEILEN', copy: 'TEXT KOPIEREN', copied: 'KOPIERT!', instagram: 'INSTAGRAM', instaHint: 'Karte gespeichert. Poste sie auf Instagram!', more: 'MEHR...', png: 'KARTE LADEN', text: 'Ich habe meine Karriere als {tier} mit {score} Legacy-Punkten in Hardwood Legacy beendet! Schaffst du mehr? Seed {s}' },
+  teamsel: { title: 'TEAM WÄHLEN', cols: 'STÄRKE  PICK', random: 'ZUFALLS-DRAFT' },
+  seedin: { title: 'SEED EINGEBEN', text: 'Gib einen Seed ein, um dieselbe Liga wie deine Freunde zu spielen. Gleicher Seed, gleicher Start.', start: 'START', short: 'Mindestens 3 Buchstaben oder Zahlen.' },
   title: {
-    unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
+    continue: 'WEITER S{s}', enterSeed: 'SEED EINGEBEN', unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
     tagline: 'EIN RUN = EINE KARRIERE', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} ZURÜCK  M TON',
   },
   options: {
-    title: 'OPTIONEN', lang: 'SPRACHE', colors: 'FARBEN', sound: 'TON', on: 'AN', off: 'AUS', back: 'ZURÜCK',
+    saveQuit: 'SPEICHERN & ENDE', saveNote: 'WEITER AB BEGINN VON SEASON {s}', title: 'OPTIONEN', lang: 'SPRACHE', colors: 'FARBEN', sound: 'TON', on: 'AN', off: 'AUS', back: 'ZURÜCK',
     hint: '{ok}/PFEILE ÄNDERN  {back} ZURÜCK',
     schemes: { classic: 'KLASSIK', la: 'LA SPECIAL', mono: 'SCHWARZ/WEISS', spaceship: 'SPACESHIP', storm: 'STORM' },
   },
@@ -26,14 +28,17 @@ export default {
     line: 'RINGE {r}  {a}  {s}', scroll: 'HOCH/RUNTER  {back} ZURÜCK', back: '{ok}/{back} ZURÜCK',
   },
   create: {
+    rerollInf: 'REROLL',
     title: 'NEUER SPIELER', seed: 'SEED {s}', daily: 'DAILY {s}', pos: 'POSITION {p}', reroll: 'REROLL ({n})',
     back: 'ZURÜCK', locked: 'GESPERRT: {x}', start: '{ok} = DRAFT', archetype: 'ARCHETYP',
   },
   arch: {
+    stretch: 'Big Man mit Dreier.', twoway: 'Elite auf beiden Seiten.', scorer: 'Punktet am Fließband.', unicorn: 'Kann alles, mit 2,13 m.',
     sharp: 'Lebt von der Dreierlinie.', slasher: 'Attackiert den Korb.', big: 'Dominiert die Zone.',
     play: 'Macht alle besser.', lock: 'Schaltet Stars aus.',
   },
   unlock: {
+    allstar: 'Ins All-Star-Team kommen', dpoy: 'DPOY gewinnen', mvp: 'Einen MVP gewinnen', ring: 'Eine Meisterschaft gewinnen', hundred: '100 Punkte in einem Spiel', legacy1000: 'Karriere mit 1000+ Legacy', runs5: '5 Karrieren spielen', rings3: '3 Ringe in einer Karriere', seasons15: 'Alle 15 Seasons spielen', contest: 'Einen All-Star-Contest gewinnen', ovr90: 'OVR 90 erreichen',
     runs1: '1 Karriere beenden', ring: 'Einen Ring gewinnen', hof: 'Hall of Famer werden', fmvp: 'Einen FMVP holen', runs3: '3 Karrieren spielen',
   },
   stat: { form: 'FORM', body: 'KÖRPER', chem: 'CHEMIE', fame: 'FAME', sho: 'WURF', pla: 'PASS', def: 'DEF', ath: 'ATH', clu: 'CLUTCH', ovr: 'OVR' },
@@ -104,6 +109,7 @@ export default {
     activeList: 'AKTIV: {x}', synList: 'SYNERGIE: {x}', synHint: '-> SYNERGIE {x}!',
   },
   perks: {
+    clutchgene: 'Clutch +6. Mehr Zeit, größere Zone.', motor: 'Körper altert 25% langsamer. Rebounds +2.', showtime: 'Fame +8 pro Season. Leichtere Dunks.', gymrat: 'Alle Skills +2. Form wächst schneller.',
     deep: 'Wurf +5. Größere Wurfzone.', spacing: 'Shooter im Team. Team +3.', anchor: 'Defense +8. Bessere DPOY-Chance.',
     boards: 'Rebounds +3, Team +2. Leichtere Boards.', sneakers: 'Körper altert 40% langsamer.', coach: 'Chemie +6 pro Season.',
     trainer: 'Form wächst schneller, fällt langsamer.', hops: 'Athletik +5. Leichtere Dunks.', media: 'Fame +6 pro Season.',

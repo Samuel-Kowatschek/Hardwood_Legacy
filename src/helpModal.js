@@ -122,3 +122,25 @@ export function openShare({ text, url, file, png }) {
     } catch { /* abgebrochen */ }
   }));
 }
+
+// Seed eingeben (z.B. um mit Freunden denselben Seed zu spielen)
+export function openSeedInput(onStart) {
+  const body = `
+    <p>${esc(t('seedin.text'))}</p>
+    <input id="seed-in" class="seed-in" maxlength="12" autocomplete="off" spellcheck="false" placeholder="ABC123">
+    <button class="share-btn seed-go" id="seed-go">${esc(t('seedin.start'))}</button>
+    <p class="share-note" id="seed-note"></p>`;
+  const root = openModal(t('seedin.title'), body);
+  if (!root) return;
+  const inp = root.querySelector('#seed-in');
+  const go = () => {
+    const seed = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+    if (seed.length < 3) { root.querySelector('#seed-note').textContent = t('seedin.short'); return; }
+    closeHelp();
+    onStart(seed);
+  };
+  inp.addEventListener('input', () => { inp.value = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
+  inp.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') go(); if (e.key === 'Escape') closeHelp(); });
+  root.querySelector('#seed-go').addEventListener('click', go);
+  setTimeout(() => inp.focus(), 0);
+}

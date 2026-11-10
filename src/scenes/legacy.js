@@ -27,9 +27,10 @@ export class LegacyScene extends Scene {
     game.run = null;
     if (this.saved) return;
     this.saved = true;
+    save.clearRun(); // Run beendet: Spielstand loeschen
     const run = this.run, p = run.p, lg = this.lg;
     const meta = save.meta();
-    const metaBefore = { ...meta, unlocked: meta.unlocked.slice() };
+    const metaBefore = { ...meta, unlocked: meta.unlocked.slice(), ach: { ...(meta.ach || {}) } };
     this.prevBest = meta.runs ? meta.best : null;
     this.newBest = meta.runs > 0 && lg.score > meta.best;
     meta.runs++;
@@ -38,6 +39,20 @@ export class LegacyScene extends Scene {
     meta.fmvps += p.awards.fmvp;
     meta.bestTier = Math.max(meta.bestTier, lg.tier.idx);
     meta.scores = (meta.scores || []).concat(lg.score).slice(-500);
+    // Erfolge fuer Freischaltungen
+    const a = p.awards, ach = meta.ach = { ...(meta.ach || {}) };
+    const peakOvr = Math.max(0, ...run.log.map(l => l.ovr || 0));
+    if (a.allStar > 0) ach.allstar = true;
+    if (a.dpoy > 0) ach.dpoy = true;
+    if (a.mvp > 0) ach.mvp = true;
+    if (a.rings > 0) ach.ring = true;
+    if (a.rings >= 3) ach.rings3 = true;
+    if (a.fmvp > 0) ach.fmvp = true;
+    if ((a.contests || 0) > 0) ach.contest = true;
+    if (p.flags.hundred) ach.hundred = true;
+    if (lg.score >= 1000) ach.legacy1000 = true;
+    if (p.career.seasons >= 15) ach.seasons15 = true;
+    if (peakOvr >= 90) ach.ovr90 = true;
     this.localRank = meta.scores.filter(s => s > lg.score).length + 1;
     this.localN = meta.scores.length;
     this.pctl = percentileOf(lg.score);

@@ -8,6 +8,8 @@ import { arcadeMods } from './data/perks.js';
 import { ovr, freshSeason, startSeason, finishSeason, gameProb, simSeries, confSeeds, PAIRS, applyAging, driftTeams } from './systems/sim.js';
 import { computeRegularAwards, computePlayoffAwards, applyRegularArcade } from './systems/awards.js';
 import { updateOverstay } from './systems/legacy.js';
+import { save } from './systems/save.js';
+import { serializeRun } from './systems/league.js';
 import { playMusic, sfx } from './systems/audio.js';
 import { t } from './i18n/index.js';
 import { drawSprite, idleFrame } from './sprites/spriteGen.js';
@@ -37,11 +39,17 @@ function teamBanner(run, line1, line2) {
   };
 }
 
-export async function playRun(game, run) {
+export async function playRun(game, run, { resume = false } = {}) {
   const p = run.p;
   game.run = run;
   playMusic('season');
   const team = run.teams[p.teamId];
+  if (!resume) await intro(game, run);
+  await seasons(game, run);
+}
+
+async function intro(game, run) {
+  const p = run.p, team = run.teams[p.teamId];
   await game.show(new MessageScene(
     t('flow.draft', { pick: p.draftPick, city: team.city, nick: team.nick, name: `${p.first} ${p.last}` }),
     teamBanner(run, t('flow.draftL1', { n: p.draftPick }), `${archetypeById(p.arch).name.toUpperCase()} ${p.pos}`),
@@ -62,7 +70,13 @@ export async function playRun(game, run) {
     },
   ), 'none');
 
+}
+
+async function seasons(game, run) {
+  const p = run.p;
   for (;;) {
+    // Autosave: Spielstand zu Beginn jeder Season (ein Slot, "Continue Run" im Hauptmenue)
+    save.saveRun(serializeRun(run));
     run.cur = freshSeason();
     playMusic('season');
     // 1. Offseason-Entscheidung
@@ -190,6 +204,7 @@ async function spotlightGame(game, run) {
 const CONTESTS = {
   sharp: { id: '3pt', kind: 'shot', shots: 5 }, slasher: { id: 'dunk', kind: 'fast' }, big: { id: 'dunk', kind: 'fast' },
   play: { id: 'skills', kind: 'pass' }, lock: { id: 'def', kind: 'defense' },
+  stretch: { id: '3pt', kind: 'shot', shots: 5 }, scorer: { id: '3pt', kind: 'shot', shots: 5 }, twoway: { id: 'dunk', kind: 'fast' }, unicorn: { id: 'dunk', kind: 'fast' },
 };
 export async function allStarContest(game, run) {
   const c = CONTESTS[run.p.arch];

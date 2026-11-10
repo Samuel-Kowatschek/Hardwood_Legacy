@@ -63,29 +63,29 @@ export class PracticeScene extends Scene {
     if (input.pressed('a')) this.activate(this.i);
   }
   draw(ctx) {
-    header(ctx, t('practice.title'));
-    box(ctx, 0, 14, 110, 130);
+    header(ctx, t('practice.title'), '', () => { this.clickRow = this.rows.length - 1; });
+    // Liste links (alle Namen in normaler Schrift), Trainingsspieler rechts
+    box(ctx, 0, 14, 121, 130);
     this.rows.forEach((id, k) => {
       const y = 21 + k * 11 + (k >= ARCADE_KINDS.length ? 4 : 0);
-      input.region(4, y - 2, 104, 11, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
-      if (k === this.i) cursor(ctx, 7, y);
+      input.region(3, y - 2, 116, 11, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
+      if (k === this.i) cursor(ctx, 5, y);
       const label = id === 'reroll' ? t('practice.reroll') : id === 'back' ? t('options.back') : t('arcade.names.' + id);
       const col = k === this.i ? C.ORANGE : C.WHITE;
-      if (k < ARCADE_KINDS.length && label.length <= 11) text(ctx, label, 15, y, col); else tiny(ctx, label, 15, y + 1, col);
+      if (k < ARCADE_KINDS.length) text(ctx, label.slice(0, 13), 13, y, col); else tiny(ctx, label, 13, y + 1, col);
     });
-    // Trainingsspieler
     const p = this.run.p, team = this.run.teams[p.teamId];
-    box(ctx, 110, 14, 50, 130);
-    drawSprite(ctx, p.look, team.colors, 127, 20, { frame: idleFrame(this.t) });
-    tiny(ctx, p.last.toUpperCase().slice(0, 10), 135, 47, C.WHITE, 'center');
-    tiny(ctx, ARCHETYPES.find(a => a.id === p.arch).name.toUpperCase().slice(0, 10), 135, 54, C.ORANGE, 'center');
-    tiny(ctx, `${t('stat.ovr')} ${ovr(p)}`, 135, 62, C.WHITE, 'center');
+    box(ctx, 121, 14, 39, 130);
+    drawSprite(ctx, p.look, team.colors, 132, 20, { frame: idleFrame(this.t) });
+    tiny(ctx, p.last.toUpperCase().slice(0, 8), 140, 47, C.WHITE, 'center');
+    tiny(ctx, ARCHETYPES.find(a => a.id === p.arch).name.toUpperCase().slice(0, 8), 140, 54, C.ORANGE, 'center');
+    tiny(ctx, `${t('stat.ovr')} ${ovr(p)}`, 140, 62, C.WHITE, 'center');
     SK.forEach((k, j) => {
       const y = 72 + j * 11;
-      tiny(ctx, t('stat.' + k).slice(0, 6), 116, y);
-      tiny(ctx, String(p.skills[k]), 154, y, C.ORANGE, 'right');
-      bar(ctx, 116, y + 6, 38, 3, p.skills[k] / 99);
+      tiny(ctx, t('stat.' + k).slice(0, 3), 126, y);
+      tiny(ctx, String(p.skills[k]), 155, y, C.ORANGE, 'right');
+      bar(ctx, 126, y + 6, 29, 3, p.skills[k] / 99);
     });
-    if (this.last) tiny(ctx, t('practice.last', { p: Math.round(this.last.q * 100) }), 135, 131, C.ORANGE, 'center');
+    if (this.last) tiny(ctx, `${Math.round(this.last.q * 100)}%`, 140, 131, C.ORANGE, 'center');
   }
 }

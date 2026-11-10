@@ -12,12 +12,14 @@ export default {
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYPE', perk: 'PERK', locked: 'LOCKED', count: '{n}/{m} UNLOCKED' },
   practice: { title: 'PRACTICE', reroll: 'NEW PLAYER', situation: 'PRACTICE', last: 'LAST {p}%' },
   share: { title: 'SHARE YOUR LEGACY', copy: 'COPY TEXT', copied: 'COPIED!', instagram: 'INSTAGRAM', instaHint: 'Card saved. Post it on Instagram!', more: 'MORE...', png: 'DOWNLOAD CARD', text: 'I retired as {tier} with a legacy score of {score} in Hardwood Legacy! Can you beat it? Seed {s}' },
+  teamsel: { title: 'PICK YOUR TEAM', cols: 'STRENGTH  PICK', random: 'RANDOM DRAFT' },
+  seedin: { title: 'ENTER SEED', text: 'Type a seed to play the same league as your friends. Same seed, same start.', start: 'START', short: 'At least 3 letters or numbers.' },
   title: {
-    unlocks: 'UNLOCKS', practice: 'PRACTICE', newRun: 'NEW RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
+    continue: 'CONTINUE S{s}', enterSeed: 'ENTER SEED', unlocks: 'UNLOCKS', practice: 'PRACTICE', newRun: 'NEW RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
     tagline: 'ONE RUN = ONE CAREER', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} BACK  M SOUND',
   },
   options: {
-    title: 'OPTIONS', lang: 'LANGUAGE', colors: 'COLORS', sound: 'SOUND', on: 'ON', off: 'OFF', back: 'BACK',
+    saveQuit: 'SAVE & QUIT', saveNote: 'CONTINUES AT START OF SEASON {s}', title: 'OPTIONS', lang: 'LANGUAGE', colors: 'COLORS', sound: 'SOUND', on: 'ON', off: 'OFF', back: 'BACK',
     hint: '{ok}/ARROWS CHANGE  {back} BACK',
     schemes: { classic: 'CLASSIC', la: 'LA SPECIAL', mono: 'BLACK/WHITE', spaceship: 'SPACESHIP', storm: 'STORM' },
   },
@@ -26,14 +28,17 @@ export default {
     line: 'RINGS {r}  {a}  {s}', scroll: 'UP/DOWN SCROLL  {back} BACK', back: '{ok}/{back} BACK',
   },
   create: {
+    rerollInf: 'REROLL',
     title: 'NEW PLAYER', seed: 'SEED {s}', daily: 'DAILY {s}', pos: 'POSITION {p}', reroll: 'REROLL ({n})',
     back: 'BACK', locked: 'LOCKED: {x}', start: '{ok} = DRAFT', archetype: 'ARCHETYPE',
   },
   arch: {
+    stretch: 'Spaces the floor as a big.', twoway: 'Elite on both ends.', scorer: 'Gets buckets in bunches.', unicorn: 'Does everything at 7 feet.',
     sharp: 'Lives behind the arc.', slasher: 'Attacks the rim.', big: 'Owns the paint.',
     play: 'Makes everyone better.', lock: 'Shuts down stars.',
   },
   unlock: {
+    allstar: 'Make an All-Star team', dpoy: 'Win Defensive Player of the Year', mvp: 'Win an MVP', ring: 'Win a championship', hundred: 'Score 100 points in a game', legacy1000: 'Finish a career with 1000+ legacy', runs5: 'Play 5 careers', rings3: 'Win 3 rings in one career', seasons15: 'Play all 15 seasons', contest: 'Win an All-Star contest', ovr90: 'Reach 90 OVR',
     runs1: 'Finish 1 career', ring: 'Win a ring', hof: 'Reach Hall of Famer', fmvp: 'Win a Finals MVP', runs3: 'Play 3 careers',
   },
   stat: { form: 'FORM', body: 'BODY', chem: 'CHEM', fame: 'FAME', sho: 'SHOT', pla: 'PASS', def: 'DEF', ath: 'ATH', clu: 'CLUTCH', ovr: 'OVR' },
@@ -104,6 +109,7 @@ export default {
     activeList: 'ACTIVE: {x}', synList: 'SYNERGY: {x}', synHint: '-> SYNERGY {x}!',
   },
   perks: {
+    clutchgene: 'Clutch +6. More time and bigger zone.', motor: 'Body ages 25% slower. Rebounds +2.', showtime: 'Fame +8 per season. Easier dunks.', gymrat: 'All skills +2. Form grows faster.',
     deep: 'Shot +5. Bigger shot zone.', spacing: 'Shooters around you. Team +3.', anchor: 'Defense +8. Better DPOY odds.',
     boards: 'Rebounds +3, team +2. Easier boards.', sneakers: 'Body ages 40% slower.', coach: 'Chemistry +6 per season.',
     trainer: 'Form grows faster, drops slower.', hops: 'Athletics +5. Easier dunks.', media: 'Fame +6 per season.',
