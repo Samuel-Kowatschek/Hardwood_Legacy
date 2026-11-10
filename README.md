@@ -44,7 +44,7 @@ Sprache (Englisch/Deutsch/Bosnisch) und Farbschema (Classic, LA Special, Black/W
 - **Karten:** 212 Entscheidungs- und Event-Karten (Offseason, Saisonmitte, Saisonende), jede höchstens einmal pro Run.
 
 - **Retire-Gamble:** Der Legacy-Score bleibt bis zum Retire verdeckt. Der Screen zeigt Multiplikator, Trend, Verletzungsrisiko und Resume. *Went Out On Top* (+25 %), *Last Dance* (+15 %), *Overstayed* (-10 % pro schwacher Season in Folge, kumulativ). Harter Cap: 15 Seasons oder Körper = 0.
-- **Arcade-Momente** (Play-In, Conf Finals, Finals, 50-Punkte-Chance): Shot-Meter (mit And-One-Mitte), Buzzer-Beater, Fast-Break, Defense-Stop, Drive, Rebound, Playmaker, Freiwürfe. Jeder Archetyp bekommt alle, nur unterschiedlich gewichtet. Skills und Perks verändern Zonen und Zeitfenster.
+- **Arcade-Momente** (Play-In, Conf Finals, Finals, 50-Punkte-Chance): Shot-Meter (mit And-One-Mitte), Buzzer-Beater, Fast-Break, Defense-Stop, Drive, Rebound, Playmaker, Freiwürfe, Standing Dunk. Jeder Archetyp bekommt alle, nur unterschiedlich gewichtet. Skills und Perks verändern Zonen und Zeitfenster.
 - **Ende:** lokaler Rang, persönlicher Rekord und ein geschätztes Perzentil (Referenz: simulierte Karrieren in `src/data/scoreDist.js`). Hall of Fame und Rekorde liegen im `localStorage` des Browsers.
 - **Perks** nach Season 1, 3, 6, 9, 12 (1 aus 3) mit Synergien.
 - **Meta-Progress:** Playmaker, Lockdown und einige Perks werden freigeschaltet; Hall of Fame (Top 10) in `localStorage`; frühere Spieler können als Rivalen zurückkehren.

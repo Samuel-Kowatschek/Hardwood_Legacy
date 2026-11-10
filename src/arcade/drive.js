@@ -7,7 +7,19 @@ import { t } from '../i18n/index.js';
 import { drawSprite } from '../sprites/spriteGen.js';
 
 const LANES = [30, 48, 66];
-const PX = 18, DUR = 400;
+const PX = 18, DUR = 400, RIM_X = 132;
+
+// Korb in Seitenansicht: Ring-Mitte bei rx, Ring auf Hoehe 40
+function drawHoop(ctx, rx, shake) {
+  const dy = shake ? 1 : 0;
+  ctx.fillStyle = C.WHITE;
+  ctx.fillRect(rx + 12, 24, 2, 70);          // Pfosten
+  ctx.fillRect(rx + 9, 20, 3, 24);           // Brett
+  ctx.fillStyle = C.ORANGE;
+  ctx.fillRect(rx - 7, 40 + dy, 16, 2);       // Ring
+  ctx.fillStyle = C.WHITE;
+  for (let i = 0; i < 5; i++) ctx.fillRect(rx - 6 + i * 3, 42 + dy + (i % 2), 1, 6 - (i % 2));
+}
 
 export class Drive {
   constructor(s) {
@@ -23,8 +35,12 @@ export class Drive {
     this.f++;
     if (this.end) {
       this.end++;
-      if (this.end === 20) { if (this.hits < 3) sfx.swish(); }
-      if (this.end > 60) this.finish();
+      const e = this.end;
+      if (this.stripped) { if (e > 50) this.finish(); return; }
+      // Abschluss: Anlauf -> Absprung -> Dunk (sauber) oder Korbleger (mit Kontakt)
+      if (this.hits === 0 && e === 48) { sfx.dunk(); sfx.crowd(1.6); }
+      if (this.hits > 0 && e === 52) { sfx.swish(); sfx.crowd(0.8); }
+      if (e > 95) this.finish();
       return;
     }
     if (input.pressed('up') && this.lane > 0) { this.lane--; sfx.blip(); }
@@ -52,6 +68,33 @@ export class Drive {
     if (this.flash) this.flash--;
     if (this.f >= DUR && !this.defs.length) this.end = 1;
   }
+  // Position von Spieler und Ball waehrend des Abschlusses
+  finishPose() {
+    const e = this.end, ease = k => k * k * (3 - 2 * k);
+    const k1 = Math.min(1, e / 30);
+    let px = PX + (RIM_X - 32 - PX) * ease(k1);
+    let py = this.y + (48 - this.y) * ease(k1);
+    let air = false;
+    const dunk = this.hits === 0;
+    if (e > 30) {
+      air = true;
+      const k2 = Math.min(1, (e - 30) / 18); // Absprung bis Frame 48
+      px = RIM_X - 32 + 18 * ease(k2);
+      const top = dunk ? 26 : 18;
+      const hang = dunk && e > 48 && e < 58;
+      py = 48 - top * Math.sin(Math.min(1, k2) * Math.PI / 2);
+      if (!hang && e >= 58) { const k3 = Math.min(1, (e - 58) / 12); py = 48 - top + top * ease(k3); air = k3 < 1; }
+    }
+    let bx = px + 13, by = py + 6;
+    if (dunk && e >= 48) { bx = RIM_X - 2; by = 36 + Math.min(22, (e - 48) * 2); }
+    if (!dunk && e >= 42) {
+      const k = Math.min(1, (e - 42) / 10);
+      const sx = RIM_X - 32 + 18 + 13, sy = 48 - 18 + 6;
+      bx = sx + (RIM_X - 2 - sx) * k; by = sy + (34 - sy) * k - Math.sin(k * Math.PI) * 10;
+      if (e >= 52) { bx = RIM_X - 2; by = 34 + Math.min(22, (e - 52) * 2); }
+    }
+    return { px, py, bx, by, air, rimX: RIM_X, shake: dunk && e >= 48 && e < 56 };
+  }
   finish() {
     this.done = true;
     this.q = this.stripped ? 0.1 : [1, 0.7, 0.45][this.hits];
@@ -67,26 +110,29 @@ export class Drive {
     LANES.forEach(y => ctx.fillRect(0, y + 22, 160, 2));
     for (let i = 0; i < 10; i++) ctx.fillRect(((i * 20 - Math.floor(this.f * this.speed)) % 200 + 200) % 200 - 20, 92, 8, 1);
     const prog = clamp(this.f / DUR, 0, 1);
-    // Korb erst einblenden, wenn keine Verteidiger mehr kommen (vorher zu frueh im Bild)
+    const fin = this.end && !this.stripped ? this.finishPose() : null;
+    // Korb erscheint erst, wenn keine Verteidiger mehr kommen, und faehrt an seine Position
     const since = this.f - DUR - 25;
     if (!this.stripped && (since > 0 || this.end)) {
-      const hx = 176 - Math.min(40, Math.max(0, Math.round(since * 0.9)) + (this.end ? this.end : 0));
-      ctx.fillStyle = C.WHITE; ctx.fillRect(hx + 6, 18, 2, 70);
-      ctx.fillStyle = C.ORANGE; ctx.fillRect(hx - 6, 30, 12, 2);
+      const rx = fin ? fin.rimX : Math.max(RIM_X, 176 - Math.round(Math.max(0, since) * 0.9));
+      drawHoop(ctx, rx, fin && fin.shake);
     }
     const sorted = this.defs.slice().sort((a, b) => a.lane - b.lane);
     for (const d of sorted) drawSprite(ctx, opp.star.look, opp.colors, Math.round(d.x), LANES[d.lane], { frame: Math.floor(tt / 10) % 2 ? 'idle0' : 'idle1' });
-    if (!(this.flash && Math.floor(this.flash / 3) % 2)) {
-      const ex = this.end && !this.stripped ? Math.min(104, this.end * 3) : 0;
-      drawSprite(ctx, p.look, team.colors, PX + ex, Math.round(this.y) - (this.end ? Math.min(12, this.end) : 0), { view: 'side', frame: Math.floor(tt / 6) % 2 ? 'run0' : 'run1', age: p.age });
-      if (!this.stripped) ball(ctx, PX + ex + 13, Math.round(this.y) + 12 + (Math.floor(tt / 6) % 2) * 4);
+    if (fin) {
+      drawSprite(ctx, p.look, team.colors, Math.round(fin.px), Math.round(fin.py), { view: 'side', frame: fin.air ? 'run0' : Math.floor(tt / 5) % 2 ? 'run0' : 'run1', age: p.age });
+      ball(ctx, Math.round(fin.bx), Math.round(fin.by));
+    } else if (!(this.flash && Math.floor(this.flash / 3) % 2)) {
+      drawSprite(ctx, p.look, team.colors, PX, Math.round(this.y), { view: 'side', frame: Math.floor(tt / 6) % 2 ? 'run0' : 'run1', age: p.age });
+      if (!this.stripped) ball(ctx, PX + 13, Math.round(this.y) + 12 + (Math.floor(tt / 6) % 2) * 4);
     }
     input.dirPad(PX + 8, Math.round(this.y) + 12, 6, 'dominant');
     box(ctx, 0, 96, 160, 48);
     text(ctx, t('arcade.drive'), 8, 103, C.ORANGE);
     tiny(ctx, t('arcade.contact', { n: this.hits }), 152, 104, this.hits ? C.ORANGE : C.WHITE, 'right');
     bar(ctx, 12, 117, 136, 6, prog);
-    if (this.end && !this.stripped) text(ctx, t('arcade.layupGood'), 80, 129, C.ORANGE, 'center');
+    if (this.end && !this.stripped && this.end > 46) text(ctx, this.hits === 0 ? t('arcade.slam') : t('arcade.layupGood'), 80, 129, C.ORANGE, 'center');
+    else if (this.stripped) text(ctx, t('arcade.blocked'), 80, 129, C.WHITE, 'center');
     else tiny(ctx, t('arcade.driveHint'), 80, 131, C.WHITE, 'center');
   }
 }

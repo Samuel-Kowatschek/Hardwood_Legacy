@@ -31,7 +31,8 @@ export class ShotMeter {
         if (this.i >= this.shots) {
           this.done = true;
           this.q = clamp((this.makes + 0.35 * this.ands) / this.shots, 0, 1);
-          this.resultText = t('arcade.resShot', { m: this.makes, n: this.shots }) + (this.ands ? t('arcade.resAndOne', { n: this.ands }) : '');
+          // Dreier-Contest: weisse Mitte = MONEYBALL (doppelte Punkte) statt And One
+          this.resultText = t('arcade.resShot', { m: this.makes, n: this.shots }) + (this.ands ? t(this.s.opts.contest ? 'arcade.resMoney' : 'arcade.resAndOne', { n: this.ands }) : '');
         } else this.next();
       }
       return;
@@ -63,7 +64,7 @@ export class ShotMeter {
     drawMeter(ctx, this.m, this.zc, this.zw, this.inner);
     if (this.res && this.fly > 20) {
       const r = this.res;
-      text(ctx, r.timeout ? t('arcade.shotClock') : r.andOne ? t('arcade.andOne') : r.make ? t('arcade.swish') : t('arcade.miss'), 80, 131, r.make ? C.ORANGE : C.WHITE, 'center');
+      text(ctx, r.timeout ? t('arcade.shotClock') : r.andOne ? t(this.s.opts.contest ? 'arcade.moneyball' : 'arcade.andOne') : r.make ? t('arcade.swish') : t('arcade.miss'), 80, 131, r.make ? C.ORANGE : C.WHITE, 'center');
     } else {
       ctx.fillStyle = C.WHITE; ctx.fillRect(12, 130, Math.round(136 * this.clock / 300), 1);
       tiny(ctx, t('arcade.shoot'), 80, 133, C.WHITE, 'center');
