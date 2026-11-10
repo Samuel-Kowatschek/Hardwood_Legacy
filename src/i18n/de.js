@@ -8,12 +8,13 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
+  ui: { menu: 'HAUPTMENÜ (Q)', menuT: 'MENÜ', help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYP', perk: 'PERK', locked: 'GESPERRT', count: '{n}/{m} FREIGESCHALTET' },
   practice: { title: 'TRAINING', reroll: 'NEUER SPIELER', situation: 'TRAINING', last: 'ZULETZT {p}%' },
   share: { title: 'LEGACY TEILEN', copy: 'TEXT KOPIEREN', copied: 'KOPIERT!', instagram: 'INSTAGRAM', instaHint: 'Karte gespeichert. Poste sie auf Instagram!', more: 'MEHR...', png: 'KARTE LADEN', text: 'Ich habe meine Karriere als {tier} mit {score} Legacy-Punkten in Hardwood Legacy beendet! Schaffst du mehr? Seed {s}' },
   teamsel: { title: 'TEAM WÄHLEN', cols: 'STÄRKE  PICK', random: 'ZUFALLS-DRAFT' },
   seedin: { title: 'SEED EINGEBEN', text: 'Gib einen Seed ein, um dieselbe Liga wie deine Freunde zu spielen. Gleicher Seed, gleicher Start.', start: 'START', short: 'Mindestens 3 Buchstaben oder Zahlen.' },
+  quit: { title: 'HAUPTMENÜ?', saved1: 'DEIN RUN IST GESPEICHERT.', saved2: 'WEITER SPÄTER AB SEASON {s}.', yes: 'JA', no: 'NEIN' },
   title: {
     continue: 'WEITER S{s}', enterSeed: 'SEED EINGEBEN', unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
     tagline: 'EIN RUN = EINE KARRIERE', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} ZURÜCK  M TON',
@@ -194,7 +195,7 @@ export default {
       { t: 'PERKS', b: 'NACH SEASON 1, 3, 6, 9 UND 12 WÄHLST DU 1 VON 3 PERKS. PERKS WIRKEN AUF SIM UND MINIGAMES (Z.B. DEEP THREAT = GRÖSSERE WURFZONE).\n\nSYNERGIEN:\nDEEP THREAT + SPACING\nDEFENSIVE ANCHOR + REBOUNDS\nSIGNATURE MOVE + ICE VEINS\nSPRING LEGS + PRO SNEAKERS\nCOURT VISION + HANDLES' },
       { t: 'RETIRE-GAMBLE', b: 'DEIN SCORE BLEIBT VERDECKT, BIS DU AUFHÖRST. DER MULTIPLIKATOR WIRD ANGEZEIGT:\n\nWENT OUT ON TOP +25%: RETIRE DIREKT NACH RING, MVP ODER FINALS MVP.\nLAST DANCE +15%: RING IN DER LETZTEN SEASON.\nOVERSTAYED: SCHWACHE SEASONS IN FOLGE KOSTEN 10%, 20%, 30%...\n\nMAXIMAL 15 SEASONS.' },
       { t: 'LEGACY-SCORE', b: 'RING 100  MVP 60  FINALS MVP 40\nDPOY 25  SCORING TITLE 20\nALL-STAR 8  MEILENSTEIN 15  ROY 10\n+ ONE-TEAM-BONUS (AB 5 SEASONS)\n+ FAME-BONUS\n- RINGE NACH SUPERTEAM-PAY-CUT ZÄHLEN WENIGER\n\nX RETIRE-MULTIPLIKATOR = LEGACY-SCORE.\n\nDAS PERZENTIL AM ENDE IST EINE SCHÄTZUNG GG. SIMULIERTE KARRIEREN.' },
-      { t: 'STEUERUNG', b: 'PFEILE: BEWEGEN / WÄHLEN\nSPACE / ENTER / Z: OK\nESC / X: ZURÜCK\nS: STATS   M: TON\nH: HILFE   O: OPTIONEN\nODER MIT DER MAUS: KLICK WÄHLT AUS.\nPFEIL-GAMES: KLICK/HALTEN RUND UM DIE MITTE (SPIELER, BALL, FADENKREUZ). MITTE = OK.\n\nAUF DEM HANDY DAS PAD AM SCREEN NUTZEN.\n\nFREISCHALTUNGEN: NEUE ARCHETYPEN UND PERKS. DEINE BESTEN KARRIEREN HÄNGEN IN DER HALL OF FAME UND KEHREN ALS RIVALEN ZURÜCK.' },
+      { t: 'STEUERUNG', b: 'PFEILE: BEWEGEN / WÄHLEN\nSPACE / ENTER / Z: OK\nESC / X: ZURÜCK\nS: STATS   M: TON\nH: HILFE   O: OPTIONEN\nQ: HAUPTMENÜ (RUN BLEIBT GESPEICHERT)\nODER MIT DER MAUS: KLICK WÄHLT AUS.\nPFEIL-GAMES: KLICK/HALTEN RUND UM DIE MITTE (SPIELER, BALL, FADENKREUZ). MITTE = OK.\n\nAUF DEM HANDY DAS PAD AM SCREEN NUTZEN.\n\nFREISCHALTUNGEN: NEUE ARCHETYPEN UND PERKS. DEINE BESTEN KARRIEREN HÄNGEN IN DER HALL OF FAME UND KEHREN ALS RIVALEN ZURÜCK.' },
     ],
   },
 };

@@ -8,12 +8,13 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
+  ui: { menu: 'MAIN MENU (Q)', menuT: 'MENU', help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYPE', perk: 'PERK', locked: 'LOCKED', count: '{n}/{m} UNLOCKED' },
   practice: { title: 'PRACTICE', reroll: 'NEW PLAYER', situation: 'PRACTICE', last: 'LAST {p}%' },
   share: { title: 'SHARE YOUR LEGACY', copy: 'COPY TEXT', copied: 'COPIED!', instagram: 'INSTAGRAM', instaHint: 'Card saved. Post it on Instagram!', more: 'MORE...', png: 'DOWNLOAD CARD', text: 'I retired as {tier} with a legacy score of {score} in Hardwood Legacy! Can you beat it? Seed {s}' },
   teamsel: { title: 'PICK YOUR TEAM', cols: 'STRENGTH  PICK', random: 'RANDOM DRAFT' },
   seedin: { title: 'ENTER SEED', text: 'Type a seed to play the same league as your friends. Same seed, same start.', start: 'START', short: 'At least 3 letters or numbers.' },
+  quit: { title: 'MAIN MENU?', saved1: 'YOUR RUN IS SAVED.', saved2: 'CONTINUE LATER AT SEASON {s}.', yes: 'YES', no: 'NO' },
   title: {
     continue: 'CONTINUE S{s}', enterSeed: 'ENTER SEED', unlocks: 'UNLOCKS', practice: 'PRACTICE', newRun: 'NEW RUN', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
     tagline: 'ONE RUN = ONE CAREER', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} BACK  M SOUND',
@@ -194,7 +195,7 @@ export default {
       { t: 'PERKS', b: 'AFTER SEASONS 1, 3, 6, 9 AND 12 YOU PICK 1 OF 3 PERKS. PERKS CHANGE THE SIM AND THE MINIGAMES (E.G. DEEP THREAT = BIGGER SHOT ZONE).\n\nSYNERGIES:\nDEEP THREAT + SPACING\nDEFENSIVE ANCHOR + REBOUNDS\nSIGNATURE MOVE + ICE VEINS\nSPRING LEGS + PRO SNEAKERS\nCOURT VISION + HANDLES' },
       { t: 'RETIRE GAMBLE', b: 'YOUR SCORE STAYS HIDDEN UNTIL YOU RETIRE. THE MULTIPLIER IS SHOWN:\n\nWENT OUT ON TOP +25%: RETIRE RIGHT AFTER A RING, MVP OR FINALS MVP.\nLAST DANCE +15%: RING IN YOUR LAST SEASON.\nOVERSTAYED: WEAK SEASONS IN A ROW COST 10%, 20%, 30%...\n\nMAX 15 SEASONS.' },
       { t: 'LEGACY SCORE', b: 'RING 100  MVP 60  FINALS MVP 40\nDPOY 25  SCORING TITLE 20\nALL-STAR 8  MILESTONE 15  ROY 10\n+ ONE-TEAM BONUS (5+ SEASONS)\n+ FAME BONUS\n- RINGS AFTER A SUPERTEAM PAY CUT COUNT LESS\n\nX RETIRE MULTIPLIER = LEGACY SCORE.\n\nTHE PERCENTILE AT THE END IS AN ESTIMATE VS. SIMULATED CAREERS.' },
-      { t: 'CONTROLS', b: 'ARROWS: MOVE / CHOOSE\nSPACE / ENTER / Z: OK\nESC / X: BACK\nS: STATS   M: SOUND\nH: HELP    O: OPTIONS\nOR USE THE MOUSE: CLICK TO CHOOSE.\nARROW GAMES: CLICK/HOLD AROUND THE CENTER (PLAYER, BALL, CROSSHAIR). CENTER = OK.\n\nON PHONES USE THE ON-SCREEN PAD.\n\nUNLOCKS: NEW ARCHETYPES AND PERKS. YOUR BEST CAREERS HANG IN THE HALL OF FAME AND MAY RETURN AS RIVALS.' },
+      { t: 'CONTROLS', b: 'ARROWS: MOVE / CHOOSE\nSPACE / ENTER / Z: OK\nESC / X: BACK\nS: STATS   M: SOUND\nH: HELP    O: OPTIONS\nQ: MAIN MENU (RUN IS SAVED)\nOR USE THE MOUSE: CLICK TO CHOOSE.\nARROW GAMES: CLICK/HOLD AROUND THE CENTER (PLAYER, BALL, CROSSHAIR). CENTER = OK.\n\nON PHONES USE THE ON-SCREEN PAD.\n\nUNLOCKS: NEW ARCHETYPES AND PERKS. YOUR BEST CAREERS HANG IN THE HALL OF FAME AND MAY RETURN AS RIVALS.' },
     ],
   },
 };
