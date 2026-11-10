@@ -6,7 +6,7 @@ import { playMusic } from '../systems/audio.js';
 import { input } from '../input.js';
 import { t } from '../i18n/index.js';
 import { drawBattle } from './common.js';
-import { ShotMeter } from './shotMeter.js';
+import { ShotMeter, drawContest } from './shotMeter.js';
 import { Clutch } from './clutch.js';
 import { FastBreak } from './fastBreak.js';
 import { DefenseStop } from './defenseStop.js';
@@ -47,8 +47,9 @@ export class ArcadeScene extends Scene {
   }
   draw(ctx) {
     if (this.phase === 'intro') {
-      drawBattle(ctx, this, this.t, { showHoop: !['defense', 'pass'].includes(this.opts.kind) });
-      tiny(ctx, this.opts.title, 6, 32, C.ORANGE);
+      if (this.opts.contest && this.opts.kind === 'shot') drawContest(ctx, this, this.t);
+      else drawBattle(ctx, this, this.t, { showHoop: !['defense', 'pass'].includes(this.opts.kind) });
+      if (!this.opts.contest) tiny(ctx, this.opts.title, 6, 32, C.ORANGE);
       if (this.bonus.length) tiny(ctx, t('arcade.bonus', { x: this.bonus.join(', ').toUpperCase() }).slice(0, 18), 6, 39, C.WHITE);
       this.box.draw(ctx, this.t);
       return;

@@ -140,6 +140,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Franchise Legend', 'Hall of Famer', 'GOAT Debate'],
 
   arcade: {
+    points: 'POINTS {n}',
     post: 'DUNK {i}/{n}', postHint: 'HOLD {ok}, RELEASE IN THE ZONE', post_dunk: 'DUNK!', post_poster: 'POSTERIZED!', post_blocked: 'BLOCKED!', post_short: 'TOO SHORT', post_rimout: 'RIM OUT', postRes: '{n}/{m} dunks!', postPosters: ' {n}x POSTER.',
     moneyball: 'MONEYBALL!', resMoney: ' {n}x MONEYBALL (double points).',
     dunkNow: 'DUNK IT NOW!', getReady: 'STOP MASHING - TIMING NEXT',

@@ -140,6 +140,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Legenda kluba', 'Hall of Famer', 'GOAT debata'],
 
   arcade: {
+    points: 'POENI {n}',
     post: 'ZAKUC. {i}/{n}', postHint: 'DRŽI {ok}, PUSTI U ZONI', post_dunk: 'ZAKUCANO!', post_poster: 'POSTER!', post_blocked: 'BLOKADA!', post_short: 'PREKRATKO', post_rimout: 'ODBIJENA', postRes: '{n}/{m} zakucavanja!', postPosters: ' {n}x POSTER.',
     moneyball: 'MONEYBALL!', resMoney: ' {n}x MONEYBALL (dupli poeni).',
     dunkNow: 'ZAKUCAJ SAD!', getReady: 'PRESTANI UDARATI - SLIJEDI TAJMING',
