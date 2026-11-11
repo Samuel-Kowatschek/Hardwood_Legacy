@@ -4,10 +4,16 @@ import { perkSum } from '../data/perks.js';
 
 const S = BALANCE.sim;
 
-function aiName(run, exclude) {
+function aiName(run, exclude, rng = run.rng) {
   const pool = run.teams.filter(t => t.id !== exclude && t.id !== run.p.teamId);
-  const t = run.rng.pick(pool);
+  const t = rng.pick(pool);
   return `${t.star.first[0]}. ${t.star.last}`;
+}
+// Gewinner-Namen fuer verlorene/fremde Awards: eigener Teilstrom, damit der Haupt-RNG (Seed) unveraendert bleibt
+function otherWinner(run, names, label, rookie) {
+  const r = run.rng.fork(label + run.seasonNo);
+  if (rookie && names) { const n = names.player(r); return `${n.first[0]}. ${n.last}`; }
+  return aiName(run, -1, r);
 }
 const rivalName = run => `${run.rival.first[0]}. ${run.rival.last}`;
 
@@ -22,7 +28,7 @@ export function applyRegularArcade(run, kind, q, weight = 1) {
 }
 
 // Regular-Season-Awards (direkt nach der Regular Season verkuendet)
-export function computeRegularAwards(run, season) {
+export function computeRegularAwards(run, season, names = null) {
   const { p, rng } = run;
   const o = season.ovr;
   const list = []; // {id, label, won, winner}
@@ -30,10 +36,12 @@ export function computeRegularAwards(run, season) {
   const rb = run.cur.rivalBoost * 2;
   const ab = run.cur.award || { all: 0, mvp: 0, dpoy: 0, ppg: 0 }; // Boni aus Regular-Season-Minigames
 
+  // ROY: in der eigenen Rookie-Season Chance; jedes Jahr wird der Gewinner gezeigt
   if (run.seasonNo === 1) {
     const won = played && o + rng.gauss(0, 3) > 58 + rng.gauss(0, 3);
-    if (won) { p.awards.roy++; list.push({ id: 'roy', won }); }
-  }
+    if (won) p.awards.roy++;
+    list.push({ id: 'roy', won, winner: won ? null : otherWinner(run, names, 'roy', true) });
+  } else list.push({ id: 'roy', won: false, winner: otherWinner(run, names, 'roy', true) });
   const asScore = o + (p.fame - 50) * 0.1 + (season.pct - 0.5) * 10 + ab.all + rng.gauss(0, 2);
   const allStar = season.gp >= 30 && asScore >= S.allStarCut;
   if (allStar) { p.awards.allStar++; p.fame += 6; list.push({ id: 'allStar', won: true }); }
@@ -46,7 +54,8 @@ export function computeRegularAwards(run, season) {
 
   const dScore = p.skills.def * 0.8 + o * 0.2 + perkSum(p.perks, 'dpoy') + ab.dpoy + rng.gauss(0, 3) - (played ? 0 : 20);
   const dpoy = dScore > S.aiDpoyBase + rng.gauss(0, 2);
-  if (dpoy) { p.awards.dpoy++; p.fame += 5; list.push({ id: 'dpoy', won: true }); }
+  if (dpoy) { p.awards.dpoy++; p.fame += 5; }
+  list.push({ id: 'dpoy', won: dpoy, winner: dpoy ? null : otherWinner(run, names, 'dpoy', false) });
 
   const scoring = played && season.ppg + ab.ppg > S.aiScoringBase + rb * 0.5 + rng.gauss(0, 1.5);
   if (scoring) { p.awards.scoring++; p.fame += 5; list.push({ id: 'scoring', won: true }); }

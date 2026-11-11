@@ -124,6 +124,7 @@ export default {
     titleReg: 'NAGRADE SEZONE', titlePo: 'POSTSEZONA', seedRow: '{w}-{l}  MJESTO {r}', nextPO: 'Sad slijedi playoff!', nextNone: 'Ove godine bez playoffa.',
     title: 'BILANS SEZONE', none: 'BEZ NAGRADA', aging: 'Dob {age}. OVR {ovr} ({d}), tijelo {db}.',
     reached: { LOTTERY: 'LUTRIJA', 'PLAY-IN': 'PLAY-IN', R1: '1. RUNDA', R2: '2. RUNDA', CF: 'FINALE KONF.', FIN: 'FINALE', CHAMP: 'PRVAK' },
+    royShort: 'ROY',
     roy: 'ROOKIE GODINE', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'NAJBOLJI STRIJELAC',
     ring: 'PRVAK!', fmvp: 'FINALS MVP', teammate: 'SAIGRAČ',
   },

@@ -85,7 +85,7 @@ async function seasons(game, run) {
     // 2. Regular Season, unterbrochen von Events
     const season = await regularSeason(game, run);
     // 3. Regular-Season-Awards (MVP, All-Star, DPOY, Scoring, ROY)
-    const reg = computeRegularAwards(run, season);
+    const reg = computeRegularAwards(run, season, game.names);
     await game.show(new AwardsScene(run, {
       title: t('awards.titleReg'), first: t('awards.seedRow', { w: season.w, l: season.l, r: season.rank }),
       list: reg.list, outro: season.rank <= 10 ? t('awards.nextPO') : t('awards.nextNone'),

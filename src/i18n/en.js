@@ -124,6 +124,7 @@ export default {
     titleReg: 'SEASON AWARDS', titlePo: 'POSTSEASON', seedRow: '{w}-{l}  SEED {r}', nextPO: 'Next up: the playoffs!', nextNone: 'No playoffs this year.',
     title: 'SEASON RECAP', none: 'NO AWARDS', aging: 'Age {age}. OVR {ovr} ({d}), body {db}.',
     reached: { LOTTERY: 'LOTTERY', 'PLAY-IN': 'PLAY-IN', R1: '1ST ROUND', R2: '2ND ROUND', CF: 'CONF FINALS', FIN: 'FINALS', CHAMP: 'CHAMPION' },
+    royShort: 'ROY',
     roy: 'ROOKIE OF THE YEAR', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE',
     ring: 'CHAMPION!', fmvp: 'FINALS MVP', teammate: 'TEAMMATE',
   },

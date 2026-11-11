@@ -69,7 +69,7 @@ src/
 1. **Autosave** (Spielstand zu Beginn jeder Season)
 2. Offseason-Karte
 3. Regular Season (`SimScene`), unterbrochen bei ca. 28–38 % (Event-Karte, ggf. mit Minigame danach), 42–50 % (Spotlight-Spiel / 50-Punkte / sehr selten 100-Punkte), 56 % (All-Star Weekend), 66–80 % (Event-Karte, 60 %)
-4. **Season Awards** (ROY, All-Star, MVP, DPOY, Scoring Title, All-Star-Contest)
+4. **Season Awards** (ROY, All-Star, MVP, DPOY, Scoring Title, All-Star-Contest). ROY, MVP und DPOY zeigen jedes Jahr den Gewinner, auch wenn man selbst verliert (Namen aus eigenem RNG-Teilstrom, Haupt-Seed bleibt gleich)
 5. Playoffs (Play-In ab Platz 7–10, echtes Bracket; Key Games in Conf Finals/Finals)
 6. **Postseason** (Ring, Finals MVP, Meilensteine, Alterung)
 7. Retire-Entscheidung (Score verdeckt, Multiplikator sichtbar) -> ggf. Perk-Wahl (nach Season 1, 3, 6, 9, 12)
