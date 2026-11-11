@@ -143,6 +143,7 @@ export async function showCard(game, run, card, phase, transition) {
 // Regular Season in Abschnitten: Unterbrechung ca. bei 35 % (Saisonmitte) und 70 % (Saisonende)
 async function regularSeason(game, run) {
   const st = startSeason(run);
+  run.cur.st = st; // fuer Hochrechnungen (Testmodus), wird nicht gespeichert
   const sim = new SimScene(run, st);
   game.set(sim, 'wipe');
   // Unterbrechungen: Event (Saisonmitte), Spotlight-Spiel (Minigame, zaehlt fuer Awards), Event (Saisonende)

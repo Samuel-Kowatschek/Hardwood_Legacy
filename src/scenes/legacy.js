@@ -62,9 +62,10 @@ export class LegacyScene extends Scene {
         this.unlocks.push(x.name);
       }
     }
-    save.setMeta(meta);
+    // Testmodus: nichts dauerhaft speichern (keine Unlocks, keine Hall of Fame)
+    if (run.test) { this.unlocks = []; this.rank = -1; } else save.setMeta(meta);
     const team = run.teams[p.teamId];
-    this.rank = save.addHof({
+    if (!run.test) this.rank = save.addHof({
       first: p.first, last: p.last, look: p.look, colors: team.colors, age: p.age,
       score: lg.score, rings: p.awards.rings, tier: t('tiers')[lg.tier.idx], arch: archetypeById(p.arch).name, seed: run.seed,
       date: new Date().toISOString().slice(0, 10),

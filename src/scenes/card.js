@@ -5,6 +5,7 @@ import { Typewriter, Menu, drawStatus } from '../ui.js';
 import { sfx } from '../systems/audio.js';
 import { t } from '../i18n/index.js';
 import { cardText, hintFor, applyOption } from '../data/cards.js';
+import { exactFx } from '../systems/testmode.js';
 
 export class CardScene extends Scene {
   constructor(run, card, phase) { super(); this.run = run; this.card = card; this.phase0 = phase; }
@@ -12,7 +13,7 @@ export class CardScene extends Scene {
     if (this.tw) return;
     this.tw = new Typewriter(cardText(this.run, this.card), 17, 4);
     const labels = t(`cards.${this.card.id}.o`);
-    this.menu = new Menu(this.card.opts.map((o, i) => ({ label: labels[i], hint: hintFor(o) })), { rowH: 16 });
+    this.menu = new Menu(this.card.opts.map((o, i) => ({ label: labels[i], hint: this.run.test ? testHint(o) : hintFor(o) })), { rowH: 16 });
     this.phase = 'text';
   }
   update() {
@@ -40,4 +41,16 @@ export class CardScene extends Scene {
       if (this.res.draw(ctx, 10, 96, 10, C.WHITE)) downArrow(ctx, 146, 134, this.t);
     }
   }
+}
+
+// Testmodus: genaue Werte statt Pfeil-Hinweisen (Details mit S -> Seite ENTSCHEIDUNG)
+function testHint(o) {
+  const parts = [];
+  if (o.special) parts.push(o.special.toUpperCase());
+  if (o.fx) parts.push(exactFx(o.fx));
+  if (o.risk) parts.push(`R${Math.round(o.risk.p * 100)}%`);
+  if (o.arcade) parts.push('MG:' + o.arcade.kind.toUpperCase());
+  if (o.pickTeam) parts.push(t('hintLbl.pick'));
+  if (o.mystery) parts.push('???');
+  return parts.join(' ').slice(0, 36) || '-';
 }

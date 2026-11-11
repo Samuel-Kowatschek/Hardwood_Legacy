@@ -7,13 +7,14 @@ import { sfx } from '../systems/audio.js';
 import { t } from '../i18n/index.js';
 import { fx, hintFor } from '../data/cards.js';
 import { faProfile, signWith } from '../systems/freeagency.js';
+import { analyzeTeam } from '../systems/testmode.js';
 
 const VIS = 7;
 
 export class FreeAgencyScene extends Scene {
   constructor(run) {
     super();
-    this.run = run; this.i = 0; this.scroll = 0; this.box = null; this.noStats = true;
+    this.run = run; this.i = 0; this.scroll = 0; this.box = null; this.noStats = !run.test;
     this.teams = run.teams.filter(x => x.id !== run.p.teamId).sort((a, b) => b.base - a.base);
     this.profiles = Object.fromEntries(this.teams.map(x => [x.id, faProfile(run, x)]));
   }
@@ -72,7 +73,11 @@ export class FreeAgencyScene extends Scene {
       tiny(ctx, this.tagText(pr).slice(0, 36), 9, 117, C.ORANGE);
       const eff = hintFor({ fx: pr.eff }) + (pr.ringChase ? '  ' + t('fa.ringChase') : '');
       tiny(ctx, eff.slice(0, 36), 9, 125, C.WHITE);
-      tiny(ctx, t('fa.strength', { n: tm.base, r: pr.rank }), 9, 133, C.WHITE);
+      if (run.test) {
+        // Testmodus: Chancen-Aenderung bei diesem Wechsel (gecacht pro Eintrag)
+        if (!this.tcache || this.tcache.i !== this.i) this.tcache = { i: this.i, s: analyzeTeam(run, tm, signWith) };
+        tiny(ctx, this.tcache.s.slice(0, 36), 9, 133, C.ORANGE);
+      } else tiny(ctx, t('fa.strength', { n: tm.base, r: pr.rank }), 9, 133, C.WHITE);
     }
   }
 }

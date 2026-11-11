@@ -7,6 +7,7 @@ import { sfx, playMusic } from '../systems/audio.js';
 import { t } from '../i18n/index.js';
 import { simTo, standingsOf, ovr } from '../systems/sim.js';
 import { drawSprite, idleFrame } from '../sprites/spriteGen.js';
+import { odds } from '../systems/testmode.js';
 
 const FRAMES_PER_GAME = 2.4;
 
@@ -80,5 +81,13 @@ export class SimScene extends Scene {
     if (this.note) tiny(ctx, (this.note.major ? t('sim.injMajor', { g: this.note.games }) : t('sim.inj', { g: this.note.games })), 152, 55, C.ORANGE, 'right');
     if (this.box) this.box.draw(ctx, this.t);
     else if (this.anim) tiny(ctx, t('sim.faster'), 80, 130, C.WHITE, 'center');
+    // Testmodus: Live-Chancen (alle 30 Frames neu berechnet)
+    if (run.test && !this.box) {
+      if (!this.odds || this.t % 30 === 0) this.odds = odds(run);
+      const o = this.odds, pc = x => Math.round(x * 100) + '%';
+      tiny(ctx, t('test.simLine1', { a: pc(o.allStar), m: pc(o.mvp), d: pc(o.dpoy) }), 8, 100, C.ORANGE);
+      tiny(ctx, t('test.simLine2', { s: pc(o.scoring), p: pc(o.playoffs), r: pc(o.ring) }), 8, 107, C.ORANGE);
+      tiny(ctx, t('test.simLine3'), 8, 114, C.WHITE);
+    }
   }
 }

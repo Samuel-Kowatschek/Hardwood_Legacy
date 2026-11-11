@@ -103,7 +103,7 @@ function frame() {
       if (game.run) { game.overlay = new QuitScene(game); input.endFrame(); }
       else if (!(game.scene instanceof TitleScene)) game.set(new TitleScene());
     } else if (input.pressed('options')) { game.overlay = new OptionsScene({ overlay: true, game }); input.endFrame(); }
-    else if (game.run && input.pressed('stats') && !game.scene.noStats) { game.overlay = new StatsScene(game.run); input.endFrame(); }
+    else if (game.run && input.pressed('stats') && !game.scene.noStats) { game.overlay = new StatsScene(game.run, game.scene); input.endFrame(); }
     else { game.scene.t++; game.scene.update?.(game); }
   }
   ctx.fillStyle = C.BG;

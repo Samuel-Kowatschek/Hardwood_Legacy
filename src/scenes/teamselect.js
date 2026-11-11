@@ -32,6 +32,7 @@ export class TeamSelectScene extends Scene {
       archId: o.archId, look: o.look, name: o.name, hof: save.hof(), teamId: k === 0 ? null : this.teams[k - 1].id,
     });
     run.daily = o.daily;
+    if (o.test) run.test = true;
     playRun(this.game, run);
   }
   update() {

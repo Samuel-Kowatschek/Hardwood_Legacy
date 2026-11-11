@@ -58,7 +58,7 @@ export function hintFor(opt) {
   return parts.slice(0, 3).join(' ');
 }
 
-const SPECIAL = {
+export const SPECIAL = {
   maxdeal: r => { const x = r.rng.pick(byBase(others(r)).slice(8, 20)); moveTeam(r, x.id); r.p.ringChase = false; return t('cardx.move', { abbr: x.abbr }); },
   superteam: r => { const x = byBase(others(r))[r.rng.int(0, 1)]; moveTeam(r, x.id); r.p.ringChase = true; return t('cardx.move', { abbr: x.abbr }); },
   trade: r => { const x = r.rng.pick(byBase(others(r)).slice(0, 14)); moveTeam(r, x.id); r.p.ringChase = false; return t('cardx.traded', { nick: x.nick }); },
