@@ -20,7 +20,7 @@ export const ARCHETYPES = [
     skills: { sho: 35, pla: 40, def: 66, ath: 68, clu: 45 },
     weights: { ath: 0.35, def: 0.35, sho: 0.1, pla: 0.1, clu: 0.1 },
     core: { form: 2, body: -6, chem: 4, fame: 0 },
-    games: { post: 4, rebound: 4, defense: 3, fast: 2, ft: 1, shot: 1, drive: 1, pass: 1 }, ppg: -2, rpg: 6, apg: -1,
+    games: { post: 4, rebound: 4, defense: 3, block: 3, fast: 2, ft: 1, shot: 1, drive: 1, pass: 1 }, ppg: -2, rpg: 6, apg: -1,
   },
   {
     id: 'play', name: 'Playmaker', pos: 'PG',
@@ -35,7 +35,7 @@ export const ARCHETYPES = [
     skills: { sho: 45, pla: 45, def: 72, ath: 62, clu: 50 },
     weights: { def: 0.45, ath: 0.25, clu: 0.1, sho: 0.1, pla: 0.1 },
     core: { form: 0, body: 0, chem: 6, fame: -4 },
-    games: { defense: 5, rebound: 2, fast: 2, shot: 1, ft: 1, drive: 1, pass: 1 }, ppg: -4, rpg: 1, apg: 0,
+    games: { defense: 5, block: 4, rebound: 2, fast: 2, shot: 1, ft: 1, drive: 1, pass: 1 }, ppg: -4, rpg: 1, apg: 0,
     unlock: { key: 'dpoy', test: m => !!m.ach?.dpoy },
   },
   // ---- Freischaltbare Archetypen (schwere Bedingungen) ----
@@ -52,7 +52,7 @@ export const ARCHETYPES = [
     skills: { sho: 60, pla: 48, def: 66, ath: 64, clu: 54 },
     weights: { def: 0.3, sho: 0.25, ath: 0.25, pla: 0.1, clu: 0.1 },
     core: { form: 1, body: 0, chem: 3, fame: 0 },
-    games: { defense: 3, shot: 3, fast: 2, drive: 2, ft: 1, rebound: 1, pass: 1 }, ppg: 1, rpg: 1, apg: 0,
+    games: { defense: 3, block: 2, shot: 3, fast: 2, drive: 2, ft: 1, rebound: 1, pass: 1 }, ppg: 1, rpg: 1, apg: 0,
     unlock: { key: 'ring', test: m => !!m.ach?.ring },
   },
   {

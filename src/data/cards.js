@@ -47,6 +47,7 @@ export function hintFor(opt) {
   if (opt.mystery) return '???';
   const parts = [];
   if (opt.arcade) parts.push(t('hintLbl.play'));
+  if (opt.pickTeam) parts.push(t('hintLbl.pick'));
   for (const k of opt.hint || []) parts.push(t('hintLbl.' + k));
   for (const [k, v] of Object.entries(opt.fx || {})) {
     if (!v || k === 'injuryGames' || k === 'rivalBoost') continue;
@@ -87,7 +88,7 @@ export const CARDS = [
   // ---------------- OFFSEASON ----------------
   { id: 'training', when: 'off', w: 1.5, opts: [{ fx: { sho: 4, clu: 1 } }, { fx: { ath: 3, body: 4 } }, { fx: { def: 3, pla: 2 } }] },
   { id: 'freeagency', when: 'off', w: r => (r.seasonNo >= 3 && r.seasonNo % 3 === 0 ? 30 : 0),
-    opts: [{ special: 'maxdeal', fx: { fame: 6 }, hint: ['newTeam'] }, { special: 'superteam', fx: { fame: -5 }, hint: ['ring'] }, { fx: { chem: 8 }, hint: ['loyal'] }] },
+    opts: [{ pickTeam: true }, { fx: { chem: 8 }, hint: ['loyal'] }] },
   { id: 'traderequest', when: 'off', cond: r => r.seasonNo >= 2 && T(r).base < 55, w: 3,
     opts: [{ special: 'trade', fx: { fame: -3 }, hint: ['newTeam'] }, { fx: { chem: 6, base: 3 } }] },
   { id: 'mentor', when: 'off', cond: r => age(r) <= 24, opts: [{ special: 'mentor', fx: { clu: 4, pla: 2, form: 2 }, hint: ['rivalQ'] }, { fx: { ath: 2 } }] },
@@ -311,7 +312,7 @@ export const CARDS = [
   { id: 'coachtimeout', when: 'late', opts: [{ fx: { chem: -4, clu: 3 } }, { fx: { chem: 3 } }] },
 
   // ---------------- Erweiterung 3: 100+ weitere Karten (inkl. Minispiel-Karten) ----------------
-  { id: 'optout', when: 'off', cond: 's2', opts: [{ special: 'maxdeal', fx: { fame: 4 }, hint: ['newTeam'] }, { fx: { chem: 4, form: 1 }, hint: ['loyal'] }] },
+  { id: 'optout', when: 'off', cond: 's2', opts: [{ pickTeam: true }, { fx: { chem: 4, form: 1 }, hint: ['loyal'] }] },
   { id: 'contenderoffer', when: 'off', cond: 's2', opts: [{ special: 'superteam', fx: { fame: -4 }, hint: ['newTeam', 'ring'] }, { fx: { chem: 5 } }] },
   { id: 'signtrade', when: 'off', cond: 's2', opts: [{ special: 'traderandom', mystery: true }, { fx: { chem: 4 } }] },
   { id: 'friendtrade', when: 'off', cond: 's2', opts: [{ special: 'trade', fx: { fame: 2 }, hint: ['newTeam'] }, { fx: { chem: 3, form: 1 } }] },
@@ -466,5 +467,6 @@ export function applyOption(run, card, i) {
     parts.push([t(opt.risk.msg), extra, opt.risk.fx ? fx(run, opt.risk.fx) : ''].filter(Boolean).join(' '));
   }
   if (opt.arcade && !parts.length) return tx(`cards.${card.id}.p`, 'cardx.playIntro');
+  if (opt.pickTeam && !parts.length) return tx(`cards.${card.id}.p`, 'cardx.pickIntro');
   return parts.join(' ') || t('cardx.nothing');
 }

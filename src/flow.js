@@ -15,6 +15,7 @@ import { t } from './i18n/index.js';
 import { drawSprite, idleFrame } from './sprites/spriteGen.js';
 import { MessageScene } from './scenes/message.js';
 import { CardScene } from './scenes/card.js';
+import { FreeAgencyScene } from './scenes/freeagency.js';
 import { SimScene } from './scenes/sim.js';
 import { LogScene } from './scenes/log.js';
 import { AwardsScene } from './scenes/awards.js';
@@ -123,6 +124,7 @@ async function seasons(game, run) {
 // Karte zeigen; hat die gewaehlte Option ein Minigame, folgt es direkt danach (Ergebnis bestimmt die Folgen)
 export async function showCard(game, run, card, phase, transition) {
   const out = await game.show(new CardScene(run, card, phase), transition);
+  if (out && out.pickTeam) { await game.show(new FreeAgencyScene(run), 'wipe'); return; }
   if (!out || !out.arcade) return;
   const a = out.arcade, rng = run.rng;
   const opp = rng.pick(run.teams.filter(x => x.id !== run.p.teamId));
@@ -181,6 +183,8 @@ async function regularSeason(game, run) {
 }
 const rngStop = (run, a, b) => run.rng.float(a, b);
 
+// Ab dieser Minispiel-Qualitaet gilt ein Playoff-Spiel als gewonnen
+const WIN_Q = 0.5;
 const arcadeAdj = q => (q - BALANCE.arcade.neutral) * BALANCE.arcade.swing;
 
 // Jeder Archetyp bekommt alle Minigames, nur unterschiedlich gewichtet; direkte Wiederholung wird vermieden.
@@ -188,7 +192,7 @@ function pickArcadeKind(run, clutchMoment) {
   if (clutchMoment && run.rng.chance(0.6)) return 'clutch';
   const prefs = archetypeById(run.p.arch).games;
   const last = run.lastKinds || [];
-  const kind = run.rng.weighted(ARCADE_KINDS.filter(k => k !== 'clutch' && k !== 'dunkc'), k => (prefs[k] ?? (k === 'post' ? 0.3 : 1)) * (last.includes(k) ? 0.15 : 1));
+  const kind = run.rng.weighted(ARCADE_KINDS.filter(k => k !== 'clutch' && k !== 'dunkc'), k => (prefs[k] ?? (k === 'post' ? 0.3 : k === 'block' ? 0.6 : 1)) * (last.includes(k) ? 0.15 : 1));
   run.lastKinds = [kind, ...last].slice(0, 2);
   return kind;
 }
@@ -303,7 +307,8 @@ async function playoffs(game, run, season) {
     await log.line(t('flow.playIn', { n: rank }), C.ORANGE);
     await log.msg(t('flow.playInMsg', { n: rank, nick: opp.nick }));
     const q = await keyGame(game, run, log, { kind: pickArcadeKind(run, false), title: t('flow.playInTitle'), opp, pressure: 0.15, situation: t('flow.allOrNothing'), scoreLine: [88, 90] });
-    const win = rng.next() < clamp(gameProb(run, me, oppId, rank <= 8) + arcadeAdj(q), 0.05, 0.95);
+    // Minispiel geschafft (q >= 0,5) = Sieg garantiert; sonst bleibt die Siegchance (mit Abzug fuers Scheitern)
+    const win = q >= WIN_Q || rng.next() < clamp(gameProb(run, me, oppId, rank <= 8) + arcadeAdj(q), 0.05, 0.95);
     await log.line(t('flow.playInRes', { abbr: opp.abbr, res: win ? t('flow.win') : t('flow.out') }), win ? C.WHITE : C.ORANGE);
     if (!win) { sfx.sad(); await log.msg(t('flow.playInLost')); return res; }
     const seedIdx = rank === 7 ? 6 : 7;
@@ -380,8 +385,12 @@ export async function playSeries(game, run, log, oppId, round, myHome) {
       prob = clamp(prob + arcadeAdj(q), 0.05, 0.95);
       // Buzzer-Beater entscheidet: Treffer = Spiel gewonnen, Fehlwurf = Serie verloren
       if (kind === 'clutch') {
-        if (q >= 0.5) { await log.msg(t('flow.buzzerMade')); prob = 1; }
+        if (q >= WIN_Q) { await log.msg(t('flow.buzzerMade')); prob = 1; }
         else { await log.msg(t('flow.buzzerMiss')); w = Math.min(w, 3); l = 4; g++; break; }
+      } else if (q >= WIN_Q) {
+        // Minispiel geschafft = dieses Spiel wird zu 100 % gewonnen
+        await log.msg(t('flow.gameWonMini'));
+        prob = 1;
       }
     }
     if (rng.next() < prob) w++; else l++;

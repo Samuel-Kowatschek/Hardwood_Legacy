@@ -19,7 +19,7 @@ python3 -m http.server 8000      # ES Modules + fetch brauchen einen HTTP-Server
 Dann `http://localhost:8000`. Eigener Seed: `?seed=ABC123`.
 
 - **Kein Build, kein npm.** Alles, was im Repo liegt, wird so ausgeliefert.
-- **Hosting:** GitHub Pages (Branch `main`, Ordner `/`, `.nojekyll` vorhanden). Cloudflare Pages geht genauso (Build-Command leer, Output `/`).
+- **Hosting:** Cloudflare Pages, deployt automatisch von Branch `main` (Build-Command leer, Output `/`). `.nojekyll` ist noch von GitHub Pages vorhanden.
 - **Workflow:** Entwickelt wird auf einem Feature-Branch (bisher `claude/gallant-fermi-p97hzi`), Merge nach `main` per Pull Request. Nicht direkt auf `main` committen.
 - **Version:** Bei jedem Release `src/version.js` hochzählen (z. B. `v0.8.3` -> `v0.8.4`).
 - **Tests:** Es gibt keine Test-Suite. Geprüft wird mit
@@ -44,13 +44,13 @@ src/
   helpModal.js   HTML-Popups: How to Play, Unlocks, Seed-Eingabe, Teilen
   version.js     Versionsnummer
   i18n/          index.js (t()), en.js, de.js, bs.js + cards.<lang>.js (Kartentexte)
-  scenes/        title, create, teamselect, card, sim, log (Playoffs), awards, perk, retire, legacy,
+  scenes/        title, create, daily, teamselect, freeagency, card, sim, log (Playoffs), awards, perk, retire, legacy,
                  hof, options, practice, stats (Overlay), quit (Overlay), message, scene (Basisklasse)
   arcade/        arcadeScene (Rahmen), common (Battle-Layout, Meter), shotMeter, clutch, fastBreak,
-                 defenseStop, drive, rebound, pass, freeThrow, post (Standing Dunk)
+                 defenseStop, drive, rebound, pass, freeThrow, post (Standing Dunk), block (Rim Protector), dunkContest
   sprites/       parts.js (Pixel-Layer als Strings), palette.js (Haut, Haare, Teamfarben), spriteGen.js
   names/         nameGen.js (Parodie-Generator), overrides.json (Wortspiele, Teamnamen, Städte)
-  systems/       rng, league (Run/Liga erzeugen, Speichern/Laden), sim, awards, legacy, save, audio
+  systems/       rng, league, freeagency (Run/Liga erzeugen, Speichern/Laden), sim, awards, legacy, save, audio
   data/          archetypes, perks, cards, balance (alle Tuning-Werte), scoreDist (Perzentil-Referenz)
 ```
 
@@ -75,7 +75,11 @@ src/
 7. Retire-Entscheidung (Score verdeckt, Multiplikator sichtbar) -> ggf. Perk-Wahl (nach Season 1, 3, 6, 9, 12)
 8. Am Ende `LegacyScene` (Score, Ranking, Unlocks, Teilen)
 
-**Minigame-Wirkung:** Regular-Season-Minigames verschieben nur die Award-Chancen (`applyRegularArcade` in `systems/awards.js`). Playoff-Minigames verschieben nur die Siegchance (Ring) und zählen für den Finals MVP.
+**Minigame-Wirkung:** Regular-Season-Minigames verschieben nur die Award-Chancen (`applyRegularArcade` in `systems/awards.js`). Playoff-Minigames: `q >= 0.5` (`WIN_Q` in `playSeries`) = Spiel sicher gewonnen, sonst Sim mit Minigame-Bonus; zählen für den Finals MVP.
+
+**Free Agency:** Kartenoption `pickTeam: true` (Karten `freeagency`, `optout`) öffnet `scenes/freeagency.js`. Konsequenzen je Team in `systems/freeagency.js` (`faProfile`: Rang 1–4 Superteam/Ringjagd, 5–10 Contender, 11–20 fair, Rest viel Geld; Großstadt +Fame; Team des Rivalen -> neuer Rivale).
+
+**Daily Seed** (`scenes/daily.js`): Seed `D` + YYYYMMDD. Archetyp aus `fork('dailyarch')`, Stats/Draft/Rivale fest (`hof: []`, keine Teamwahl, keine Rerolls), nur Name (HTML-Popup) und Look änderbar. 1x pro Tag: `meta.dailyDone` wird beim Start gesetzt; ein eingetippter Tages-Seed zählt ebenfalls als Daily.
 
 ### Run-Objekt (`systems/league.js`)
 `createRun(seed, names, { archId, look, name, hof, teamId })` erzeugt:
@@ -118,6 +122,7 @@ src/
 | `pass` | Playmaker | Pfeil zum freien Mitspieler |
 | `ft` | Freiwürfe | Pfeile gegen Drift (mit Trägheit), Brett-Rechteck = Bank Shot |
 | `post` | Standing Dunk | SPACE halten/loslassen, Block vermeiden |
+| `block` | Rim Protector | SPACE springen, Ball beim Wurf blocken, nicht auf Pumpfakes reinfallen |
 | `dunkc` | Dunk Contest (nur All-Star Weekend / Karte / Training) | Dunk wählen (5 Stufen, schwerer = mehr Punkte), Marker stoppen; kein Verteidiger, nur Treffer oder Fehlversuch |
 
 - `dunkc` ist nicht im normalen Pool (`pickArcadeKind` schließt `clutch` und `dunkc` aus).
@@ -169,7 +174,7 @@ src/
 
 | Key | Inhalt |
 |---|---|
-| `hwl_meta_v1` | runs, best, scores[], ach{}, unlocked[], totalRings, fmvps, bestTier |
+| `hwl_meta_v1` | runs, best, scores[], ach{}, unlocked[], totalRings, fmvps, bestTier, dailyDone |
 | `hwl_hof_v1` | Hall of Fame (Top 10) |
 | `hwl_settings_v1` | Sprache, Farbschema, Ton |
 | `hwl_run_v1` | gespeicherter Run (ein Slot, Autosave zu Season-Beginn; Continue im Hauptmenü) |

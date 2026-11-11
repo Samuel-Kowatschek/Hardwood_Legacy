@@ -54,7 +54,7 @@ export function openUnlocks() {
   ];
   const n = items.filter(i => has(i.x)).length;
   const body = `<p class="u-count">${esc(t('unlocks.count', { n, m: items.length }))}</p>` + items.map(({ x, type }) => {
-    if (!has(x)) return `<section class="u-locked"><h3>${esc(x.name)}</h3><p>${esc(t('unlocks.locked'))}</p></section>`;
+    if (!has(x)) return `<section class="u-locked"><h3>${esc(x.name)}</h3><p class="u-type">${esc(t('unlocks.' + type))} · ${esc(t('unlocks.locked'))}</p><p>${esc(t('unlocks.how'))} ${esc(t('unlock.' + x.unlock.key))}</p></section>`;
     let desc;
     if (type === 'archetype') {
       const sk = ['sho', 'pla', 'def', 'ath', 'clu'].map(k => `${t('stat.' + k)} ${x.skills[k]}`).join(' · ');
@@ -124,6 +124,29 @@ export function openShare({ text, url, file, png }) {
 }
 
 // Seed eingeben (z.B. um mit Freunden denselben Seed zu spielen)
+// Daily Seed: Namen frei waehlen (nur kosmetisch)
+export function openNameInput(cur, onDone) {
+  const clean = s => s.replace(/[^\p{L}' .-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 12);
+  const body = `
+    <p>${esc(t('namein.text'))}</p>
+    <input id="nm-first" class="seed-in" maxlength="12" autocomplete="off" spellcheck="false" value="${esc(cur.first)}">
+    <input id="nm-last" class="seed-in" maxlength="12" autocomplete="off" spellcheck="false" value="${esc(cur.last)}">
+    <button class="share-btn seed-go" id="nm-go">${esc(t('namein.ok'))}</button>
+    <p class="share-note" id="nm-note"></p>`;
+  const root = openModal(t('namein.title'), body);
+  if (!root) return;
+  const f = root.querySelector('#nm-first'), l = root.querySelector('#nm-last');
+  const go = () => {
+    const first = clean(f.value).toUpperCase(), last = clean(l.value).toUpperCase();
+    if (!first || !last) { root.querySelector('#nm-note').textContent = t('namein.short'); return; }
+    closeHelp();
+    onDone({ first, last });
+  };
+  for (const inp of [f, l]) inp.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') go(); if (e.key === 'Escape') closeHelp(); });
+  root.querySelector('#nm-go').addEventListener('click', go);
+  setTimeout(() => f.focus(), 0);
+}
+
 export function openSeedInput(onStart) {
   const body = `
     <p>${esc(t('seedin.text'))}</p>

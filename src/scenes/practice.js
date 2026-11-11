@@ -67,8 +67,8 @@ export class PracticeScene extends Scene {
     // Liste links (alle Namen in normaler Schrift), Trainingsspieler rechts
     box(ctx, 0, 14, 121, 130);
     this.rows.forEach((id, k) => {
-      const y = 20 + k * 10 + (k >= ARCADE_KINDS.length ? 4 : 0);
-      input.region(3, y - 2, 116, 10, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
+      const y = 19 + k * 9 + (k >= ARCADE_KINDS.length ? 3 : 0);
+      input.region(3, y - 2, 116, 9, () => { if (this.i !== k) { this.i = k; sfx.blip(); } }, () => { this.clickRow = k; });
       if (k === this.i) cursor(ctx, 5, y);
       const label = id === 'reroll' ? t('practice.reroll') : id === 'back' ? t('options.back') : t('arcade.names.' + id);
       const col = k === this.i ? C.ORANGE : C.WHITE;

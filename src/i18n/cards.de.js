@@ -1,10 +1,12 @@
 // Kartentexte (DE). t = Titel (max 18), x = Text (max ~64 Zeichen), o = Optionen (max 17).
 export const hintLbl = {
+  pick: 'JEDES TEAM', 
   play: 'MINISPIEL', 
   team: 'TEAM', wins: 'SIEGE', playoffs: 'PLAYOFFS', pts: 'PKT', rest: 'PAUSE', rival: 'RIVALE',
   newTeam: 'NEUES TEAM', ring: 'RING-CHANCE+', loyal: 'TREUE', rivalQ: 'RIVALE?', risk: 'RISIKO?',
 };
 export const cardx = {
+  pickIntro: 'Zeit, dein nächstes Team zu wählen!',
   bombed: 'Der Auftritt wird ein Reinfall...',
   playGood: 'Das hat geklappt!', playBad: 'Es klappt nicht.', playIntro: 'Zeig, was du kannst!',
   scandal: 'Skandal!', blockbuster: 'BLOCKBUSTER-TRADE!', fined: 'Geldstrafe!', yips: 'Es wird schlimmer...', exposed: 'Es kommt raus...', offkey: 'Völlig schief!',
@@ -15,7 +17,7 @@ export const cardx = {
 };
 export const cards = {
   training: { t: 'TRAININGSCAMP', x: 'Der Sommer ist lang. Worauf legst du den Fokus?', o: ['Wurftraining', 'Kraftraum', 'Film-Studium'] },
-  freeagency: { t: 'FREE AGENCY', x: 'Dein Vertrag läuft aus. Drei Angebote liegen auf dem Tisch.', o: ['Max-Deal', 'Superteam-Paycut', 'Bleiben'] },
+  freeagency: { t: 'FREE AGENCY', x: 'Dein Vertrag läuft aus. Jedes Team der Liga ist möglich.', o: ['Team wählen', 'Bleiben'] },
   traderequest: { t: 'TRADE-WUNSCH?', x: 'Die {nick} verlieren. Fans und Presse werden ungeduldig.', o: ['Trade fordern', 'Loyal bleiben'] },
   mentor: { t: 'MENTOR', x: 'Ein alter Veteran will dich unter seine Fittiche nehmen.', o: ['Annehmen', 'Allein trainieren'] },
   loadmgmt: { t: 'ALTERNDE KNIE', x: 'Der Doc rät zu Load Management in dieser Saison.', o: ['Load Management', 'Volle Pulle'] },

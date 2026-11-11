@@ -1,10 +1,12 @@
 // Tekstovi karata (BS). t = naslov (max 17), x = tekst (max 4 reda po 17 znakova), o = opcije (max 17).
 export const hintLbl = {
+  pick: 'BILO KOJI TIM', 
   play: 'MINIIGRA', 
   team: 'TIM', wins: 'POBJEDE', playoffs: 'PLAYOFF', pts: 'POENI', rest: 'ODMOR', rival: 'RIVAL',
   newTeam: 'NOVI TIM', ring: 'ŠANSA ZA PRSTEN+', loyal: 'LOJALNOST', rivalQ: 'RIVAL?', risk: 'RIZIK?',
 };
 export const cardx = {
+  pickIntro: 'Vrijeme je da izabereš novi tim!',
   bombed: 'Nastup je propao...',
   playGood: 'Uspjelo je!', playBad: 'Nije uspjelo.', playIntro: 'Pokaži šta znaš!',
   scandal: 'Skandal!', blockbuster: 'VELIKI TRANSFER!', fined: 'Kazna!', yips: 'Sve je gore...', exposed: 'Sve je izašlo na vidjelo...', offkey: 'Potpuno falš!',
@@ -15,7 +17,7 @@ export const cardx = {
 };
 export const cards = {
   training: { t: 'TRENING KAMP', x: 'Dugo ljeto je pred tobom. Na šta se fokusiraš?', o: ['Trening šuta', 'Teretana', 'Analiza snimaka'] },
-  freeagency: { t: 'SLOBODNI AGENT', x: 'Ugovor ti ističe. Tri ponude su na stolu.', o: ['Maksimalni ugovor', 'Supertim za manje', 'Ostani'] },
+  freeagency: { t: 'SLOBODNI AGENT', x: 'Ugovor ti ističe. Svaki tim u ligi je opcija.', o: ['Izaberi tim', 'Ostani'] },
   traderequest: { t: 'TRAŽIŠ TRANSFER?', x: '{nick} gube. Navijači i mediji gube strpljenje.', o: ['Traži transfer', 'Ostani lojalan'] },
   mentor: { t: 'MENTOR', x: 'Stari veteran te želi uzeti pod svoje.', o: ['Prihvati', 'Treniraj sam'] },
   loadmgmt: { t: 'STARA KOLJENA', x: 'Doktor savjetuje čuvanje snage ove sezone.', o: ['Čuvaj se', 'Punim gasom'] },

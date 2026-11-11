@@ -3,11 +3,12 @@ import { C, tiny, box, ball } from '../gfx.js';
 import { Menu, bigText } from '../ui.js';
 import { save } from '../systems/save.js';
 import { input } from '../input.js';
-import { playMusic } from '../systems/audio.js';
+import { playMusic, sfx } from '../systems/audio.js';
 import { randomSeedString, dailySeedString, RNG } from '../systems/rng.js';
 import { drawSprite, idleFrame, rollLook } from '../sprites/spriteGen.js';
 import { t } from '../i18n/index.js';
 import { CreateScene } from './create.js';
+import { DailyCreateScene, dailyDone } from './daily.js';
 import { HofScene } from './hof.js';
 import { PracticeScene } from './practice.js';
 import { openHelp, openUnlocks, openSeedInput } from '../helpModal.js';
@@ -31,12 +32,18 @@ export class TitleScene extends Scene {
     this.saved = save.loadRun();
     const items = [];
     if (this.saved) items.push({ id: 'continue', label: t('title.continue', { s: this.saved.seasonNo }) });
-    items.push({ id: 'new', label: t('title.newRun') }, { id: 'daily', label: t('title.daily') }, { id: 'enterseed', label: t('title.enterSeed') });
+    items.push({ id: 'new', label: t('title.newRun') }, { id: 'daily', label: dailyDone(dailySeedString()) ? t('title.dailyDone') : t('title.daily'), disabled: dailyDone(dailySeedString()) }, { id: 'enterseed', label: t('title.enterSeed') });
     if (this.urlSeed) items.push({ id: 'seed', label: t('title.seed', { s: this.urlSeed.slice(0, 8) }) });
     items.push({ id: 'practice', label: t('title.practice') }, { id: 'unlocks', label: t('title.unlocks') },
       { id: 'hof', label: t('title.hof') }, { id: 'help', label: t('title.help') }, { id: 'options', label: t('title.options') });
     this.items = items;
     this.menu = new Menu(items, { rowH: items.length > 9 ? 9 : 10, hint: false });
+  }
+  // Wer den heutigen Daily-Seed eintippt, spielt den Daily (inkl. 1x-pro-Tag-Regel)
+  startSeed(game, seed) {
+    if (seed !== dailySeedString()) return game.set(new CreateScene(seed));
+    if (dailyDone(seed)) { sfx.back(); return; }
+    game.set(new DailyCreateScene(seed));
   }
   update(game) {
     const i = this.menu.update();
@@ -46,10 +53,10 @@ export class TitleScene extends Scene {
       const run = restoreRun(this.saved);
       playRun(game, run, { resume: true });
     } else if (id === 'enterseed') {
-      openSeedInput(seed => game.set(new CreateScene(seed)));
+      openSeedInput(seed => this.startSeed(game, seed));
     } else if (id === 'new') game.set(new CreateScene(randomSeedString()));
-    else if (id === 'daily') game.set(new CreateScene(dailySeedString(), true));
-    else if (id === 'seed') game.set(new CreateScene(this.urlSeed));
+    else if (id === 'daily') game.set(new DailyCreateScene(dailySeedString()));
+    else if (id === 'seed') this.startSeed(game, this.urlSeed);
     else if (id === 'hof') game.set(new HofScene());
     else if (id === 'practice') game.set(new PracticeScene());
     else if (id === 'unlocks') openUnlocks();
