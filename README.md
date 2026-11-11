@@ -32,11 +32,13 @@ Sprache (Englisch/Deutsch/Bosnisch) und Farbschema (Classic, LA Special, Black/W
 
 `Titel -> Spieler erstellen -> [Offseason-Karte -> Season-Sim (unterbrochen von Events) -> Playoffs (Key Games) -> Awards -> Retire?] -> Legacy-Karte`
 
-- **Spotlight-Spiele:** In der Regular Season gibt es Minigames, deren Ergebnis die Award-Chancen (MVP, All-Star, DPOY, Scoring Title) verschiebt. Playoff-Minigames zählen nur für Siegchance (Ring) und Finals MVP.
+- **Spotlight-Spiele:** In der Regular Season gibt es Minigames, deren Ergebnis die Award-Chancen (MVP, All-Star, DPOY, Scoring Title) verschiebt. Playoff-Minigames: gewonnen = Spiel gewonnen (100 %), sonst entscheidet die Sim; zählen außerdem für den Finals MVP.
 - **Spielstand:** Ein Run wird zu Beginn jeder Season automatisch im Browser gespeichert (ein Slot). Im Hauptmenü "Continue", im Run Optionen -> "Save & Quit".
 - **Seeds:** Eigener Seed über "Enter Seed" im Hauptmenü (oder `?seed=`), um mit Freunden zu vergleichen.
+- **Daily Seed:** 1x pro Tag spielbar. Archetyp, Stats, Draft und Rivale sind für alle gleich (keine Rerolls), nur Name und Aussehen sind frei.
+- **Free Agency:** Bei Vertragsende jedes Team der Liga wählbar: Superteam (Ringjagd, weniger Würfe), Contender, fairer Deal, viel Geld bei schwachen Teams; Großstadt = mehr Fame, Team des Rivalen = Rivale wird Mitspieler.
 - **Teamwahl:** Vor dem Draft das Team wählen: schwaches Team = früher Pick (mehr Talent), starkes Team = später Pick.
-- **Training:** Im Hauptmenü alle 8 Minigames frei üben, mit einem zufällig generierten Spieler.
+- **Training:** Im Hauptmenü alle 11 Minigames frei üben, mit einem zufällig generierten Spieler.
 - **Unlocks:** 6 Archetypen- und 7 Perk-Freischaltungen über Erfolge (erstes All-Star-Team, DPOY, MVP, Titel, 100-Punkte-Spiel, Legacy 1000+, ...).
 - **100-Punkte-Spiel:** extrem seltenes Event in der Regular Season.
 - **All-Star Weekend:** Einladung zum Contest je nach Archetyp (Dreier, Dunk, Skills, Defense); Siege bringen Fame und Legacy-Punkte.

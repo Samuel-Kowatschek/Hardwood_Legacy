@@ -27,7 +27,7 @@ export class CardScene extends Scene {
         this.phase = 'result';
         sfx.hit();
       }
-    } else if (this.res.update()) this.finish(this.chosen && this.chosen.arcade ? { arcade: this.chosen.arcade } : undefined);
+    } else if (this.res.update()) this.finish(this.chosen && (this.chosen.arcade || this.chosen.pickTeam) ? { arcade: this.chosen.arcade, pickTeam: !!this.chosen.pickTeam } : undefined);
   }
   draw(ctx) {
     drawStatus(ctx, this.run, this.t, t('status.' + this.phase0));
