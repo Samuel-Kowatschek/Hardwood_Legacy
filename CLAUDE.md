@@ -43,6 +43,7 @@ src/
   input.js       Tastatur/Touch/Maus, klickbare Regionen, Richtungs-Pad für Maus in Minigames
   helpModal.js   HTML-Popups: How to Play, Unlocks, Seed-Eingabe, Teilen
   version.js     Versionsnummer
+  config.js      Betreiber-Einstellungen: PayPal.me-Name für den Kaffee-/Trinkgeld-Button (leer = Button versteckt)
   i18n/          index.js (t()), en.js, de.js, bs.js + cards.<lang>.js (Kartentexte)
   scenes/        title, create, daily, teamselect, freeagency, card, sim, log (Playoffs), awards, perk, retire, legacy,
                  hof, options, practice, stats (Overlay), quit (Overlay), message, scene (Basisklasse)
@@ -162,7 +163,8 @@ src/
 - **Innenabstand:** Text nicht direkt an Rahmen (Doppelrahmen ist 3px breit) – mind. ~5px Luft lassen.
 - **Alle UI-Texte über `t('pfad', params)`** und in **en, de, bs** pflegen. Fehlende Keys fallen auf Englisch zurück. Tastennamen über `{ok}`, `{back}`, `{stats}` (Tastatur SPACE/ESC/S, Touch OK/BACK/STATS).
 - **Maus/Touch:** Klickbares beim Zeichnen mit `input.region(x, y, w, h, hover, click)` registrieren (Menu-Widget macht das selbst). Gibt es keine Regionen, wirkt ein Klick wie OK. Menüs bekommen oben links einen Zurück-Button über `header(ctx, title, right, onBack)`.
-- **Popups** (Hilfe, Unlocks, Seed, Teilen) sind HTML in `helpModal.js`; solange eines offen ist, ist `input.blocked` gesetzt.
+- **Kaffee-Button:** `#tip-bar` (Desktop-Leiste) und `#tip-pad` (Touch) in `index.html`, Popup `openTip()` in `helpModal.js` mit PayPal.me-Links (`paypal.com/paypalme/<name>/<betrag><währung>`), Beträge in `src/config.js`.
+- **Popups** (Hilfe, Unlocks, Seed, Teilen, Kaffee) sind HTML in `helpModal.js`; solange eines offen ist, ist `input.blocked` gesetzt.
 
 ## 7. Steuerung
 

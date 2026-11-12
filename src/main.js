@@ -11,7 +11,7 @@ import { save } from './systems/save.js';
 import { loadNameGen } from './names/nameGen.js';
 import { TitleScene } from './scenes/title.js';
 import { VERSION } from './version.js';
-import { openHelp, closeHelp } from './helpModal.js';
+import { openHelp, closeHelp, openTip, tipEnabled } from './helpModal.js';
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -141,6 +141,14 @@ async function boot() {
   const labelButtons = () => document.querySelectorAll('[data-label]').forEach(el => { el.textContent = t('ui.' + el.dataset.label); });
   labelButtons();
   window.addEventListener('langchange', labelButtons);
+  // Kaffee-Button (nur wenn in src/config.js ein PayPal-Name eingetragen ist)
+  for (const id of ['tip-bar', 'tip-pad']) {
+    const el = document.getElementById(id);
+    if (!el || !tipEnabled()) continue;
+    el.hidden = false;
+    el.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); });
+    el.addEventListener('click', e => { e.preventDefault(); el.blur(); if (!input.blocked) openTip(); });
+  }
 
   await initFont();
   text(ctx, 'LOADING...', 80, 68, C.WHITE, 'center');

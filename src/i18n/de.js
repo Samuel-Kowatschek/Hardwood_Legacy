@@ -8,7 +8,7 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { menu: 'HAUPTMENÜ (Q)', menuT: 'MENÜ', help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
+  ui: { tip: 'KAFFEE', tipT: 'TIP', menu: 'HAUPTMENÜ (Q)', menuT: 'MENÜ', help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYP', perk: 'PERK', locked: 'GESPERRT', how: 'So schaltest du es frei:', count: '{n}/{m} FREIGESCHALTET' },
   practice: { title: 'TRAINING', reroll: 'NEUER SPIELER', situation: 'TRAINING', last: 'ZULETZT {p}%' },
   share: { title: 'LEGACY TEILEN', copy: 'TEXT KOPIEREN', copied: 'KOPIERT!', instagram: 'INSTAGRAM', instaHint: 'Karte gespeichert. Poste sie auf Instagram!', more: 'MEHR...', png: 'KARTE LADEN', text: 'Ich habe meine Karriere als {tier} mit {score} Legacy-Punkten in Hardwood Legacy beendet! Schaffst du mehr? Seed {s}' },
@@ -34,6 +34,7 @@ export default {
     mini: 'MINIGAME', need: 'BRAUCHT {n}%', noChange: 'KEINE AENDERUNG', pickTeam: 'TEAM WAEHLEN (CHANCEN IN LISTE)',
     simLine1: 'ALLSTAR {a}  MVP {m}  DPOY {d}', simLine2: 'TOPSCOR {s}  PLAYOFF {p}  RING {r}', simLine3: '{stats} = ALLE CHANCEN (TESTMODUS)',
   },
+  tip: { title: 'KAFFEE SPENDIEREN', text: 'Gefällt dir Hardwood Legacy? Das Spiel ist gratis und ohne Werbung. Wenn du den Creator unterstützen willst, hilft ein Kaffee sehr!', any: 'ANDERER BETRAG', note: 'Öffnet PayPal in einem neuen Tab. Danke!' },
   title: {
     continue: 'WEITER S{s}', enterSeed: 'SEED EINGEBEN', unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', dailyDone: 'DAILY: FERTIG', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
     tagline: 'EIN RUN = EINE KARRIERE', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} ZURÜCK  M TON',

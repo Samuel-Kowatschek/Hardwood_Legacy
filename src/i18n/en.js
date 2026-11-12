@@ -8,7 +8,7 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { menu: 'MAIN MENU (Q)', menuT: 'MENU', help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
+  ui: { tip: 'COFFEE', tipT: 'TIP', menu: 'MAIN MENU (Q)', menuT: 'MENU', help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYPE', perk: 'PERK', locked: 'LOCKED', how: 'How to unlock:', count: '{n}/{m} UNLOCKED' },
   practice: { title: 'PRACTICE', reroll: 'NEW PLAYER', situation: 'PRACTICE', last: 'LAST {p}%' },
   share: { title: 'SHARE YOUR LEGACY', copy: 'COPY TEXT', copied: 'COPIED!', instagram: 'INSTAGRAM', instaHint: 'Card saved. Post it on Instagram!', more: 'MORE...', png: 'DOWNLOAD CARD', text: 'I retired as {tier} with a legacy score of {score} in Hardwood Legacy! Can you beat it? Seed {s}' },
@@ -34,6 +34,7 @@ export default {
     mini: 'MINIGAME', need: 'NEED {n}%', noChange: 'NO ODDS CHANGE', pickTeam: 'PICK ANY TEAM (ODDS IN LIST)',
     simLine1: 'ALLSTAR {a}  MVP {m}  DPOY {d}', simLine2: 'SCORING {s}  PLAYOFF {p}  RING {r}', simLine3: '{stats} = ALL ODDS (TEST MODE)',
   },
+  tip: { title: 'BUY ME A COFFEE', text: 'Enjoying Hardwood Legacy? It is free and has no ads. If you want to support the creator, a coffee helps a lot!', any: 'OTHER AMOUNT', note: 'Opens PayPal in a new tab. Thank you!' },
   title: {
     continue: 'CONTINUE S{s}', enterSeed: 'ENTER SEED', unlocks: 'UNLOCKS', practice: 'PRACTICE', newRun: 'NEW RUN', dailyDone: 'DAILY: DONE', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
     tagline: 'ONE RUN = ONE CAREER', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} BACK  M SOUND',

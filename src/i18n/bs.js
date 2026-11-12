@@ -8,7 +8,7 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { menu: 'GLAVNI MENI (Q)', menuT: 'MENI', help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
+  ui: { tip: 'KAFA', tipT: 'TIP', menu: 'GLAVNI MENI (Q)', menuT: 'MENI', help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
   unlocks: { title: 'OTKLJUČANO', archetype: 'ARHETIP', perk: 'PERK', locked: 'ZAKLJUČANO', how: 'Kako otključati:', count: '{n}/{m} OTKLJUČANO' },
   practice: { title: 'TRENING', reroll: 'NOVI IGRAČ', situation: 'TRENING', last: 'ZADNJE {p}%' },
   share: { title: 'PODIJELI LEGACY', copy: 'KOPIRAJ TEKST', copied: 'KOPIRANO!', instagram: 'INSTAGRAM', instaHint: 'Kartica sačuvana. Objavi je na Instagramu!', more: 'VIŠE...', png: 'PREUZMI KARTICU', text: 'Završio sam karijeru kao {tier} sa {score} legacy poena u Hardwood Legacy! Možeš li bolje? Seed {s}' },
@@ -34,6 +34,7 @@ export default {
     mini: 'MINIIGRA', need: 'TREBA {n}%', noChange: 'BEZ PROMJENE', pickTeam: 'IZABERI TIM (ŠANSE U LISTI)',
     simLine1: 'ALLSTAR {a}  MVP {m}  DPOY {d}', simLine2: 'POENI {s}  PLEJOF {p}  PRSTEN {r}', simLine3: '{stats} = SVE ŠANSE (TEST MOD)',
   },
+  tip: { title: 'ČASTI ME KAFOM', text: 'Sviđa ti se Hardwood Legacy? Igra je besplatna i bez reklama. Ako želiš podržati autora, kafa puno znači!', any: 'DRUGI IZNOS', note: 'Otvara PayPal u novom tabu. Hvala!' },
   title: {
     continue: 'NASTAVI S{s}', enterSeed: 'UNESI SEED', unlocks: 'OTKLJUČANO', practice: 'TRENING', newRun: 'NOVA KARIJERA', dailyDone: 'DNEVNI: GOTOVO', daily: 'DNEVNI SEED', seed: 'SEED {s}', hof: 'KUĆA SLAVNIH', help: 'KAKO SE IGRA', options: 'POSTAVKE',
     tagline: 'JEDNA IGRA = JEDNA KARIJERA', record: 'IGRE {n}  REKORD {b}', hint: '{ok} OK  {back} NAZAD  M ZVUK',

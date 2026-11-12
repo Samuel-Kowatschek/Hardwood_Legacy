@@ -40,6 +40,14 @@
   .bbtn { font: 8px 'Press Start 2P', monospace; color: var(--white); background: var(--bg); border: 2px solid var(--white);
     padding: 7px 9px; cursor: pointer; box-shadow: 2px 2px 0 var(--dark); }
   .bbtn:hover, .bbtn.on { background: var(--orange); }
+  /* Kaffee-/Trinkgeld-Button */
+  .tip { border-color: var(--orange) !important; display: inline-flex; align-items: center; gap: 6px; }
+  .tip[hidden] { display: none !important; }
+  .cup { width: 14px; height: 12px; shape-rendering: crispEdges; flex: none; }
+  .meta .tip { padding: 4px 7px; }
+  .tip-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .tip-grid a, .tip-any { display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+  .tip-any { margin-top: 8px; }
   @media (pointer: coarse) { #bar { display: none; } }
   /* How-to-Play-Popup */
   #help { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center;
@@ -104,6 +112,7 @@
     <button class="bbtn" data-btn="options" data-label="options">OPTIONS</button>
     <button class="bbtn" data-btn="stats" data-label="stats">STATS</button>
     <button class="bbtn" data-btn="mute" data-label="sound">SOUND</button>
+    <button class="bbtn tip" id="tip-bar" hidden><svg class="cup" viewBox="0 0 9 8" aria-hidden="true"><path d="M2 0h1v1H2zM4 0h1v1H4zM6 0h1v1H6zM0 2h7v4H0zM7 3h2v2H7zM1 6h5v1H1zM0 7h7v1H0z" fill="currentColor"/></svg><span data-label="tip">COFFEE</span></button>
   </div>
   <div id="pad">
     <div class="dpad">
@@ -111,7 +120,7 @@
       <div class="btn" data-btn="right">&#9654;</div><div class="btn" data-btn="down">&#9660;</div>
     </div>
     <div class="ab"><div class="btn round" data-btn="b">BACK</div><div class="btn round" data-btn="a">OK</div></div>
-    <div class="meta"><div class="btn" data-btn="menu" data-label="menuT">MENU</div><div class="btn" data-btn="help" data-label="helpT">HELP</div><div class="btn" data-btn="options" data-label="optionsT">OPTIONS</div><div class="btn" data-btn="stats" data-label="statsT">STATS</div><div class="btn" data-btn="mute" data-label="soundT">SOUND</div></div>
+    <div class="meta"><div class="btn" data-btn="menu" data-label="menuT">MENU</div><div class="btn" data-btn="help" data-label="helpT">HELP</div><div class="btn" data-btn="options" data-label="optionsT">OPTIONS</div><div class="btn" data-btn="stats" data-label="statsT">STATS</div><div class="btn" data-btn="mute" data-label="soundT">SOUND</div><div class="btn tip" id="tip-pad" hidden aria-label="Tip"><svg class="cup" viewBox="0 0 9 8" aria-hidden="true"><path d="M2 0h1v1H2zM4 0h1v1H4zM6 0h1v1H6zM0 2h7v4H0zM7 3h2v2H7zM1 6h5v1H1zM0 7h7v1H0z" fill="currentColor"/></svg></div></div>
   </div>
   <script type="module" src="src/main.js"></script>
 </body>

@@ -5,6 +5,7 @@ import { sfx } from './systems/audio.js';
 import { save } from './systems/save.js';
 import { ARCHETYPES } from './data/archetypes.js';
 import { PERKS } from './data/perks.js';
+import { TIP } from './config.js';
 
 let el = null;
 
@@ -166,4 +167,21 @@ export function openSeedInput(onStart) {
   inp.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') go(); if (e.key === 'Escape') closeHelp(); });
   root.querySelector('#seed-go').addEventListener('click', go);
   setTimeout(() => inp.focus(), 0);
+}
+
+// Trinkgeld: PayPal.me-Links mit festen Betraegen (oeffnen PayPal in neuem Tab)
+const CUP = '<svg class="cup" viewBox="0 0 9 8" aria-hidden="true"><path d="M2 0h1v1H2zM4 0h1v1H4zM6 0h1v1H6zM0 2h7v4H0zM7 3h2v2H7zM1 6h5v1H1zM0 7h7v1H0z" fill="currentColor"/></svg>';
+export const tipEnabled = () => !!TIP.paypal;
+export function openTip() {
+  if (!tipEnabled()) return;
+  const base = 'https://www.paypal.com/paypalme/' + encodeURIComponent(TIP.paypal);
+  const link = (href, label) => `<a class="share-btn" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${CUP}${esc(label)}</a>`;
+  const body = `
+    <p>${esc(t('tip.text'))}</p>
+    <div class="tip-grid">${TIP.amounts.map(a => link(`${base}/${a}${TIP.currency}`, `${a} ${TIP.currency}`)).join('')}</div>
+    ${link(base, t('tip.any')).replace('class="share-btn"', 'class="share-btn tip-any"')}
+    <p class="share-note">${esc(t('tip.note'))}</p>`;
+  const root = openModal(t('tip.title'), body);
+  if (!root) return;
+  root.querySelectorAll('a').forEach(a => a.addEventListener('click', () => sfx.select()));
 }
