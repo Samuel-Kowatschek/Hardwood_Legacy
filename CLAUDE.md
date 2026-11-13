@@ -19,7 +19,8 @@ python3 -m http.server 8000      # ES Modules + fetch brauchen einen HTTP-Server
 Dann `http://localhost:8000`. Eigener Seed: `?seed=ABC123`.
 
 - **Kein Build, kein npm.** Alles, was im Repo liegt, wird so ausgeliefert.
-- **Hosting:** Cloudflare Pages, deployt automatisch von Branch `main` (Build-Command leer, Output `/`). `.nojekyll` ist noch von GitHub Pages vorhanden.
+- **Hosting:** Cloudflare, deployt automatisch von Branch `main` (Build-Command leer, Output `/`). Domain: `hardwood-legacy.samus-arcade.com`. `.nojekyll` ist noch von GitHub Pages vorhanden.
+- **Domain-Umzug:** `src/migrate.js` (normales Script, im `<head>` zuerst geladen) leitet die alte Domain `hardwood-legacy.kowatschek-s.workers.dev` auf die neue weiter und nimmt die `hwl_*`-Spielstände im Link-Anker (`#hwlmigrate=`) mit; die neue Domain führt sie idempotent zusammen. Die alte Domain muss dafür weiter dieselbe Version ausliefern.
 - **Workflow:** Entwickelt wird auf einem Feature-Branch (bisher `claude/gallant-fermi-p97hzi`), Merge nach `main` per Pull Request. Nicht direkt auf `main` committen.
 - **Version:** Bei jedem Release `src/version.js` hochzählen (z. B. `v0.8.3` -> `v0.8.4`).
 - **Tests:** Es gibt keine Test-Suite. Geprüft wird mit
@@ -43,6 +44,7 @@ src/
   input.js       Tastatur/Touch/Maus, klickbare Regionen, Richtungs-Pad für Maus in Minigames
   helpModal.js   HTML-Popups: How to Play, Unlocks, Seed-Eingabe, Teilen
   version.js     Versionsnummer
+  migrate.js     Spielstände von der alten Domain übernehmen (Weiterleitung mit Daten im Link-Anker)
   config.js      Betreiber-Einstellungen: PayPal.me-Name für den Kaffee-/Trinkgeld-Button (leer = Button versteckt)
   i18n/          index.js (t()), en.js, de.js, bs.js + cards.<lang>.js (Kartentexte)
   scenes/        title, create, daily, teamselect, freeagency, card, sim, log (Playoffs), awards, perk, retire, legacy,
