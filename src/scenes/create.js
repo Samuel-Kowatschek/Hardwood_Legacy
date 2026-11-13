@@ -14,7 +14,7 @@ const SK = ['sho', 'pla', 'def', 'ath', 'clu'];
 const VIS = 5; // sichtbare Archetypen (Liste scrollt)
 
 export class CreateScene extends Scene {
-  constructor(seed, daily = false) { super(); this.seed = seed; this.daily = daily; this.noStats = true; }
+  constructor(seed, daily = false, test = false) { super(); this.seed = seed; this.daily = daily; this.test = test; this.noStats = true; }
   enter(game) {
     this.game = game;
     if (this.name) return; // Rueckkehr aus der Teamwahl
@@ -23,7 +23,7 @@ export class CreateScene extends Scene {
     this.rerolls = this.daily ? 3 : Infinity;
     this.rollN = 0;
     this.roll();
-    this.locked = ARCHETYPES.map(a => !!a.unlock && !a.unlock.test(this.meta) && !this.meta.unlocked.includes(a.id));
+    this.locked = ARCHETYPES.map(a => !this.test && !!a.unlock && !a.unlock.test(this.meta) && !this.meta.unlocked.includes(a.id));
     this.i = 0; this.arch = 0; this.msg = ''; this.scroll = 0;
   }
   roll() {
@@ -53,7 +53,7 @@ export class CreateScene extends Scene {
     if (this.locked[this.i]) { sfx.back(); this.msg = t('create.locked', { x: t('unlock.' + ARCHETYPES[this.i].unlock.key) }); return; }
     sfx.select();
     this.game.set(new TeamSelectScene(this, {
-      seed: this.seed, daily: this.daily, archId: ARCHETYPES[this.i].id, look: this.look,
+      seed: this.seed, daily: this.daily, test: this.test, archId: ARCHETYPES[this.i].id, look: this.look,
       name: { first: this.name.first, last: this.name.last },
     }));
   }
@@ -68,7 +68,7 @@ export class CreateScene extends Scene {
     if (fits(this.name.last)) text(ctx, this.name.last, 48, 26, C.ORANGE); else tiny(ctx, this.name.last, 48, 27, C.ORANGE);
     tiny(ctx, t('create.pos', { p: lk ? '?' : a.pos }), 48, 37);
     tiny(ctx, lk ? (this.msg || t('create.locked', { x: t('unlock.' + a.unlock.key) })).slice(0, 27) : t('arch.' + a.id).slice(0, 27), 48, 45, lk ? C.ORANGE : C.WHITE);
-    tiny(ctx, (this.daily ? t('create.daily', { s: this.seed }) : t('create.seed', { s: this.seed })), 48, 53, C.WHITE);
+    tiny(ctx, this.test ? t('test.create', { s: this.seed }) : this.daily ? t('create.daily', { s: this.seed }) : t('create.seed', { s: this.seed }), 48, 53, this.test ? C.ORANGE : C.WHITE);
     tiny(ctx, t('create.start'), 48, 61, C.ORANGE);
 
     box(ctx, 0, 72, 160, 72);

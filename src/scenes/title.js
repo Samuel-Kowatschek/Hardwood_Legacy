@@ -8,6 +8,7 @@ import { randomSeedString, dailySeedString, RNG } from '../systems/rng.js';
 import { drawSprite, idleFrame, rollLook } from '../sprites/spriteGen.js';
 import { t } from '../i18n/index.js';
 import { CreateScene } from './create.js';
+import { TEST_SEED } from '../systems/testmode.js';
 import { DailyCreateScene, dailyDone } from './daily.js';
 import { HofScene } from './hof.js';
 import { PracticeScene } from './practice.js';
@@ -41,6 +42,7 @@ export class TitleScene extends Scene {
   }
   // Wer den heutigen Daily-Seed eintippt, spielt den Daily (inkl. 1x-pro-Tag-Regel)
   startSeed(game, seed) {
+    if (seed === TEST_SEED) return game.set(new CreateScene(randomSeedString(), false, true));
     if (seed !== dailySeedString()) return game.set(new CreateScene(seed));
     if (dailyDone(seed)) { sfx.back(); return; }
     game.set(new DailyCreateScene(seed));

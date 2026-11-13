@@ -8,7 +8,7 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { menu: 'HAUPTMENÜ (Q)', menuT: 'MENÜ', help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
+  ui: { tip: 'KAFFEE', tipT: 'TIP', menu: 'HAUPTMENÜ (Q)', menuT: 'MENÜ', help: 'HILFE (H)', options: 'OPTIONEN (O)', stats: 'STATS (S)', sound: 'TON (M)', helpT: 'HILFE', optionsT: 'OPTIONEN', statsT: 'STATS', soundT: 'TON' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYP', perk: 'PERK', locked: 'GESPERRT', how: 'So schaltest du es frei:', count: '{n}/{m} FREIGESCHALTET' },
   practice: { title: 'TRAINING', reroll: 'NEUER SPIELER', situation: 'TRAINING', last: 'ZULETZT {p}%' },
   share: { title: 'LEGACY TEILEN', copy: 'TEXT KOPIEREN', copied: 'KOPIERT!', instagram: 'INSTAGRAM', instaHint: 'Karte gespeichert. Poste sie auf Instagram!', more: 'MEHR...', png: 'KARTE LADEN', text: 'Ich habe meine Karriere als {tier} mit {score} Legacy-Punkten in Hardwood Legacy beendet! Schaffst du mehr? Seed {s}' },
@@ -23,6 +23,18 @@ export default {
   },
   daily: { title: 'DAILY SEED', start: 'START', look: 'NEUER LOOK', name: 'NAME ÄNDERN', pick: 'PICK #{n}  OVR {o}', fixed: 'GLEICHER SPIELER FÜR ALLE' },
   namein: { title: 'DEIN NAME', text: 'Vor- und Nachname (je max. 12 Buchstaben).', ok: 'OK', short: 'Bitte beide Namen eingeben.' },
+  test: {
+    badge: 'TESTMODUS', create: 'TESTMODUS {s}', nav: '< > SEITE {i}/{n}  {stats} = ZU',
+    p: { odds: 'CHANCEN (SCHAETZUNG)', league: 'LIGA', decision: 'ENTSCHEIDUNG' },
+    o: { allStar: 'ALLSTAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'TOPSCOR', roy: 'ROOKIE', playoffs: 'PLAYOFF', ring: 'RING', fmvp: 'FMVP' },
+    proj: 'PROG {w}-{l} RANG {r} PPG {ppg} SP {gp}', hidden: 'POT {pot} VERL {inj} STAERKE {pw}/{avg}',
+    bonus: 'MINIGAMES AS{a} MVP{m} DP{d} PKT{s}', series: 'SERIEN {x}', legacy: 'LEGACY JETZT {n}  VS BESTE {g}',
+    bars: 'KI-MESSLATTEN (DU)', bar1: 'MVP {m}  ALLSTAR {a}  (OVR {o})', bar2: 'DPOY {d} (DEF {def})  PKT {s} ({ppg})',
+    rows: 'POWER RANKING   * = RIVALE', risk: 'RISIKO', good: 'SIEG FX', bad: 'NIEDERL FX', ifRisk: 'BEI RISIKO:', ifGood: 'SIEG:', ifBad: 'NIEDERL:',
+    mini: 'MINIGAME', need: 'BRAUCHT {n}%', noChange: 'KEINE AENDERUNG', pickTeam: 'TEAM WAEHLEN (CHANCEN IN LISTE)',
+    simLine1: 'ALLSTAR {a}  MVP {m}  DPOY {d}', simLine2: 'TOPSCOR {s}  PLAYOFF {p}  RING {r}', simLine3: '{stats} = ALLE CHANCEN (TESTMODUS)',
+  },
+  tip: { title: 'KAFFEE SPENDIEREN', text: 'Gefällt dir Hardwood Legacy? Das Spiel ist gratis und ohne Werbung. Wenn du den Creator unterstützen willst, hilft ein Kaffee sehr!', any: 'ANDERER BETRAG', note: 'Öffnet PayPal in einem neuen Tab. Danke!' },
   title: {
     continue: 'WEITER S{s}', enterSeed: 'SEED EINGEBEN', unlocks: 'UNLOCKS', practice: 'TRAINING', newRun: 'NEUER RUN', dailyDone: 'DAILY: FERTIG', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'SO GEHT\'S', options: 'OPTIONEN',
     tagline: 'EIN RUN = EINE KARRIERE', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} ZURÜCK  M TON',
@@ -113,6 +125,7 @@ export default {
     titleReg: 'SAISON-AWARDS', titlePo: 'POSTSEASON', seedRow: '{w}-{l}  PLATZ {r}', nextPO: 'Jetzt kommen die Playoffs!', nextNone: 'Keine Playoffs dieses Jahr.',
     title: 'SEASON-BILANZ', none: 'KEINE AWARDS', aging: 'Alter {age}. OVR {ovr} ({d}), Körper {db}.',
     reached: { LOTTERY: 'LOTTERY', 'PLAY-IN': 'PLAY-IN', R1: '1. RUNDE', R2: '2. RUNDE', CF: 'CONF FINALS', FIN: 'FINALS', CHAMP: 'CHAMPION' },
+    royShort: 'ROY',
     roy: 'ROOKIE OF THE YEAR', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE',
     ring: 'CHAMPION!', fmvp: 'FINALS MVP', teammate: 'MITSPIELER',
   },
@@ -153,7 +166,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Franchise Legend', 'Hall of Famer', 'GOAT-Debatte'],
 
   arcade: {
-    blockN: 'BLOCK {i}/{n}', blocks: 'BLOCKS {n}', blockHint: '{ok} = SPRINGEN', blockPump: 'PUMPFAKE! WARTEN...', block_block: 'GEBLOCKT!', block_perfect: 'WEGGEHAUEN!', block_early: 'ZU FRÜH', block_late: 'ZU SPÄT', block_nojump: 'KEIN SPRUNG', blockRes: '{n}/{m} Würfe geblockt!',
+    blockN: 'BLOCK {i}/{n}', blocks: 'BLOCKS {n}', blockHint: '{ok} IN DER ZONE', blockPump: 'PUMPFAKE! WARTEN...', block_block: 'GEBLOCKT!', block_perfect: 'WEGGEHAUEN!', block_early: 'ZU FRÜH', block_late: 'ZU SPÄT', block_nojump: 'KEIN SPRUNG', blockRes: '{n}/{m} Würfe geblockt!',
     dkRound: 'DUNK {i}/{n}', dkTotal: 'GESAMT {s}', dkPts: 'PKT', dkHint: 'IN DER ZONE STOPPEN', dkScore: 'WERTUNG {s}', dkPerfect: 'PERFEKT!', dkMade: 'GEDUNKT!', dkMiss: 'DANEBEN!', dkRes: 'Gesamtwertung: {s} von {m}!',
     dunks: { tomahawk: 'Tomahawk', windmill: 'Windmill', legs: 'Durch die Beine', spin: '360er', line: 'Von der Freiwurflinie' },
     points: 'PUNKTE {n}',
@@ -162,7 +175,7 @@ export default {
     dunkNow: 'JETZT DUNKEN!', getReady: 'NICHT MEHR HÄMMERN - GLEICH TIMING',
     names: { block: 'RIM PROTECTOR', dunkc: 'DUNK CONTEST', post: 'STANDING DUNK', shot: 'SHOT-METER', clutch: 'BUZZER-BEATER', fast: 'FAST-BREAK', defense: 'DEFENSE-STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREIWÜRFE' },
     intro: {
-      block: 'RIM PROTECTOR! Angreifer springen zum Korb. Drück {ok}, sodass dein Sprung beim Wurf am höchsten ist. Zu früh oder zu spät = Korb. Achtung vor Pumpfakes!',
+      block: 'RIM PROTECTOR! Der weiße Kreis wird kleiner. Drück {ok}, wenn er in der orangen Zone ist, und du blockst den Wurf. Pumpfakes machen den Kreis nur langsamer.',
       dunkc: 'Wähle einen Dunk (schwerer = mehr Punkte) und stoppe den Marker in der Zone. Kein Verteidiger, kein Block: Er geht rein oder daneben. 3 Runden, 5 Judges.',
       post: 'STANDING DUNK! {ok} halten zum Aufladen, in der orangen Zone loslassen. Springt der Verteidiger: warten oder Weiß treffen für ein Poster!',
       shot3: '{n} Würfe von draußen. Orange Zone = Treffer. Weiße Mitte = MONEYBALL, doppelte Punkte!',
@@ -208,7 +221,7 @@ export default {
       { t: 'SKILLS', b: 'WURF, PASS, DEF, ATH, CLUTCH.\nDEIN ARCHETYP GEWICHTET SIE ZU DEINEM OVR (GESAMTWERT).\n\nSKILLS VERÄNDERN AUCH DIE MINIGAMES: WURF = GRÖSSERE WURFZONE, CLUTCH = MEHR ZEIT, DEF = LÄNGERE FENSTER, ATH = LEICHTERE DUNKS UND BOARDS, PASS = LÄNGERE PASSFENSTER.\n\nMIT {stats} SIEHST DU JEDERZEIT ALLE STATS.' },
       { t: 'KARTEN', b: 'ENTSCHEIDUNGS- UND EVENT-KARTEN HABEN 2-3 OPTIONEN MIT HINWEIS:\n+ STEIGT, - SINKT,\n? UNKLAR, RISIKO = KANN WEHTUN.\n\nMANCHE OPTIONEN STARTEN DANACH EIN MINISPIEL (MARKIERT MIT MINISPIEL). WER ABLEHNT, SPIELT ES NICHT.\n\nNICHT JEDE FOLGE WIRD ANGEZEIGT. EIN TEAMWECHSEL SETZT DIE CHEMIE ZURÜCK.' },
       { t: 'KEY GAMES', b: 'MANCHE SPIELE SPIELST DU LIVE (5-15 SEK.).\n\nREGULAR SEASON: SPOTLIGHT- UND MILESTONE-SPIELE. GUT GESPIELT STEIGEN DEINE CHANCEN AUF MVP, ALL-STAR, DPOY UND SCORING TITLE, SCHLECHT GESPIELT SINKEN SIE.\n\nPLAYOFFS: PLAY-IN, CONF FINALS UND FINALS ÄNDERN DIE SIEGCHANCE (RING) UND ZÄHLEN FÜR DEN FINALS MVP.\n\nBUZZER-BEATER IN DER SERIE: TREFFER = SPIEL GEWONNEN, FEHLWURF = SERIE VERLOREN.\n\nWEISSE MITTE IM METER = AND ONE.' },
-      { t: 'MINIGAMES', b: 'SHOT-METER - TIMING BEIM WURF\nBUZZER-BEATER - EIN WURF, FAKES\nFAST-BREAK - HÄMMERN, DANN DUNK\nDEFENSE-STOP - PFEILE IM TAKT\nDRIVE - VERTEIDIGERN AUSWEICHEN\nREBOUND - POSITION UND SPRUNG\nPLAYMAKER - FINDE DEN FREIEN MANN\nFREIWÜRFE - ZIEL RUHIG HALTEN\nSTANDING DUNK - AUFLADEN, BLOCK AUSTRICKSEN\nRIM PROTECTOR - BLOCKS TIMEN\nDUNK CONTEST - DUNK WÄHLEN, SCHWERER = MEHR PUNKTE\n\nDEIN ARCHETYP BESTIMMT, WAS AM HÄUFIGSTEN KOMMT.' },
+      { t: 'MINIGAMES', b: 'SHOT-METER - TIMING BEIM WURF\nBUZZER-BEATER - EIN WURF, FAKES\nFAST-BREAK - HÄMMERN, DANN DUNK\nDEFENSE-STOP - PFEILE IM TAKT\nDRIVE - VERTEIDIGERN AUSWEICHEN\nREBOUND - POSITION UND SPRUNG\nPLAYMAKER - FINDE DEN FREIEN MANN\nFREIWÜRFE - ZIEL RUHIG HALTEN\nSTANDING DUNK - AUFLADEN, BLOCK AUSTRICKSEN\nRIM PROTECTOR - KREIS IN DER ZONE\nDUNK CONTEST - DUNK WÄHLEN, SCHWERER = MEHR PUNKTE\n\nDEIN ARCHETYP BESTIMMT, WAS AM HÄUFIGSTEN KOMMT.' },
       { t: 'PERKS', b: 'NACH SEASON 1, 3, 6, 9 UND 12 WÄHLST DU 1 VON 3 PERKS. PERKS WIRKEN AUF SIM UND MINIGAMES (Z.B. DEEP THREAT = GRÖSSERE WURFZONE).\n\nSYNERGIEN:\nDEEP THREAT + SPACING\nDEFENSIVE ANCHOR + REBOUNDS\nSIGNATURE MOVE + ICE VEINS\nSPRING LEGS + PRO SNEAKERS\nCOURT VISION + HANDLES' },
       { t: 'RETIRE-GAMBLE', b: 'DEIN SCORE BLEIBT VERDECKT, BIS DU AUFHÖRST. DER MULTIPLIKATOR WIRD ANGEZEIGT:\n\nWENT OUT ON TOP +25%: RETIRE DIREKT NACH RING, MVP ODER FINALS MVP.\nLAST DANCE +15%: RING IN DER LETZTEN SEASON.\nOVERSTAYED: SCHWACHE SEASONS IN FOLGE KOSTEN 10%, 20%, 30%...\n\nMAXIMAL 15 SEASONS.' },
       { t: 'LEGACY-SCORE', b: 'RING 100  MVP 60  FINALS MVP 40\nDPOY 25  SCORING TITLE 20\nALL-STAR 8  MEILENSTEIN 15  ROY 10\n+ ONE-TEAM-BONUS (AB 5 SEASONS)\n+ FAME-BONUS\n- RINGE NACH SUPERTEAM-PAY-CUT ZÄHLEN WENIGER\n\nX RETIRE-MULTIPLIKATOR = LEGACY-SCORE.\n\nDAS PERZENTIL AM ENDE IST EINE SCHÄTZUNG GG. SIMULIERTE KARRIEREN.' },

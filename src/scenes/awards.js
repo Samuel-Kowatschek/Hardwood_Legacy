@@ -15,7 +15,7 @@ export class AwardsScene extends Scene {
     const rows = [{ s: first, c: C.WHITE }];
     for (const a of list) {
       if (a.won) rows.push({ s: t('awards.' + a.id), c: C.ORANGE, ball: true, sfx: ['ring', 'mvp', 'fmvp'].includes(a.id) ? 'fanfare' : 'hit' });
-      else rows.push({ s: `${t('awards.' + a.id)}: ${a.winner === '@teammate' ? t('awards.teammate') : a.winner}`, c: C.WHITE });
+      else rows.push({ s: `${t(a.id === 'roy' ? 'awards.royShort' : 'awards.' + a.id)}: ${a.winner === '@teammate' ? t('awards.teammate') : a.winner}`, c: C.WHITE });
     }
     for (const m of newMs) rows.push({ s: t('milestone.' + m), c: C.ORANGE, ball: true, sfx: 'hit' });
     if (!rows.some(r => r.ball)) rows.push({ s: t('awards.none'), c: C.WHITE });

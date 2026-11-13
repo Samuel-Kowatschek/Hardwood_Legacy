@@ -8,7 +8,7 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { menu: 'GLAVNI MENI (Q)', menuT: 'MENI', help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
+  ui: { tip: 'KAFA', tipT: 'TIP', menu: 'GLAVNI MENI (Q)', menuT: 'MENI', help: 'POMOĆ (H)', options: 'POSTAVKE (O)', stats: 'STATS (S)', sound: 'ZVUK (M)', helpT: 'POMOĆ', optionsT: 'POSTAVKE', statsT: 'STATS', soundT: 'ZVUK' },
   unlocks: { title: 'OTKLJUČANO', archetype: 'ARHETIP', perk: 'PERK', locked: 'ZAKLJUČANO', how: 'Kako otključati:', count: '{n}/{m} OTKLJUČANO' },
   practice: { title: 'TRENING', reroll: 'NOVI IGRAČ', situation: 'TRENING', last: 'ZADNJE {p}%' },
   share: { title: 'PODIJELI LEGACY', copy: 'KOPIRAJ TEKST', copied: 'KOPIRANO!', instagram: 'INSTAGRAM', instaHint: 'Kartica sačuvana. Objavi je na Instagramu!', more: 'VIŠE...', png: 'PREUZMI KARTICU', text: 'Završio sam karijeru kao {tier} sa {score} legacy poena u Hardwood Legacy! Možeš li bolje? Seed {s}' },
@@ -23,6 +23,18 @@ export default {
   },
   daily: { title: 'DNEVNI SEED', start: 'START', look: 'NOVI IZGLED', name: 'UREDI IME', pick: 'PIK #{n}  OVR {o}', fixed: 'ISTI IGRAČ ZA SVE' },
   namein: { title: 'TVOJE IME', text: 'Ime i prezime (max. 12 slova svako).', ok: 'OK', short: 'Unesi oba imena.' },
+  test: {
+    badge: 'TEST MOD', create: 'TEST MOD {s}', nav: '< > STRANA {i}/{n}  {stats} = ZATVORI',
+    p: { odds: 'ŠANSE (PROCJENA)', league: 'LIGA', decision: 'ODLUKA' },
+    o: { allStar: 'ALLSTAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'POENI', roy: 'ROOKIE', playoffs: 'PLEJOF', ring: 'PRSTEN', fmvp: 'FMVP' },
+    proj: 'PROJ {w}-{l} RANG {r} PPG {ppg} UT {gp}', hidden: 'POT {pot} POVR {inj} SNAGA {pw}/{avg}',
+    bonus: 'MINIIGRE AS{a} MVP{m} DP{d} PTS{s}', series: 'SERIJE {x}', legacy: 'LEGACY SAD {n}  VS NAJB {g}',
+    bars: 'AI GRANICE (TI)', bar1: 'MVP {m}  ALLSTAR {a}  (OVR {o})', bar2: 'DPOY {d} (DEF {def})  PTS {s} ({ppg})',
+    rows: 'POWER RANKING   * = RIVAL', risk: 'RIZIK', good: 'POBJEDA FX', bad: 'PORAZ FX', ifRisk: 'AKO RIZIK:', ifGood: 'POBJEDA:', ifBad: 'PORAZ:',
+    mini: 'MINIIGRA', need: 'TREBA {n}%', noChange: 'BEZ PROMJENE', pickTeam: 'IZABERI TIM (ŠANSE U LISTI)',
+    simLine1: 'ALLSTAR {a}  MVP {m}  DPOY {d}', simLine2: 'POENI {s}  PLEJOF {p}  PRSTEN {r}', simLine3: '{stats} = SVE ŠANSE (TEST MOD)',
+  },
+  tip: { title: 'ČASTI ME KAFOM', text: 'Sviđa ti se Hardwood Legacy? Igra je besplatna i bez reklama. Ako želiš podržati autora, kafa puno znači!', any: 'DRUGI IZNOS', note: 'Otvara PayPal u novom tabu. Hvala!' },
   title: {
     continue: 'NASTAVI S{s}', enterSeed: 'UNESI SEED', unlocks: 'OTKLJUČANO', practice: 'TRENING', newRun: 'NOVA KARIJERA', dailyDone: 'DNEVNI: GOTOVO', daily: 'DNEVNI SEED', seed: 'SEED {s}', hof: 'KUĆA SLAVNIH', help: 'KAKO SE IGRA', options: 'POSTAVKE',
     tagline: 'JEDNA IGRA = JEDNA KARIJERA', record: 'IGRE {n}  REKORD {b}', hint: '{ok} OK  {back} NAZAD  M ZVUK',
@@ -113,6 +125,7 @@ export default {
     titleReg: 'NAGRADE SEZONE', titlePo: 'POSTSEZONA', seedRow: '{w}-{l}  MJESTO {r}', nextPO: 'Sad slijedi playoff!', nextNone: 'Ove godine bez playoffa.',
     title: 'BILANS SEZONE', none: 'BEZ NAGRADA', aging: 'Dob {age}. OVR {ovr} ({d}), tijelo {db}.',
     reached: { LOTTERY: 'LUTRIJA', 'PLAY-IN': 'PLAY-IN', R1: '1. RUNDA', R2: '2. RUNDA', CF: 'FINALE KONF.', FIN: 'FINALE', CHAMP: 'PRVAK' },
+    royShort: 'ROY',
     roy: 'ROOKIE GODINE', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'NAJBOLJI STRIJELAC',
     ring: 'PRVAK!', fmvp: 'FINALS MVP', teammate: 'SAIGRAČ',
   },
@@ -153,7 +166,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Legenda kluba', 'Hall of Famer', 'GOAT debata'],
 
   arcade: {
-    blockN: 'BLOK {i}/{n}', blocks: 'BLOKOVI {n}', blockHint: '{ok} = SKOK', blockPump: 'FINTA! ČEKAJ...', block_block: 'BLOKIRANO!', block_perfect: 'ODBIJENO!', block_early: 'PRERANO', block_late: 'PREKASNO', block_nojump: 'BEZ SKOKA', blockRes: '{n}/{m} šuteva blokirano!',
+    blockN: 'BLOK {i}/{n}', blocks: 'BLOKOVI {n}', blockHint: '{ok} U ZONI', blockPump: 'FINTA! ČEKAJ...', block_block: 'BLOKIRANO!', block_perfect: 'ODBIJENO!', block_early: 'PRERANO', block_late: 'PREKASNO', block_nojump: 'BEZ SKOKA', blockRes: '{n}/{m} šuteva blokirano!',
     dkRound: 'ZAKUC. {i}/{n}', dkTotal: 'UKUPNO {s}', dkPts: 'POE', dkHint: 'STANI U ZONI', dkScore: 'OCJENA {s}', dkPerfect: 'SAVRŠENO!', dkMade: 'ZAKUCANO!', dkMiss: 'PROMAŠAJ!', dkRes: 'Ukupna ocjena: {s} od {m}!',
     dunks: { tomahawk: 'Tomahawk', windmill: 'Vjetrenjača', legs: 'Kroz noge', spin: 'Okret 360', line: 'Sa linije slobodnih' },
     points: 'POENI {n}',
@@ -162,7 +175,7 @@ export default {
     dunkNow: 'ZAKUCAJ SAD!', getReady: 'PRESTANI UDARATI - SLIJEDI TAJMING',
     names: { block: 'ČUVAR OBRUČA', dunkc: 'DUNK TAKMIČ.', post: 'ZAKUCAVANJE', shot: 'ŠUT-METAR', clutch: 'NA SIRENU', fast: 'KONTRANAPAD', defense: 'ODBRANA', drive: 'PRODOR', rebound: 'SKOK', pass: 'PLEJMEJKER', ft: 'BACANJA' },
     intro: {
-      block: 'ČUVAR OBRUČA! Napadači skaču prema košu. Pritisni {ok} tako da ti skok bude najviši kad bace loptu. Prerano ili prekasno = koš. Pazi na finte!',
+      block: 'ČUVAR OBRUČA! Bijeli krug se smanjuje. Pritisni {ok} kad je u narandžastoj zoni i blokiraš šut. Finte samo usporavaju krug.',
       dunkc: 'Izaberi zakucavanje (teže = više poena) i zaustavi marker u zoni. Nema odbrane, nema blokade: ili uđe ili promaši. 3 runde, 5 sudija.',
       post: 'ZAKUCAVANJE IZ MJESTA! Drži {ok} za snagu, pusti u narandžastoj zoni. Ako odbrambeni skače: čekaj ili pogodi bijelo za poster!',
       shot3: '{n} šuteva za tri. Narandžasta zona = pogodak. Bijela sredina = MONEYBALL, dupli poeni!',
@@ -208,7 +221,7 @@ export default {
       { t: 'VJEŠTINE', b: 'ŠUT, PAS, ODBRANA, ATL, CLUTCH.\nTVOJ ARHETIP IH PRETVARA U OVR (UKUPNO).\n\nVJEŠTINE MIJENJAJU I MINIIGRE: ŠUT = VEĆA ZONA, CLUTCH = VIŠE VREMENA, ODBRANA = DUŽI PROZORI, ATL = LAKŠA ZAKUCAVANJA I SKOKOVI, PAS = DUŽI PROZORI ZA PAS.\n\nPRITISNI {stats} BILO KADA ZA SVE STATISTIKE.' },
       { t: 'KARTE', b: 'KARTE ODLUKA I DOGAĐAJA IMAJU 2-3 OPCIJE SA SAVJETOM:\n+ RASTE, - PADA,\n? NEPOZNATO, RIZIK = MOŽE BOLJETI.\n\nNEKE OPCIJE ODMAH POKREĆU MINIIGRU (OZNAČENO). AKO ODBIJEŠ, NE IGRAŠ JE.\n\nNE VIDI SE SVAKA POSLJEDICA. PROMJENA TIMA RESETUJE HEMIJU.' },
       { t: 'KLJUČNE UTAKMICE', b: 'NEKE UTAKMICE IGRAŠ UŽIVO (5-15 SEK.).\n\nREGULARNI DIO: VELIKE I REKORDNE UTAKMICE. DOBAR REZULTAT DIŽE ŠANSE ZA MVP, ALL-STAR, DPOY I STRIJELCA, LOŠ IH SPUŠTA.\n\nPLAYOFF: PLAY-IN, FINALE KONFERENCIJE I FINALE MIJENJAJU ŠANSU ZA POBJEDU (PRSTEN) I BROJE ZA FINALS MVP.\n\nKOŠ NA SIRENU U SERIJI: POGODAK = POBJEDA U UTAKMICI, PROMAŠAJ = KRAJ SERIJE.\n\nBIJELA SREDINA = AND ONE.' },
-      { t: 'MINIIGRE', b: 'ŠUT-METAR - TAJMING ŠUTA\nNA SIRENU - JEDAN ŠUT, FINTE\nKONTRANAPAD - UDARAJ, PA ZAKUCAJ\nODBRANA - STRELICE U RITMU\nPRODOR - IZBJEGNI ODBRANU\nSKOK - POZICIJA I SKOK\nPLEJMEJKER - NAĐI SLOBODNOG\nBACANJA - SMIRI NIŠAN\nZAKUCAVANJE - SNAGA I TAJMING\nČUVAR OBRUČA - TAJMING BLOKOVA\nDUNK TAKMIČENJE - IZABERI ZAKUCAVANJE, TEŽE = VIŠE POENA\n\nTVOJ ARHETIP ODREĐUJE ŠTA SE NAJČEŠĆE POJAVLJUJE.' },
+      { t: 'MINIIGRE', b: 'ŠUT-METAR - TAJMING ŠUTA\nNA SIRENU - JEDAN ŠUT, FINTE\nKONTRANAPAD - UDARAJ, PA ZAKUCAJ\nODBRANA - STRELICE U RITMU\nPRODOR - IZBJEGNI ODBRANU\nSKOK - POZICIJA I SKOK\nPLEJMEJKER - NAĐI SLOBODNOG\nBACANJA - SMIRI NIŠAN\nZAKUCAVANJE - SNAGA I TAJMING\nČUVAR OBRUČA - KRUG U ZONI\nDUNK TAKMIČENJE - IZABERI ZAKUCAVANJE, TEŽE = VIŠE POENA\n\nTVOJ ARHETIP ODREĐUJE ŠTA SE NAJČEŠĆE POJAVLJUJE.' },
       { t: 'PERKOVI', b: 'NAKON SEZONA 1, 3, 6, 9 I 12 BIRAŠ 1 OD 3 PERKA. PERKOVI MIJENJAJU SIMULACIJU I MINIIGRE (NPR. DEEP THREAT = VEĆA ZONA ŠUTA).\n\nSINERGIJE:\nDEEP THREAT + SPACING\nDEFENSIVE ANCHOR + REBOUNDS\nSIGNATURE MOVE + ICE VEINS\nSPRING LEGS + PRO SNEAKERS\nCOURT VISION + HANDLES' },
       { t: 'KOCKA PENZIJE', b: 'TVOJ SKOR JE SKRIVEN DO PENZIJE. MNOŽITELJ SE VIDI:\n\nOTIŠAO NA VRHU +25%: PENZIJA ODMAH NAKON PRSTENA, MVP ILI FINALS MVP.\nPOSLJEDNJI PLES +15%: PRSTEN U ZADNJOJ SEZONI.\nPREDUGO OSTAO: SLABE SEZONE ZAREDOM KOŠTAJU 10%, 20%, 30%...\n\nNAJVIŠE 15 SEZONA.' },
       { t: 'LEGACY SKOR', b: 'PRSTEN 100  MVP 60  FINALS MVP 40\nDPOY 25  STRIJELAC 20\nALL-STAR 8  PREKRETNICA 15  ROY 10\n+ BONUS ZA JEDAN TIM (5+ SEZONA)\n+ BONUS SLAVE\n- PRSTENJE NAKON SUPERTIMA VRIJEDI MANJE\n\nX MNOŽITELJ = LEGACY SKOR.\n\nPROCENAT NA KRAJU JE PROCJENA PREMA SIMULIRANIM KARIJERAMA.' },

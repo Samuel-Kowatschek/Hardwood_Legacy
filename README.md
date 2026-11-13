@@ -36,6 +36,8 @@ Sprache (Englisch/Deutsch/Bosnisch) und Farbschema (Classic, LA Special, Black/W
 - **Spielstand:** Ein Run wird zu Beginn jeder Season automatisch im Browser gespeichert (ein Slot). Im Hauptmenü "Continue", im Run Optionen -> "Save & Quit".
 - **Seeds:** Eigener Seed über "Enter Seed" im Hauptmenü (oder `?seed=`), um mit Freunden zu vergleichen.
 - **Daily Seed:** 1x pro Tag spielbar. Archetyp, Stats, Draft und Rivale sind für alle gleich (keine Rerolls), nur Name und Aussehen sind frei.
+- **Kaffee-Button:** PayPal.me-Name in `src/config.js` (`TIP.paypal`) eintragen, dann erscheint unten der Button "COFFEE" mit 3/5/10 EUR und freiem Betrag.
+- **Testmodus:** Seed `TESTING` eingeben -> alle Chancen (MVP, All-Star, Ring ...), verdeckte Werte, KI-Messlatten und wie jede Entscheidung die Chancen verändert (Stats-Overlay mit Links/Rechts blättern). Zählt nicht für Unlocks/HoF.
 - **Free Agency:** Bei Vertragsende jedes Team der Liga wählbar: Superteam (Ringjagd, weniger Würfe), Contender, fairer Deal, viel Geld bei schwachen Teams; Großstadt = mehr Fame, Team des Rivalen = Rivale wird Mitspieler.
 - **Teamwahl:** Vor dem Draft das Team wählen: schwaches Team = früher Pick (mehr Talent), starkes Team = später Pick.
 - **Training:** Im Hauptmenü alle 11 Minigames frei üben, mit einem zufällig generierten Spieler.

@@ -43,6 +43,7 @@ src/
   input.js       Tastatur/Touch/Maus, klickbare Regionen, Richtungs-Pad für Maus in Minigames
   helpModal.js   HTML-Popups: How to Play, Unlocks, Seed-Eingabe, Teilen
   version.js     Versionsnummer
+  config.js      Betreiber-Einstellungen: PayPal.me-Name für den Kaffee-/Trinkgeld-Button (leer = Button versteckt)
   i18n/          index.js (t()), en.js, de.js, bs.js + cards.<lang>.js (Kartentexte)
   scenes/        title, create, daily, teamselect, freeagency, card, sim, log (Playoffs), awards, perk, retire, legacy,
                  hof, options, practice, stats (Overlay), quit (Overlay), message, scene (Basisklasse)
@@ -50,7 +51,7 @@ src/
                  defenseStop, drive, rebound, pass, freeThrow, post (Standing Dunk), block (Rim Protector), dunkContest
   sprites/       parts.js (Pixel-Layer als Strings), palette.js (Haut, Haare, Teamfarben), spriteGen.js
   names/         nameGen.js (Parodie-Generator), overrides.json (Wortspiele, Teamnamen, Städte)
-  systems/       rng, league, freeagency (Run/Liga erzeugen, Speichern/Laden), sim, awards, legacy, save, audio
+  systems/       rng, league, freeagency, testmode (Run/Liga erzeugen, Speichern/Laden), sim, awards, legacy, save, audio
   data/          archetypes, perks, cards, balance (alle Tuning-Werte), scoreDist (Perzentil-Referenz)
 ```
 
@@ -69,7 +70,7 @@ src/
 1. **Autosave** (Spielstand zu Beginn jeder Season)
 2. Offseason-Karte
 3. Regular Season (`SimScene`), unterbrochen bei ca. 28–38 % (Event-Karte, ggf. mit Minigame danach), 42–50 % (Spotlight-Spiel / 50-Punkte / sehr selten 100-Punkte), 56 % (All-Star Weekend), 66–80 % (Event-Karte, 60 %)
-4. **Season Awards** (ROY, All-Star, MVP, DPOY, Scoring Title, All-Star-Contest)
+4. **Season Awards** (ROY, All-Star, MVP, DPOY, Scoring Title, All-Star-Contest). ROY, MVP und DPOY zeigen jedes Jahr den Gewinner, auch wenn man selbst verliert (Namen aus eigenem RNG-Teilstrom, Haupt-Seed bleibt gleich)
 5. Playoffs (Play-In ab Platz 7–10, echtes Bracket; Key Games in Conf Finals/Finals)
 6. **Postseason** (Ring, Finals MVP, Meilensteine, Alterung)
 7. Retire-Entscheidung (Score verdeckt, Multiplikator sichtbar) -> ggf. Perk-Wahl (nach Season 1, 3, 6, 9, 12)
@@ -80,6 +81,11 @@ src/
 **Free Agency:** Kartenoption `pickTeam: true` (Karten `freeagency`, `optout`) öffnet `scenes/freeagency.js`. Konsequenzen je Team in `systems/freeagency.js` (`faProfile`: Rang 1–4 Superteam/Ringjagd, 5–10 Contender, 11–20 fair, Rest viel Geld; Großstadt +Fame; Team des Rivalen -> neuer Rivale).
 
 **Daily Seed** (`scenes/daily.js`): Seed `D` + YYYYMMDD. Archetyp aus `fork('dailyarch')`, Stats/Draft/Rivale fest (`hof: []`, keine Teamwahl, keine Rerolls), nur Name (HTML-Popup) und Look änderbar. 1x pro Tag: `meta.dailyDone` wird beim Start gesetzt; ein eingetippter Tages-Seed zählt ebenfalls als Daily.
+
+**Testmodus** (Seed `TESTING` eintippen oder `?seed=TESTING`): zufällige Liga, alle Archetypen frei, `run.test = true`, Run zählt nicht für Meta/Unlocks/HoF.
+- `systems/testmode.js`: `odds(run)` schätzt Chancen analytisch aus denselben Formeln wie `awards.js`/`sim.js` (All-Star, MVP, DPOY, Scoring, ROY, Playoffs, Ring, FMVP); `analyzeOption`/`analyzeTeam` rechnen Entscheidungen auf einer Run-Kopie (`cloneRun`) durch.
+- Anzeige: Karten zeigen genaue Werte statt `+/++`, Sim-Szene zeigt Live-Chancen, Free Agency zeigt Chancen-Änderung je Team. Stats-Overlay (S) hat Zusatzseiten (`scenes/testpages.js`, Links/Rechts): Chancen, Liga (KI-Messlatten, Power Ranking, Rivale), Entscheidung.
+- Bei Formeländerungen in `awards.js`/`sim.js` auch `testmode.js` anpassen. `run.cur.st` (laufende Season) wird dafür in `regularSeason` gesetzt.
 
 ### Run-Objekt (`systems/league.js`)
 `createRun(seed, names, { archId, look, name, hof, teamId })` erzeugt:
@@ -122,7 +128,7 @@ src/
 | `pass` | Playmaker | Pfeil zum freien Mitspieler |
 | `ft` | Freiwürfe | Pfeile gegen Drift (mit Trägheit), Brett-Rechteck = Bank Shot |
 | `post` | Standing Dunk | SPACE halten/loslassen, Block vermeiden |
-| `block` | Rim Protector | SPACE springen, Ball beim Wurf blocken, nicht auf Pumpfakes reinfallen |
+| `block` | Rim Protector | Kreis schrumpft auf orange Zone zu, SPACE wenn er drin ist (Kreis zeigt echten Wurfzeitpunkt, Pumpfakes nur langsamer) |
 | `dunkc` | Dunk Contest (nur All-Star Weekend / Karte / Training) | Dunk wählen (5 Stufen, schwerer = mehr Punkte), Marker stoppen; kein Verteidiger, nur Treffer oder Fehlversuch |
 
 - `dunkc` ist nicht im normalen Pool (`pickArcadeKind` schließt `clutch` und `dunkc` aus).
@@ -157,7 +163,8 @@ src/
 - **Innenabstand:** Text nicht direkt an Rahmen (Doppelrahmen ist 3px breit) – mind. ~5px Luft lassen.
 - **Alle UI-Texte über `t('pfad', params)`** und in **en, de, bs** pflegen. Fehlende Keys fallen auf Englisch zurück. Tastennamen über `{ok}`, `{back}`, `{stats}` (Tastatur SPACE/ESC/S, Touch OK/BACK/STATS).
 - **Maus/Touch:** Klickbares beim Zeichnen mit `input.region(x, y, w, h, hover, click)` registrieren (Menu-Widget macht das selbst). Gibt es keine Regionen, wirkt ein Klick wie OK. Menüs bekommen oben links einen Zurück-Button über `header(ctx, title, right, onBack)`.
-- **Popups** (Hilfe, Unlocks, Seed, Teilen) sind HTML in `helpModal.js`; solange eines offen ist, ist `input.blocked` gesetzt.
+- **Kaffee-Button:** `#tip-bar` (Desktop-Leiste) und `#tip-pad` (Touch) in `index.html`, Popup `openTip()` in `helpModal.js` mit PayPal.me-Links (`paypal.com/paypalme/<name>/<betrag><währung>`), Beträge in `src/config.js`.
+- **Popups** (Hilfe, Unlocks, Seed, Teilen, Kaffee) sind HTML in `helpModal.js`; solange eines offen ist, ist `input.blocked` gesetzt.
 
 ## 7. Steuerung
 

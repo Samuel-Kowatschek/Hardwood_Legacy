@@ -8,7 +8,7 @@ export default {
   },
   langName: { en: 'ENGLISH', de: 'DEUTSCH', bs: 'BOSANSKI' },
 
-  ui: { menu: 'MAIN MENU (Q)', menuT: 'MENU', help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
+  ui: { tip: 'COFFEE', tipT: 'TIP', menu: 'MAIN MENU (Q)', menuT: 'MENU', help: 'HELP (H)', options: 'OPTIONS (O)', stats: 'STATS (S)', sound: 'SOUND (M)', helpT: 'HELP', optionsT: 'OPTIONS', statsT: 'STATS', soundT: 'SOUND' },
   unlocks: { title: 'UNLOCKS', archetype: 'ARCHETYPE', perk: 'PERK', locked: 'LOCKED', how: 'How to unlock:', count: '{n}/{m} UNLOCKED' },
   practice: { title: 'PRACTICE', reroll: 'NEW PLAYER', situation: 'PRACTICE', last: 'LAST {p}%' },
   share: { title: 'SHARE YOUR LEGACY', copy: 'COPY TEXT', copied: 'COPIED!', instagram: 'INSTAGRAM', instaHint: 'Card saved. Post it on Instagram!', more: 'MORE...', png: 'DOWNLOAD CARD', text: 'I retired as {tier} with a legacy score of {score} in Hardwood Legacy! Can you beat it? Seed {s}' },
@@ -23,6 +23,18 @@ export default {
   },
   daily: { title: 'DAILY SEED', start: 'START', look: 'NEW LOOK', name: 'EDIT NAME', pick: 'PICK #{n}  OVR {o}', fixed: 'SAME PLAYER FOR ALL' },
   namein: { title: 'YOUR NAME', text: 'First and last name (max. 12 letters each).', ok: 'OK', short: 'Please enter both names.' },
+  test: {
+    badge: 'TEST MODE', create: 'TEST MODE {s}', nav: '< > PAGE {i}/{n}  {stats} = CLOSE',
+    p: { odds: 'ODDS (ESTIMATE)', league: 'LEAGUE', decision: 'DECISION' },
+    o: { allStar: 'ALLSTAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'SCORING', roy: 'ROOKIE', playoffs: 'PLAYOFF', ring: 'RING', fmvp: 'FMVP' },
+    proj: 'PROJ {w}-{l} RANK {r} PPG {ppg} GP {gp}', hidden: 'POT {pot} INJURY {inj} POWER {pw}/{avg}',
+    bonus: 'MINIGAMES AS{a} MVP{m} DP{d} PTS{s}', series: 'SERIES {x}', legacy: 'LEGACY NOW {n}  VS BEST {g}',
+    bars: 'AI BENCHMARKS (YOU)', bar1: 'MVP {m}  ALLSTAR {a}  (OVR {o})', bar2: 'DPOY {d} (DEF {def})  PTS {s} ({ppg})',
+    rows: 'POWER RANKING   * = RIVAL', risk: 'RISK', good: 'WIN FX', bad: 'LOSS FX', ifRisk: 'IF RISK:', ifGood: 'WIN:', ifBad: 'LOSS:',
+    mini: 'MINIGAME', need: 'NEED {n}%', noChange: 'NO ODDS CHANGE', pickTeam: 'PICK ANY TEAM (ODDS IN LIST)',
+    simLine1: 'ALLSTAR {a}  MVP {m}  DPOY {d}', simLine2: 'SCORING {s}  PLAYOFF {p}  RING {r}', simLine3: '{stats} = ALL ODDS (TEST MODE)',
+  },
+  tip: { title: 'BUY ME A COFFEE', text: 'Enjoying Hardwood Legacy? It is free and has no ads. If you want to support the creator, a coffee helps a lot!', any: 'OTHER AMOUNT', note: 'Opens PayPal in a new tab. Thank you!' },
   title: {
     continue: 'CONTINUE S{s}', enterSeed: 'ENTER SEED', unlocks: 'UNLOCKS', practice: 'PRACTICE', newRun: 'NEW RUN', dailyDone: 'DAILY: DONE', daily: 'DAILY SEED', seed: 'SEED {s}', hof: 'HALL OF FAME', help: 'HOW TO PLAY', options: 'OPTIONS',
     tagline: 'ONE RUN = ONE CAREER', record: 'RUNS {n}  BEST {b}', hint: '{ok} OK  {back} BACK  M SOUND',
@@ -113,6 +125,7 @@ export default {
     titleReg: 'SEASON AWARDS', titlePo: 'POSTSEASON', seedRow: '{w}-{l}  SEED {r}', nextPO: 'Next up: the playoffs!', nextNone: 'No playoffs this year.',
     title: 'SEASON RECAP', none: 'NO AWARDS', aging: 'Age {age}. OVR {ovr} ({d}), body {db}.',
     reached: { LOTTERY: 'LOTTERY', 'PLAY-IN': 'PLAY-IN', R1: '1ST ROUND', R2: '2ND ROUND', CF: 'CONF FINALS', FIN: 'FINALS', CHAMP: 'CHAMPION' },
+    royShort: 'ROY',
     roy: 'ROOKIE OF THE YEAR', allStar: 'ALL-STAR', mvp: 'MVP', dpoy: 'DPOY', scoring: 'SCORING TITLE',
     ring: 'CHAMPION!', fmvp: 'FINALS MVP', teammate: 'TEAMMATE',
   },
@@ -153,7 +166,7 @@ export default {
   tiers: ['Role Player', 'All-Star', 'Franchise Legend', 'Hall of Famer', 'GOAT Debate'],
 
   arcade: {
-    blockN: 'BLOCK {i}/{n}', blocks: 'BLOCKS {n}', blockHint: '{ok} = JUMP', blockPump: 'PUMP FAKE! WAIT...', block_block: 'BLOCKED!', block_perfect: 'SWATTED!', block_early: 'TOO EARLY', block_late: 'TOO LATE', block_nojump: 'NO JUMP', blockRes: '{n}/{m} shots blocked!',
+    blockN: 'BLOCK {i}/{n}', blocks: 'BLOCKS {n}', blockHint: '{ok} IN THE ZONE', blockPump: 'PUMP FAKE! WAIT...', block_block: 'BLOCKED!', block_perfect: 'SWATTED!', block_early: 'TOO EARLY', block_late: 'TOO LATE', block_nojump: 'NO JUMP', blockRes: '{n}/{m} shots blocked!',
     dkRound: 'DUNK {i}/{n}', dkTotal: 'TOTAL {s}', dkPts: 'PTS', dkHint: 'STOP IN THE ZONE', dkScore: 'SCORE {s}', dkPerfect: 'PERFECT!', dkMade: 'DUNKED!', dkMiss: 'MISSED!', dkRes: 'Total score: {s} of {m}!',
     dunks: { tomahawk: 'Tomahawk', windmill: 'Windmill', legs: 'Between the legs', spin: '360 Spin', line: 'Free-throw line' },
     points: 'POINTS {n}',
@@ -162,7 +175,7 @@ export default {
     dunkNow: 'DUNK IT NOW!', getReady: 'STOP MASHING - TIMING NEXT',
     names: { block: 'RIM PROTECTOR', dunkc: 'DUNK CONTEST', post: 'STANDING DUNK', shot: 'SHOT METER', clutch: 'BUZZER-BEATER', fast: 'FAST BREAK', defense: 'DEFENSE STOP', drive: 'DRIVE', rebound: 'REBOUND', pass: 'PLAYMAKER', ft: 'FREE THROWS' },
     intro: {
-      block: 'RIM PROTECTOR! Attackers jump at the rim. Press {ok} so your jump peaks when they release the ball. Too early or too late = basket. Watch for pump fakes!',
+      block: 'RIM PROTECTOR! The white circle shrinks. Press {ok} when it is inside the orange zone to block the shot. Pump fakes only slow the circle down.',
       dunkc: 'Pick a dunk (harder = more points), then stop the marker in the zone. No defender, no block: it goes in or it misses. 3 rounds, 5 judges.',
       post: 'STANDING DUNK! Hold {ok} to load up, release in the orange zone. Watch the defender jump: wait or go white for a poster!',
       shot3: '{n} shots from downtown. Orange zone = make. White center = MONEYBALL, double points!',
@@ -208,7 +221,7 @@ export default {
       { t: 'SKILLS', b: 'SHOT, PASS, DEF, ATH, CLUTCH.\nYOUR ARCHETYPE WEIGHTS THEM INTO YOUR OVR (OVERALL).\n\nSKILLS ALSO SHAPE THE MINIGAMES: SHOT = BIGGER SHOT ZONE, CLUTCH = MORE TIME, DEF = LONGER WINDOWS, ATH = EASIER DUNKS AND BOARDS, PASS = LONGER PASSING WINDOWS.\n\nPRESS {stats} ANYTIME FOR ALL STATS.' },
       { t: 'CARDS', b: 'DECISION AND EVENT CARDS HAVE 2-3 OPTIONS WITH A HINT:\n+ GOES UP, - GOES DOWN,\n? UNKNOWN, RISK = CAN HURT.\n\nSOME OPTIONS START A MINIGAME RIGHT AFTER (MARKED MINIGAME). DECLINE AND IT NEVER STARTS.\n\nNOT EVERY CONSEQUENCE IS SHOWN. CHANGING TEAMS RESETS CHEMISTRY.' },
       { t: 'KEY GAMES', b: 'SOME GAMES ARE PLAYED LIVE (5-15 SEC).\n\nREGULAR SEASON: SPOTLIGHT AND MILESTONE GAMES. A GOOD RESULT RAISES YOUR MVP, ALL-STAR, DPOY AND SCORING CHANCES, A BAD ONE LOWERS THEM.\n\nPLAYOFFS: PLAY-IN, CONF FINALS AND FINALS SHIFT THE WIN CHANCE (RING) AND COUNT FOR FINALS MVP.\n\nBUZZER-BEATER IN A SERIES: MAKE IT AND YOU WIN THE GAME, MISS AND THE SERIES IS OVER.\n\nWHITE CENTER IN A METER = AND ONE.' },
-      { t: 'MINIGAMES', b: 'SHOT METER - TIME YOUR RELEASE\nBUZZER-BEATER - ONE SHOT, FAKES\nFAST BREAK - MASH, THEN DUNK\nDEFENSE STOP - ARROWS IN RHYTHM\nDRIVE - DODGE DEFENDERS\nREBOUND - POSITION AND JUMP\nPLAYMAKER - FIND THE OPEN MAN\nFREE THROWS - STEADY YOUR AIM\nSTANDING DUNK - LOAD UP, BEAT THE BLOCK\nRIM PROTECTOR - TIME YOUR BLOCKS\nDUNK CONTEST - PICK A DUNK, HARDER = MORE POINTS\n\nYOUR ARCHETYPE DECIDES WHICH COME UP MOST.' },
+      { t: 'MINIGAMES', b: 'SHOT METER - TIME YOUR RELEASE\nBUZZER-BEATER - ONE SHOT, FAKES\nFAST BREAK - MASH, THEN DUNK\nDEFENSE STOP - ARROWS IN RHYTHM\nDRIVE - DODGE DEFENDERS\nREBOUND - POSITION AND JUMP\nPLAYMAKER - FIND THE OPEN MAN\nFREE THROWS - STEADY YOUR AIM\nSTANDING DUNK - LOAD UP, BEAT THE BLOCK\nRIM PROTECTOR - HIT THE CIRCLE ZONE\nDUNK CONTEST - PICK A DUNK, HARDER = MORE POINTS\n\nYOUR ARCHETYPE DECIDES WHICH COME UP MOST.' },
       { t: 'PERKS', b: 'AFTER SEASONS 1, 3, 6, 9 AND 12 YOU PICK 1 OF 3 PERKS. PERKS CHANGE THE SIM AND THE MINIGAMES (E.G. DEEP THREAT = BIGGER SHOT ZONE).\n\nSYNERGIES:\nDEEP THREAT + SPACING\nDEFENSIVE ANCHOR + REBOUNDS\nSIGNATURE MOVE + ICE VEINS\nSPRING LEGS + PRO SNEAKERS\nCOURT VISION + HANDLES' },
       { t: 'RETIRE GAMBLE', b: 'YOUR SCORE STAYS HIDDEN UNTIL YOU RETIRE. THE MULTIPLIER IS SHOWN:\n\nWENT OUT ON TOP +25%: RETIRE RIGHT AFTER A RING, MVP OR FINALS MVP.\nLAST DANCE +15%: RING IN YOUR LAST SEASON.\nOVERSTAYED: WEAK SEASONS IN A ROW COST 10%, 20%, 30%...\n\nMAX 15 SEASONS.' },
       { t: 'LEGACY SCORE', b: 'RING 100  MVP 60  FINALS MVP 40\nDPOY 25  SCORING TITLE 20\nALL-STAR 8  MILESTONE 15  ROY 10\n+ ONE-TEAM BONUS (5+ SEASONS)\n+ FAME BONUS\n- RINGS AFTER A SUPERTEAM PAY CUT COUNT LESS\n\nX RETIRE MULTIPLIER = LEGACY SCORE.\n\nTHE PERCENTILE AT THE END IS AN ESTIMATE VS. SIMULATED CAREERS.' },
