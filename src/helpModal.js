@@ -169,19 +169,38 @@ export function openSeedInput(onStart) {
   setTimeout(() => inp.focus(), 0);
 }
 
-// Trinkgeld: PayPal.me-Links mit festen Betraegen (oeffnen PayPal in neuem Tab)
-const CUP = '<svg class="cup" viewBox="0 0 9 8" aria-hidden="true"><path d="M2 0h1v1H2zM4 0h1v1H4zM6 0h1v1H6zM0 2h7v4H0zM7 3h2v2H7zM1 6h5v1H1zM0 7h7v1H0z" fill="currentColor"/></svg>';
+// Spenden: Fenster mit frei waehlbarem Betrag; erst "Spenden" oeffnet PayPal.me mit diesem Betrag
+const COIN = '<svg class="coin" viewBox="0 0 8 8" aria-hidden="true"><path d="M2 0h1v1H2zM3 0h1v1H3zM4 0h1v1H4zM5 0h1v1H5zM1 1h1v1H1zM2 1h1v1H2zM3 1h1v1H3zM4 1h1v1H4zM5 1h1v1H5zM6 1h1v1H6zM0 2h1v1H0zM1 2h1v1H1zM2 2h1v1H2zM5 2h1v1H5zM6 2h1v1H6zM7 2h1v1H7zM0 3h1v1H0zM1 3h1v1H1zM2 3h1v1H2zM5 3h1v1H5zM6 3h1v1H6zM7 3h1v1H7zM0 4h1v1H0zM1 4h1v1H1zM2 4h1v1H2zM5 4h1v1H5zM6 4h1v1H6zM7 4h1v1H7zM0 5h1v1H0zM1 5h1v1H1zM2 5h1v1H2zM5 5h1v1H5zM6 5h1v1H6zM7 5h1v1H7zM1 6h1v1H1zM2 6h1v1H2zM3 6h1v1H3zM4 6h1v1H4zM5 6h1v1H5zM6 6h1v1H6zM2 7h1v1H2zM3 7h1v1H3zM4 7h1v1H4zM5 7h1v1H5z" fill="currentColor"/></svg>';
 export const tipEnabled = () => !!TIP.paypal;
 export function openTip() {
   if (!tipEnabled()) return;
-  const base = 'https://www.paypal.com/paypalme/' + encodeURIComponent(TIP.paypal);
-  const link = (href, label) => `<a class="share-btn" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${CUP}${esc(label)}</a>`;
   const body = `
     <p>${esc(t('tip.text'))}</p>
-    <div class="tip-grid">${TIP.amounts.map(a => link(`${base}/${a}${TIP.currency}`, `${a} ${TIP.currency}`)).join('')}</div>
-    ${link(base, t('tip.any')).replace('class="share-btn"', 'class="share-btn tip-any"')}
-    <p class="share-note">${esc(t('tip.note'))}</p>`;
+    <div class="tip-row">
+      <input id="tip-amt" class="seed-in" type="text" inputmode="decimal" maxlength="7" autocomplete="off" value="${esc(TIP.preset)}" aria-label="${esc(t('tip.amount'))}">
+      <span class="tip-cur">${esc(TIP.currency)}</span>
+    </div>
+    <div class="tip-chips">${TIP.amounts.map(a => `<button class="share-btn" data-amt="${a}">${a} ${esc(TIP.currency)}</button>`).join('')}</div>
+    <button class="share-btn tip-go" id="tip-go">${COIN}${esc(t('tip.go'))}</button>
+    <p class="share-note" id="tip-note">${esc(t('tip.note', { name: TIP.paypal }))}</p>`;
   const root = openModal(t('tip.title'), body);
   if (!root) return;
-  root.querySelectorAll('a').forEach(a => a.addEventListener('click', () => sfx.select()));
+  const inp = root.querySelector('#tip-amt'), note = root.querySelector('#tip-note');
+  // Betrag pruefen: Komma oder Punkt, max. 2 Nachkommastellen
+  const amount = () => {
+    const v = Number(inp.value.trim().replace(',', '.'));
+    return Number.isFinite(v) && v >= TIP.min && v <= TIP.max ? Math.round(v * 100) / 100 : null;
+  };
+  const go = () => {
+    const a = amount();
+    if (a == null) { note.textContent = t('tip.invalid', { min: TIP.min, max: TIP.max }); inp.focus(); return; }
+    sfx.select();
+    window.open(`https://www.paypal.com/paypalme/${encodeURIComponent(TIP.paypal)}/${a.toFixed(2)}${TIP.currency}`, '_blank', 'noopener');
+    closeHelp();
+  };
+  inp.addEventListener('input', () => { inp.value = inp.value.replace(/[^0-9.,]/g, ''); });
+  inp.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') go(); if (e.key === 'Escape') closeHelp(); });
+  root.querySelectorAll('[data-amt]').forEach(b => b.addEventListener('click', () => { inp.value = b.dataset.amt; sfx.blip(); inp.focus(); }));
+  root.querySelector('#tip-go').addEventListener('click', go);
+  setTimeout(() => { inp.focus(); inp.select(); }, 0);
 }
