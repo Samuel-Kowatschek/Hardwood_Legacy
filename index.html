@@ -44,11 +44,14 @@
   /* Kaffee-/Trinkgeld-Button */
   .tip { border-color: var(--orange) !important; display: inline-flex; align-items: center; gap: 6px; }
   .tip[hidden] { display: none !important; }
-  .cup { width: 14px; height: 12px; shape-rendering: crispEdges; flex: none; }
+  .coin { width: 12px; height: 12px; shape-rendering: crispEdges; flex: none; color: var(--orange); }
+  .tip:hover .coin, .tip.on .coin, .share-btn:hover .coin { color: var(--white); }
   .meta .tip { padding: 4px 7px; }
-  .tip-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
-  .tip-grid a, .tip-any { display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
-  .tip-any { margin-top: 8px; }
+  .tip-row { display: flex; gap: 8px; align-items: stretch; margin-top: 12px; }
+  .tip-row .seed-in { flex: 1; min-width: 0; margin: 0; text-align: right; }
+  .tip-cur { display: flex; align-items: center; font-size: 10px; }
+  .tip-chips { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .tip-go { width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; border-color: var(--orange); }
   @media (pointer: coarse) { #bar { display: none; } }
   /* How-to-Play-Popup */
   #help { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center;
@@ -113,7 +116,7 @@
     <button class="bbtn" data-btn="options" data-label="options">OPTIONS</button>
     <button class="bbtn" data-btn="stats" data-label="stats">STATS</button>
     <button class="bbtn" data-btn="mute" data-label="sound">SOUND</button>
-    <button class="bbtn tip" id="tip-bar" hidden><svg class="cup" viewBox="0 0 9 8" aria-hidden="true"><path d="M2 0h1v1H2zM4 0h1v1H4zM6 0h1v1H6zM0 2h7v4H0zM7 3h2v2H7zM1 6h5v1H1zM0 7h7v1H0z" fill="currentColor"/></svg><span data-label="tip">COFFEE</span></button>
+    <button class="bbtn tip" id="tip-bar" hidden><svg class="coin" viewBox="0 0 8 8" aria-hidden="true"><path d="M2 0h1v1H2zM3 0h1v1H3zM4 0h1v1H4zM5 0h1v1H5zM1 1h1v1H1zM2 1h1v1H2zM3 1h1v1H3zM4 1h1v1H4zM5 1h1v1H5zM6 1h1v1H6zM0 2h1v1H0zM1 2h1v1H1zM2 2h1v1H2zM5 2h1v1H5zM6 2h1v1H6zM7 2h1v1H7zM0 3h1v1H0zM1 3h1v1H1zM2 3h1v1H2zM5 3h1v1H5zM6 3h1v1H6zM7 3h1v1H7zM0 4h1v1H0zM1 4h1v1H1zM2 4h1v1H2zM5 4h1v1H5zM6 4h1v1H6zM7 4h1v1H7zM0 5h1v1H0zM1 5h1v1H1zM2 5h1v1H2zM5 5h1v1H5zM6 5h1v1H6zM7 5h1v1H7zM1 6h1v1H1zM2 6h1v1H2zM3 6h1v1H3zM4 6h1v1H4zM5 6h1v1H5zM6 6h1v1H6zM2 7h1v1H2zM3 7h1v1H3zM4 7h1v1H4zM5 7h1v1H5z" fill="currentColor"/></svg><span data-label="tip">DONATE</span></button>
   </div>
   <div id="pad">
     <div class="dpad">
@@ -121,7 +124,7 @@
       <div class="btn" data-btn="right">&#9654;</div><div class="btn" data-btn="down">&#9660;</div>
     </div>
     <div class="ab"><div class="btn round" data-btn="b">BACK</div><div class="btn round" data-btn="a">OK</div></div>
-    <div class="meta"><div class="btn" data-btn="menu" data-label="menuT">MENU</div><div class="btn" data-btn="help" data-label="helpT">HELP</div><div class="btn" data-btn="options" data-label="optionsT">OPTIONS</div><div class="btn" data-btn="stats" data-label="statsT">STATS</div><div class="btn" data-btn="mute" data-label="soundT">SOUND</div><div class="btn tip" id="tip-pad" hidden aria-label="Tip"><svg class="cup" viewBox="0 0 9 8" aria-hidden="true"><path d="M2 0h1v1H2zM4 0h1v1H4zM6 0h1v1H6zM0 2h7v4H0zM7 3h2v2H7zM1 6h5v1H1zM0 7h7v1H0z" fill="currentColor"/></svg></div></div>
+    <div class="meta"><div class="btn" data-btn="menu" data-label="menuT">MENU</div><div class="btn" data-btn="help" data-label="helpT">HELP</div><div class="btn" data-btn="options" data-label="optionsT">OPTIONS</div><div class="btn" data-btn="stats" data-label="statsT">STATS</div><div class="btn" data-btn="mute" data-label="soundT">SOUND</div><div class="btn tip" id="tip-pad" hidden aria-label="Donate"><svg class="coin" viewBox="0 0 8 8" aria-hidden="true"><path d="M2 0h1v1H2zM3 0h1v1H3zM4 0h1v1H4zM5 0h1v1H5zM1 1h1v1H1zM2 1h1v1H2zM3 1h1v1H3zM4 1h1v1H4zM5 1h1v1H5zM6 1h1v1H6zM0 2h1v1H0zM1 2h1v1H1zM2 2h1v1H2zM5 2h1v1H5zM6 2h1v1H6zM7 2h1v1H7zM0 3h1v1H0zM1 3h1v1H1zM2 3h1v1H2zM5 3h1v1H5zM6 3h1v1H6zM7 3h1v1H7zM0 4h1v1H0zM1 4h1v1H1zM2 4h1v1H2zM5 4h1v1H5zM6 4h1v1H6zM7 4h1v1H7zM0 5h1v1H0zM1 5h1v1H1zM2 5h1v1H2zM5 5h1v1H5zM6 5h1v1H6zM7 5h1v1H7zM1 6h1v1H1zM2 6h1v1H2zM3 6h1v1H3zM4 6h1v1H4zM5 6h1v1H5zM6 6h1v1H6zM2 7h1v1H2zM3 7h1v1H3zM4 7h1v1H4zM5 7h1v1H5z" fill="currentColor"/></svg></div></div>
   </div>
   <script type="module" src="src/main.js"></script>
 </body>

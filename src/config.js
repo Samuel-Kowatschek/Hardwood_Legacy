@@ -1,9 +1,10 @@
 // Einstellungen fuer den Betreiber der Seite.
-// Trinkgeld/Spenden ("Kauf dem Creator einen Kaffee"): PayPal.me-Name eintragen.
-// Beispiel: dein Link ist https://paypal.me/maxmuster -> paypal: 'maxmuster'
-// Leer lassen = Kaffee-Button wird nicht angezeigt.
+// Spenden-Button: PayPal.me-Name (paypal.me/<name>). Leer lassen = Button wird nicht angezeigt.
 export const TIP = {
-  paypal: '',
+  paypal: 'samuelkowatschek',
   currency: 'EUR',
-  amounts: [3, 5, 10],
+  preset: 5,           // vorausgefuellter Betrag im Spenden-Fenster
+  amounts: [3, 5, 10], // Schnellauswahl (fuellt nur das Feld, Weiterleitung erst mit "Spenden")
+  min: 1,
+  max: 1000,
 };
